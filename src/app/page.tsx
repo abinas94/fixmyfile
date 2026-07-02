@@ -5,6 +5,7 @@ import { Shield, Zap, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Cod
 import ToolCard from "@/components/ToolCard";
 import { tools, categories } from "@/lib/tools-config";
 import Link from "next/link";
+import AdBanner from "@/components/AdBanner";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -147,6 +148,12 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Ad Banner */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="hidden sm:block"><AdBanner type="leaderboard" /></div>
+        <div className="sm:hidden"><AdBanner type="mobile" /></div>
+      </div>
 
       {/* How It Works */}
       <section className="bg-[var(--muted)] py-20">
