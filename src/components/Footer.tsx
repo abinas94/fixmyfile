@@ -1,12 +1,8 @@
 import { FileText, Shield, Zap, Globe } from "lucide-react";
-import AdBanner from "./AdBanner";
 
 export default function Footer() {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--muted)]">
-      <div className="flex justify-center pt-8">
-        <AdBanner type="rectangle" />
-      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Features strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
