@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ScanText, ArrowLeft, Copy, Check, Loader2, Download, FileText } from "lucide-react";
+import { ScanText, ArrowLeft, Copy, Check, Loader2, Download, FileText, Share2 } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 
@@ -118,6 +118,38 @@ export default function OCRTool() {
     URL.revokeObjectURL(a.href);
   };
 
+  const shareText = async () => {
+    const content = getOutputText();
+    // Try Web Share API (works on mobile - share to WhatsApp, email, etc.)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "OCR Extracted Text - FixMyFile",
+          text: content,
+        });
+        return;
+      } catch (e) {
+        // User cancelled or API failed, fall back
+        if ((e as Error).name === "AbortError") return;
+      }
+    }
+    // Fallback: share as file
+    if (navigator.share && navigator.canShare) {
+      const file = new File([content], "ocr-output.txt", { type: "text/plain" });
+      if (navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file], title: "OCR Extracted Text" });
+          return;
+        } catch { /* fall through */ }
+      }
+    }
+    // Final fallback: copy to clipboard
+    await navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    alert("Text copied to clipboard! You can paste it anywhere.");
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
@@ -212,6 +244,9 @@ export default function OCRTool() {
                   </button>
                   <button onClick={() => downloadText("md")} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--muted)] hover:bg-[var(--accent)]">
                     <FileText className="w-3 h-3" /> .md
+                  </button>
+                  <button onClick={shareText} className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--primary)] text-white hover:opacity-90">
+                    <Share2 className="w-3 h-3" /> Share
                   </button>
                 </div>
               </div>
