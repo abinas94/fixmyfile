@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { ScanLine, ArrowLeft, Camera, Trash2, RotateCw, Download, Plus } from "lucide-react";
+import { ScanLine, ArrowLeft, Camera, Trash2, RotateCw, Download, Plus, Share2 } from "lucide-react";
 import Link from "next/link";
 import ProcessingButton from "@/components/ProcessingButton";
 
@@ -12,6 +12,7 @@ export default function ScanToPDF() {
   const [useCamera, setUseCamera] = useState(false);
   const [enhanceContrast, setEnhanceContrast] = useState(true);
   const [grayscale, setGrayscale] = useState(true);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
@@ -159,6 +160,10 @@ export default function ScanToPDF() {
 
       const pdfBytes = await pdf.save();
       const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
+
+      // Store blob for sharing
+      setPdfBlob(blob);
+
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -262,8 +267,33 @@ export default function ScanToPDF() {
 
       {/* Generate PDF */}
       {scannedPages.length > 0 && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-col items-center gap-3">
           <ProcessingButton onClick={generatePDF} isProcessing={isProcessing} isComplete={isComplete} label="Create PDF" />
+          {isComplete && pdfBlob && (
+            <div className="flex gap-3 mt-3">
+              <button onClick={async () => {
+                const file = new File([pdfBlob], "scanned-document.pdf", { type: "application/pdf" });
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                  await navigator.share({ files: [file], title: "Scanned Document", text: "Scanned with FixMyFile" });
+                } else {
+                  // Fallback: download
+                  const url = URL.createObjectURL(pdfBlob);
+                  const a = document.createElement("a"); a.href = url; a.download = "scanned-document.pdf"; a.click(); URL.revokeObjectURL(url);
+                  alert("Share not supported on this device. File downloaded instead.");
+                }
+              }}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-semibold shadow-lg hover:bg-green-600 hover:scale-105 active:scale-95 transition-all">
+                <Share2 className="w-4 h-4" /> Share via WhatsApp
+              </button>
+              <button onClick={() => {
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement("a"); a.href = url; a.download = "scanned-document.pdf"; a.click(); URL.revokeObjectURL(url);
+              }}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--border)] font-semibold hover:border-[var(--primary)] transition-all">
+                <Download className="w-4 h-4" /> Download
+              </button>
+            </div>
+          )}
         </div>
       )}
 
