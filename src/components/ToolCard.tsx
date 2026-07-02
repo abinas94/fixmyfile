@@ -41,6 +41,7 @@ import {
   Table,
   Wand2,
   Eraser,
+  ScanLine,
 } from "lucide-react";
 import type { ToolConfig } from "@/lib/tools-config";
 
@@ -87,6 +88,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Table,
   Wand2,
   Eraser,
+  ScanLine,
 };
 
 export default function ToolCard({ tool }: { tool: ToolConfig }) {

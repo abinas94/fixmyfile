@@ -147,6 +147,15 @@ export const tools: ToolConfig[] = [
     href: "/tools/pipeline",
     category: "pdf",
   },
+  {
+    id: "scan-to-pdf",
+    name: "Scan to PDF",
+    description: "Scan documents with camera — auto-enhance to clean PDF",
+    icon: "ScanLine",
+    color: "from-slate-700 to-slate-900",
+    href: "/tools/scan-to-pdf",
+    category: "pdf",
+  },
 
   // ============================================================
   // IMAGE TOOLS
