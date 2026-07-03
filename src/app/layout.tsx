@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PWARegister from "@/components/PWARegister";
+import InstallBanner from "@/components/InstallBanner";
 
 export const metadata: Metadata = {
   title: "FixMyFile - Free Online File Tools | PDF, Image, OCR, Documents",
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <InstallBanner />
       </body>
     </html>
   );
