@@ -98,7 +98,7 @@ export default function ToolCard({ tool }: { tool: ToolConfig }) {
 
   return (
     <Link href={tool.href} className="group block">
-      <div className="relative p-3 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl border border-[var(--border)] bg-[var(--card)] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 hover:-translate-y-1 h-full">
+      <div className="relative p-3 sm:p-5 lg:p-6 rounded-xl sm:rounded-2xl border border-[var(--border)] bg-[var(--card)] hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col items-center text-center">
         <div
           className={`w-9 h-9 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-2 sm:mb-3 lg:mb-4 shadow-lg group-hover:scale-110 transition-transform`}
         >

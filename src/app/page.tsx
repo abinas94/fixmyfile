@@ -111,7 +111,7 @@ export default function Home() {
       {/* Tools Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* Category Filter */}
-        <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -128,7 +128,7 @@ export default function Home() {
         </div>
 
         {/* Tool Count */}
-        <p className="text-sm text-[var(--muted-foreground)] mb-6">
+        <p className="text-sm text-[var(--muted-foreground)] mb-6 text-center">
           Showing {filteredTools.length} tool{filteredTools.length !== 1 ? "s" : ""}
           {activeCategory !== "all" && (
             <button
