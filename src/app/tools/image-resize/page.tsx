@@ -16,11 +16,24 @@ export default function ImageResize() {
   const [originalSize, setOriginalSize] = useState({ w: 0, h: 0 });
   const [mode, setMode] = useState<"pixels" | "percent">("pixels");
   const [percent, setPercent] = useState(50);
+  const [quality, setQuality] = useState(0.85);
+  const [outputFormat, setOutputFormat] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
+  const [fileSize, setFileSize] = useState(0); // original file size in bytes
+  const [estimatedSize, setEstimatedSize] = useState<string | null>(null);
+  const [resultSize, setResultSize] = useState<string | null>(null);
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
   const handleFilesSelected = (newFiles: File[]) => {
     const file = newFiles[0];
     setFiles([file]);
     setIsComplete(false);
+    setFileSize(file.size);
+    setResultSize(null);
     const img = new window.Image();
     img.onload = () => {
       setOriginalSize({ w: img.width, h: img.height });
@@ -66,12 +79,15 @@ export default function ImageResize() {
       URL.revokeObjectURL(url);
 
       const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((b) => resolve(b!), files[0].type || "image/png", 0.92);
+        canvas.toBlob((b) => resolve(b!), outputFormat, quality);
       });
+
+      setResultSize(formatFileSize(blob.size));
 
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `resized-${files[0].name}`;
+      const ext = outputFormat === "image/png" ? ".png" : outputFormat === "image/webp" ? ".webp" : ".jpg";
+      a.download = `resized-${files[0].name.replace(/\.\w+$/, ext)}`;
       a.click();
       URL.revokeObjectURL(a.href);
       setIsComplete(true);
@@ -103,7 +119,7 @@ export default function ImageResize() {
       {files.length > 0 && (
         <div className="mt-6 p-6 rounded-2xl border border-[var(--border)] bg-[var(--card)]">
           <p className="text-sm text-[var(--muted-foreground)] mb-4">
-            Original: {originalSize.w} x {originalSize.h}px
+            Original: {originalSize.w} x {originalSize.h}px • File size: {formatFileSize(fileSize)}
           </p>
           <div className="flex gap-3 mb-4">
             <button onClick={() => setMode("pixels")}
@@ -142,6 +158,48 @@ export default function ImageResize() {
               </p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Quality & Format */}
+      {files.length > 0 && (
+        <div className="mt-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Output Format</label>
+            <div className="flex gap-2">
+              {([["image/jpeg", "JPG (smallest)"], ["image/png", "PNG (lossless)"], ["image/webp", "WebP (best)"]] as const).map(([fmt, label]) => (
+                <button key={fmt} onClick={() => setOutputFormat(fmt)}
+                  className={`px-3 py-2 rounded-xl text-xs font-medium ${outputFormat === fmt ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {outputFormat !== "image/png" && (
+            <div>
+              <label className="block text-sm font-medium mb-2">Quality: {Math.round(quality * 100)}% {quality < 0.5 ? "(small file)" : quality > 0.85 ? "(best quality)" : ""}</label>
+              <input type="range" min={0.1} max={1} step={0.05} value={quality}
+                onChange={(e) => setQuality(Number(e.target.value))}
+                className="w-full accent-[var(--primary)]" />
+              <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
+                <span>Small file (for forms)</span><span>Best quality</span>
+              </div>
+            </div>
+          )}
+          {resultSize && (
+            <div className="p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+              <p className="text-sm font-medium text-green-800 dark:text-green-300">Output file size: {resultSize}</p>
+            </div>
+          )}
+          <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+            <p className="text-xs text-blue-700 dark:text-blue-300 font-medium mb-1">Common form requirements:</p>
+            <div className="flex flex-wrap gap-2 text-xs text-blue-600 dark:text-blue-400">
+              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">Passport: 10-300 KB</span>
+              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">UPSC: 20-300 KB, 3.5x4.5cm</span>
+              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">SSC: 20-50 KB, 100x120px</span>
+              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">Bank forms: &lt;100 KB</span>
+            </div>
+          </div>
         </div>
       )}
 

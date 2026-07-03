@@ -40,56 +40,94 @@ export default function BackgroundRemover() {
       const data = imageData.data;
 
       if (mode === "auto") {
-        // Auto mode: detect background from corners and flood-fill remove
-        // Sample background color from corners
-        const corners = [
-          0, // top-left
-          (canvas.width - 1) * 4, // top-right
-          (canvas.height - 1) * canvas.width * 4, // bottom-left
-          ((canvas.height - 1) * canvas.width + (canvas.width - 1)) * 4, // bottom-right
-        ];
+        // FLOOD-FILL FROM EDGES — handles gradients, complex backgrounds
+        // Start from all border pixels and fill inward as long as color difference between
+        // neighboring pixels is within tolerance (this follows gradients naturally)
+        const width = canvas.width;
+        const height = canvas.height;
+        const visited = new Uint8Array(width * height);
+        const queue: number[] = [];
+        const tol = tolerance * 3.5;
 
-        let bgR = 0, bgG = 0, bgB = 0;
-        for (const idx of corners) {
-          bgR += data[idx];
-          bgG += data[idx + 1];
-          bgB += data[idx + 2];
+        // Seed the queue with all border pixels
+        for (let x = 0; x < width; x++) {
+          queue.push(x); // top row
+          queue.push((height - 1) * width + x); // bottom row
         }
-        bgR = Math.round(bgR / 4);
-        bgG = Math.round(bgG / 4);
-        bgB = Math.round(bgB / 4);
+        for (let y = 0; y < height; y++) {
+          queue.push(y * width); // left column
+          queue.push(y * width + (width - 1)); // right column
+        }
 
-        // Remove pixels similar to background color
-        const tol = tolerance;
-        for (let i = 0; i < data.length; i += 4) {
+        // Mark border pixels as background
+        for (const idx of queue) visited[idx] = 1;
+
+        // BFS flood-fill: expand from edges, marking background pixels
+        let qi = 0;
+        while (qi < queue.length) {
+          const pixelIdx = queue[qi++];
+          const px = pixelIdx % width;
+          const py = Math.floor(pixelIdx / width);
+          const i = pixelIdx * 4;
           const r = data[i], g = data[i + 1], b = data[i + 2];
-          const diff = Math.sqrt(
-            Math.pow(r - bgR, 2) + Math.pow(g - bgG, 2) + Math.pow(b - bgB, 2)
-          );
-          if (diff < tol * 2.5) {
-            // Make transparent with edge softening
-            const alpha = Math.min(255, Math.max(0, (diff - tol) * (255 / tol)));
-            data[i + 3] = Math.round(alpha);
+
+          // Check 4 neighbors
+          const neighbors = [
+            px > 0 ? pixelIdx - 1 : -1,
+            px < width - 1 ? pixelIdx + 1 : -1,
+            py > 0 ? pixelIdx - width : -1,
+            py < height - 1 ? pixelIdx + width : -1,
+          ];
+
+          for (const ni of neighbors) {
+            if (ni < 0 || visited[ni]) continue;
+            const nIdx = ni * 4;
+            const nr = data[nIdx], ng = data[nIdx + 1], nb = data[nIdx + 2];
+
+            // Compare with current pixel (follows gradients) AND with initial corner color
+            const diffNeighbor = Math.sqrt((r - nr) ** 2 + (g - ng) ** 2 + (b - nb) ** 2);
+
+            if (diffNeighbor < tol) {
+              visited[ni] = 1;
+              queue.push(ni);
+            }
           }
         }
 
-        // Edge refinement: smooth alpha along edges
-        const width = canvas.width;
-        const height = canvas.height;
-        for (let y = 1; y < height - 1; y++) {
-          for (let x = 1; x < width - 1; x++) {
-            const idx = (y * width + x) * 4;
-            if (data[idx + 3] > 0 && data[idx + 3] < 255) {
-              // Average with neighbors for smoother edges
-              let sum = 0, count = 0;
-              for (let dy = -1; dy <= 1; dy++) {
-                for (let dx = -1; dx <= 1; dx++) {
-                  const ni = ((y + dy) * width + (x + dx)) * 4;
-                  sum += data[ni + 3];
-                  count++;
+        // Apply: visited pixels become transparent with edge softening
+        for (let idx = 0; idx < width * height; idx++) {
+          const i = idx * 4;
+          if (visited[idx]) {
+            // Check if this is an edge pixel (has non-visited neighbor)
+            const px = idx % width;
+            const py = Math.floor(idx / width);
+            let isEdge = false;
+            const edgeNeighbors = [
+              px > 0 ? idx - 1 : -1, px < width - 1 ? idx + 1 : -1,
+              py > 0 ? idx - width : -1, py < height - 1 ? idx + width : -1,
+            ];
+            for (const ni of edgeNeighbors) {
+              if (ni >= 0 && !visited[ni]) { isEdge = true; break; }
+            }
+            // Edge pixels: semi-transparent for smooth blending
+            data[i + 3] = isEdge ? 80 : 0;
+          }
+        }
+
+        // Second pass: smooth edges
+        const alphaData = new Uint8Array(width * height);
+        for (let i = 0; i < width * height; i++) alphaData[i] = data[i * 4 + 3];
+        for (let y = 2; y < height - 2; y++) {
+          for (let x = 2; x < width - 2; x++) {
+            const idx = y * width + x;
+            if (alphaData[idx] > 0 && alphaData[idx] < 255) {
+              let sum = 0;
+              for (let dy = -2; dy <= 2; dy++) {
+                for (let dx = -2; dx <= 2; dx++) {
+                  sum += alphaData[(y + dy) * width + (x + dx)];
                 }
               }
-              data[idx + 3] = Math.round(sum / count);
+              data[idx * 4 + 3] = Math.round(sum / 25);
             }
           }
         }

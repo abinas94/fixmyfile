@@ -446,6 +446,15 @@ export const tools: ToolConfig[] = [
     href: "/tools/qr-code",
     category: "dev-tools",
   },
+  {
+    id: "qr-scanner",
+    name: "QR & Barcode Scanner",
+    description: "Scan QR codes, UPI, barcodes with camera",
+    icon: "ScanLine",
+    color: "from-emerald-500 to-teal-600",
+    href: "/tools/qr-scanner",
+    category: "dev-tools",
+  },
 ];
 
 export const categories = [
