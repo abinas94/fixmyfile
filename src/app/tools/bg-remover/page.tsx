@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Eraser, ArrowLeft, Download, Loader2, Undo2, MousePointer2 } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
@@ -17,7 +17,6 @@ export default function BackgroundRemover() {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
-  const [brushSize, setBrushSize] = useState(20);
 
   const drawCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -72,41 +71,62 @@ export default function BackgroundRemover() {
       clientX = e.clientX;
       clientY = e.clientY;
     }
-    return { x: clientX - rect.left, y: clientY - rect.top };
+    // Scale from displayed CSS size to canvas internal resolution
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    };
+  };
+
+  const lastPoint = useRef<{ x: number; y: number } | null>(null);
+
+  // Brush size scales with image resolution so it looks consistent
+  const getBrush = () => {
+    const canvas = drawCanvasRef.current;
+    if (!canvas) return 24;
+    return Math.max(16, Math.round(canvas.width / 25));
   };
 
   const startDraw = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     setIsDrawing(true);
     const { x, y } = getCanvasCoords(e);
+    lastPoint.current = { x, y };
     setPoints((prev) => [...prev, { x, y }]);
-    drawMark(x, y);
+    drawMark(x, y, x, y);
   };
 
   const moveDraw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing) return;
     e.preventDefault();
     const { x, y } = getCanvasCoords(e);
+    const last = lastPoint.current || { x, y };
     setPoints((prev) => [...prev, { x, y }]);
-    drawMark(x, y);
+    drawMark(last.x, last.y, x, y);
+    lastPoint.current = { x, y };
   };
 
   const stopDraw = () => {
     setIsDrawing(false);
+    lastPoint.current = null;
   };
 
-  const drawMark = (x: number, y: number) => {
+  // Draw a continuous line from last point to current point
+  const drawMark = (x1: number, y1: number, x2: number, y2: number) => {
     const canvas = drawCanvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
+    const brush = getBrush();
+    ctx.strokeStyle = mode === "draw-keep" ? "rgba(0, 200, 100, 0.5)" : "rgba(255, 50, 50, 0.5)";
+    ctx.lineWidth = brush;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.beginPath();
-    ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
-    if (mode === "draw-keep") {
-      ctx.fillStyle = "rgba(0, 200, 100, 0.4)";
-    } else {
-      ctx.fillStyle = "rgba(255, 50, 50, 0.4)";
-    }
-    ctx.fill();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
   };
 
   const resetDrawing = () => {
@@ -139,12 +159,13 @@ export default function BackgroundRemover() {
 
         // Create mask: pixels near drawn points = keep, others = remove
         const keepMask = new Uint8Array(width * height);
-        const scaledBrush = Math.round(brushSize * scaleX * 1.5);
+        const brush = getBrush();
+        const scaledBrush = Math.round((brush / 2) * scaleX);
 
         for (const pt of points) {
+          // points are in canvas resolution; convert to image resolution
           const cx = Math.round(pt.x * scaleX);
           const cy = Math.round(pt.y * scaleY);
-          // Mark a circle around each point as "keep"
           for (let dy = -scaledBrush; dy <= scaledBrush; dy++) {
             for (let dx = -scaledBrush; dx <= scaledBrush; dx++) {
               if (dx * dx + dy * dy <= scaledBrush * scaledBrush) {
@@ -221,14 +242,19 @@ export default function BackgroundRemover() {
         const visited = new Uint8Array(width * height);
         const queue: number[] = [];
 
-        // Seed from drawn points
+        // Seed from drawn points (small area around each)
+        const seedRadius = Math.max(2, Math.round(getBrush() / 2 * scaleX * 0.5));
         for (const pt of points) {
           const cx = Math.round(pt.x * scaleX);
           const cy = Math.round(pt.y * scaleY);
-          const idx = cy * width + cx;
-          if (idx >= 0 && idx < width * height && !visited[idx]) {
-            visited[idx] = 1;
-            queue.push(idx);
+          for (let dy = -seedRadius; dy <= seedRadius; dy++) {
+            for (let dx = -seedRadius; dx <= seedRadius; dx++) {
+              const px = cx + dx, py = cy + dy;
+              if (px >= 0 && px < width && py >= 0 && py < height) {
+                const idx = py * width + px;
+                if (!visited[idx]) { visited[idx] = 1; queue.push(idx); }
+              }
+            }
           }
         }
 
@@ -359,19 +385,13 @@ export default function BackgroundRemover() {
             {mode === "auto" && "Auto mode removes white/light backgrounds. For colored backgrounds, use the Draw modes instead."}
           </div>
 
-          {/* Brush size + Tolerance */}
-          <div className="grid grid-cols-2 gap-4">
-            {mode !== "auto" && (
-              <div>
-                <label className="block text-xs font-medium mb-1">Brush Size: {brushSize}px</label>
-                <input type="range" min={5} max={60} value={brushSize} onChange={(e) => setBrushSize(Number(e.target.value))}
-                  className="w-full accent-[var(--primary)]" />
-              </div>
-            )}
-            <div>
-              <label className="block text-xs font-medium mb-1">Tolerance: {tolerance}</label>
-              <input type="range" min={5} max={60} value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))}
-                className="w-full accent-[var(--primary)]" />
+          {/* Tolerance */}
+          <div>
+            <label className="block text-xs font-medium mb-1">Tolerance: {tolerance} {tolerance < 20 ? "(precise edges)" : tolerance > 45 ? "(aggressive)" : "(balanced)"}</label>
+            <input type="range" min={5} max={60} value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))}
+              className="w-full accent-[var(--primary)]" />
+            <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
+              <span>Precise</span><span>Removes more</span>
             </div>
           </div>
 
