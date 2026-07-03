@@ -1,35 +1,125 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Eraser, ArrowLeft, Download, Loader2 } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Eraser, ArrowLeft, Download, Loader2, Undo2, MousePointer2 } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+
+type Mode = "draw-keep" | "draw-remove" | "auto";
 
 export default function BackgroundRemover() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
-  const [tolerance, setTolerance] = useState(30);
-  const [mode, setMode] = useState<"auto" | "color">("auto");
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [tolerance, setTolerance] = useState(25);
+  const [mode, setMode] = useState<Mode>("draw-keep");
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
+  const [brushSize, setBrushSize] = useState(20);
+
+  const drawCanvasRef = useRef<HTMLCanvasElement>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const imgDimensions = useRef({ w: 0, h: 0, displayW: 0, displayH: 0 });
 
   const handleFilesSelected = (newFiles: File[]) => {
     setFiles([newFiles[0]]);
     setResultUrl(null);
+    setPoints([]);
+    setImageLoaded(false);
     if (originalUrl) URL.revokeObjectURL(originalUrl);
-    setOriginalUrl(URL.createObjectURL(newFiles[0]));
+    const url = URL.createObjectURL(newFiles[0]);
+    setOriginalUrl(url);
+
+    const img = new window.Image();
+    img.onload = () => {
+      imgRef.current = img;
+      imgDimensions.current.w = img.width;
+      imgDimensions.current.h = img.height;
+      setImageLoaded(true);
+      initDrawCanvas(img);
+    };
+    img.src = url;
+  };
+
+  const initDrawCanvas = (img: HTMLImageElement) => {
+    const canvas = drawCanvasRef.current;
+    if (!canvas) return;
+    // Set canvas to match display size
+    const maxW = Math.min(600, window.innerWidth - 48);
+    const ratio = img.height / img.width;
+    const displayW = maxW;
+    const displayH = Math.round(maxW * ratio);
+    canvas.width = displayW;
+    canvas.height = displayH;
+    imgDimensions.current.displayW = displayW;
+    imgDimensions.current.displayH = displayH;
+
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(img, 0, 0, displayW, displayH);
+  };
+
+  const getCanvasCoords = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = drawCanvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
+    let clientX: number, clientY: number;
+    if ("touches" in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  };
+
+  const startDraw = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    setIsDrawing(true);
+    const { x, y } = getCanvasCoords(e);
+    setPoints((prev) => [...prev, { x, y }]);
+    drawMark(x, y);
+  };
+
+  const moveDraw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const { x, y } = getCanvasCoords(e);
+    setPoints((prev) => [...prev, { x, y }]);
+    drawMark(x, y);
+  };
+
+  const stopDraw = () => {
+    setIsDrawing(false);
+  };
+
+  const drawMark = (x: number, y: number) => {
+    const canvas = drawCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+    if (mode === "draw-keep") {
+      ctx.fillStyle = "rgba(0, 200, 100, 0.4)";
+    } else {
+      ctx.fillStyle = "rgba(255, 50, 50, 0.4)";
+    }
+    ctx.fill();
+  };
+
+  const resetDrawing = () => {
+    setPoints([]);
+    setResultUrl(null);
+    if (imgRef.current) initDrawCanvas(imgRef.current);
   };
 
   const handleRemove = async () => {
-    if (!files.length) return;
+    if (!files.length || !imgRef.current) return;
     setIsProcessing(true);
     try {
-      const img = new window.Image();
-      const url = URL.createObjectURL(files[0]);
-      await new Promise((resolve) => { img.onload = resolve; img.src = url; });
-      URL.revokeObjectURL(url);
-
+      const img = imgRef.current;
       const canvas = document.createElement("canvas");
       canvas.width = img.width;
       canvas.height = img.height;
@@ -38,31 +128,48 @@ export default function BackgroundRemover() {
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
+      const width = canvas.width;
+      const height = canvas.height;
 
-      if (mode === "auto") {
-        // FLOOD-FILL FROM EDGES — handles gradients, complex backgrounds
-        // Start from all border pixels and fill inward as long as color difference between
-        // neighboring pixels is within tolerance (this follows gradients naturally)
-        const width = canvas.width;
-        const height = canvas.height;
+      if (mode === "draw-keep" && points.length > 5) {
+        // User drew on areas to KEEP — remove everything else
+        // Scale points from display canvas to actual image coordinates
+        const scaleX = width / imgDimensions.current.displayW;
+        const scaleY = height / imgDimensions.current.displayH;
+
+        // Create mask: pixels near drawn points = keep, others = remove
+        const keepMask = new Uint8Array(width * height);
+        const scaledBrush = Math.round(brushSize * scaleX * 1.5);
+
+        for (const pt of points) {
+          const cx = Math.round(pt.x * scaleX);
+          const cy = Math.round(pt.y * scaleY);
+          // Mark a circle around each point as "keep"
+          for (let dy = -scaledBrush; dy <= scaledBrush; dy++) {
+            for (let dx = -scaledBrush; dx <= scaledBrush; dx++) {
+              if (dx * dx + dy * dy <= scaledBrush * scaledBrush) {
+                const px = cx + dx;
+                const py = cy + dy;
+                if (px >= 0 && px < width && py >= 0 && py < height) {
+                  keepMask[py * width + px] = 1;
+                }
+              }
+            }
+          }
+        }
+
+        // Expand the keep zone using flood-fill from marked pixels
+        // Fill connected similar-colored pixels outward from the marked area
+        const tol = tolerance * 4;
         const visited = new Uint8Array(width * height);
         const queue: number[] = [];
-        const tol = tolerance * 3.5;
 
-        // Seed the queue with all border pixels
-        for (let x = 0; x < width; x++) {
-          queue.push(x); // top row
-          queue.push((height - 1) * width + x); // bottom row
-        }
-        for (let y = 0; y < height; y++) {
-          queue.push(y * width); // left column
-          queue.push(y * width + (width - 1)); // right column
+        // Seed: all marked pixels
+        for (let i = 0; i < keepMask.length; i++) {
+          if (keepMask[i]) { queue.push(i); visited[i] = 1; }
         }
 
-        // Mark border pixels as background
-        for (const idx of queue) visited[idx] = 1;
-
-        // BFS flood-fill: expand from edges, marking background pixels
+        // BFS: expand from marked region, keeping similar pixels
         let qi = 0;
         while (qi < queue.length) {
           const pixelIdx = queue[qi++];
@@ -71,7 +178,6 @@ export default function BackgroundRemover() {
           const i = pixelIdx * 4;
           const r = data[i], g = data[i + 1], b = data[i + 2];
 
-          // Check 4 neighbors
           const neighbors = [
             px > 0 ? pixelIdx - 1 : -1,
             px < width - 1 ? pixelIdx + 1 : -1,
@@ -82,64 +188,100 @@ export default function BackgroundRemover() {
           for (const ni of neighbors) {
             if (ni < 0 || visited[ni]) continue;
             const nIdx = ni * 4;
-            const nr = data[nIdx], ng = data[nIdx + 1], nb = data[nIdx + 2];
-
-            // Compare with current pixel (follows gradients) AND with initial corner color
-            const diffNeighbor = Math.sqrt((r - nr) ** 2 + (g - ng) ** 2 + (b - nb) ** 2);
-
-            if (diffNeighbor < tol) {
+            const diff = Math.sqrt((r - data[nIdx]) ** 2 + (g - data[nIdx + 1]) ** 2 + (b - data[nIdx + 2]) ** 2);
+            if (diff < tol) {
               visited[ni] = 1;
               queue.push(ni);
             }
           }
         }
 
-        // Apply: visited pixels become transparent with edge softening
-        for (let idx = 0; idx < width * height; idx++) {
-          const i = idx * 4;
-          if (visited[idx]) {
-            // Check if this is an edge pixel (has non-visited neighbor)
-            const px = idx % width;
-            const py = Math.floor(idx / width);
-            let isEdge = false;
-            const edgeNeighbors = [
-              px > 0 ? idx - 1 : -1, px < width - 1 ? idx + 1 : -1,
-              py > 0 ? idx - width : -1, py < height - 1 ? idx + width : -1,
-            ];
-            for (const ni of edgeNeighbors) {
-              if (ni >= 0 && !visited[ni]) { isEdge = true; break; }
+        // Remove non-visited pixels (background)
+        for (let i = 0; i < width * height; i++) {
+          if (!visited[i]) {
+            // Check if edge pixel for smooth blending
+            const px = i % width;
+            const py = Math.floor(i / width);
+            let nearEdge = false;
+            for (let d = 1; d <= 3; d++) {
+              if ((px - d >= 0 && visited[i - d]) || (px + d < width && visited[i + d]) ||
+                  (py - d >= 0 && visited[i - d * width]) || (py + d < height && visited[i + d * width])) {
+                nearEdge = true; break;
+              }
             }
-            // Edge pixels: semi-transparent for smooth blending
-            data[i + 3] = isEdge ? 80 : 0;
+            data[i * 4 + 3] = nearEdge ? 100 : 0;
           }
         }
 
-        // Second pass: smooth edges
-        const alphaData = new Uint8Array(width * height);
-        for (let i = 0; i < width * height; i++) alphaData[i] = data[i * 4 + 3];
-        for (let y = 2; y < height - 2; y++) {
-          for (let x = 2; x < width - 2; x++) {
-            const idx = y * width + x;
-            if (alphaData[idx] > 0 && alphaData[idx] < 255) {
-              let sum = 0;
-              for (let dy = -2; dy <= 2; dy++) {
-                for (let dx = -2; dx <= 2; dx++) {
-                  sum += alphaData[(y + dy) * width + (x + dx)];
-                }
-              }
-              data[idx * 4 + 3] = Math.round(sum / 25);
+      } else if (mode === "draw-remove" && points.length > 5) {
+        // User drew on areas to REMOVE — flood-fill from those points
+        const scaleX = width / imgDimensions.current.displayW;
+        const scaleY = height / imgDimensions.current.displayH;
+        const tol = tolerance * 3.5;
+        const visited = new Uint8Array(width * height);
+        const queue: number[] = [];
+
+        // Seed from drawn points
+        for (const pt of points) {
+          const cx = Math.round(pt.x * scaleX);
+          const cy = Math.round(pt.y * scaleY);
+          const idx = cy * width + cx;
+          if (idx >= 0 && idx < width * height && !visited[idx]) {
+            visited[idx] = 1;
+            queue.push(idx);
+          }
+        }
+
+        // BFS flood-fill from marked background points
+        let qi = 0;
+        while (qi < queue.length) {
+          const pixelIdx = queue[qi++];
+          const px = pixelIdx % width;
+          const py = Math.floor(pixelIdx / width);
+          const i = pixelIdx * 4;
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+
+          const neighbors = [
+            px > 0 ? pixelIdx - 1 : -1,
+            px < width - 1 ? pixelIdx + 1 : -1,
+            py > 0 ? pixelIdx - width : -1,
+            py < height - 1 ? pixelIdx + width : -1,
+          ];
+
+          for (const ni of neighbors) {
+            if (ni < 0 || visited[ni]) continue;
+            const nIdx = ni * 4;
+            const diff = Math.sqrt((r - data[nIdx]) ** 2 + (g - data[nIdx + 1]) ** 2 + (b - data[nIdx + 2]) ** 2);
+            if (diff < tol) {
+              visited[ni] = 1;
+              queue.push(ni);
             }
           }
         }
+
+        // Remove visited pixels
+        for (let i = 0; i < width * height; i++) {
+          if (visited[i]) {
+            const px = i % width;
+            const py = Math.floor(i / width);
+            let nearEdge = false;
+            for (let d = 1; d <= 2; d++) {
+              if ((px - d >= 0 && !visited[i - d]) || (px + d < width && !visited[i + d]) ||
+                  (py - d >= 0 && !visited[i - d * width]) || (py + d < height && !visited[i + d * width])) {
+                nearEdge = true; break;
+              }
+            }
+            data[i * 4 + 3] = nearEdge ? 80 : 0;
+          }
+        }
+
       } else {
-        // Color mode: remove white/light backgrounds (most common use case)
+        // Auto mode fallback: simple white/light background removal
         const tol = tolerance * 3;
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i], g = data[i + 1], b = data[i + 2];
-          // Distance from white
-          const distFromWhite = Math.sqrt(
-            Math.pow(255 - r, 2) + Math.pow(255 - g, 2) + Math.pow(255 - b, 2)
-          );
+          const brightness = (r + g + b) / 3;
+          const distFromWhite = Math.sqrt((255 - r) ** 2 + (255 - g) ** 2 + (255 - b) ** 2);
           if (distFromWhite < tol) {
             const alpha = Math.min(255, Math.max(0, (distFromWhite / tol) * 255));
             data[i + 3] = Math.round(alpha);
@@ -181,59 +323,93 @@ export default function BackgroundRemover() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Background Remover</h1>
-            <p className="text-[var(--muted-foreground)]">Remove image background instantly — no sign-up needed</p>
+            <p className="text-[var(--muted-foreground)]">Draw on the subject to keep, then remove background</p>
           </div>
         </div>
       </div>
 
       <FileDropZone onFilesSelected={handleFilesSelected} accept="image/*" multiple={false} maxFiles={1} files={files}
-        onRemoveFile={() => { setFiles([]); setResultUrl(null); setOriginalUrl(null); }} />
+        onRemoveFile={() => { setFiles([]); setResultUrl(null); setOriginalUrl(null); setPoints([]); setImageLoaded(false); }} />
 
-      {files.length > 0 && (
+      {imageLoaded && !resultUrl && (
         <div className="mt-6 p-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] space-y-4">
-          {/* Mode */}
+          {/* Mode selection */}
           <div>
-            <label className="block text-sm font-medium mb-2">Mode</label>
-            <div className="flex gap-2">
-              <button onClick={() => setMode("auto")}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${mode === "auto" ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
-                Auto Detect (corners)
+            <label className="block text-sm font-medium mb-2">How to select</label>
+            <div className="flex gap-2 flex-wrap">
+              <button onClick={() => { setMode("draw-keep"); resetDrawing(); }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${mode === "draw-keep" ? "bg-green-500 text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                <MousePointer2 className="w-4 h-4" /> Draw on subject (KEEP)
               </button>
-              <button onClick={() => setMode("color")}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${mode === "color" ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
-                Remove White/Light BG
+              <button onClick={() => { setMode("draw-remove"); resetDrawing(); }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${mode === "draw-remove" ? "bg-red-500 text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                <Eraser className="w-4 h-4" /> Draw on background (REMOVE)
+              </button>
+              <button onClick={() => { setMode("auto"); resetDrawing(); }}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${mode === "auto" ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                Auto (white BG only)
               </button>
             </div>
           </div>
 
-          {/* Tolerance */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Tolerance: {tolerance}</label>
-            <input type="range" min={5} max={80} value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))}
-              className="w-full accent-[var(--primary)]" />
-            <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-              <span>Precise (less removal)</span><span>Aggressive (more removal)</span>
+          {/* Instructions */}
+          <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 text-xs text-blue-700 dark:text-blue-300">
+            {mode === "draw-keep" && "Draw/scribble over the person/object you want to KEEP. Don't need to be precise — just mark the general area. The tool will detect edges automatically."}
+            {mode === "draw-remove" && "Draw/scribble on the BACKGROUND you want to remove. Mark different parts of the background if it has multiple colors."}
+            {mode === "auto" && "Auto mode removes white/light backgrounds. For colored backgrounds, use the Draw modes instead."}
+          </div>
+
+          {/* Brush size + Tolerance */}
+          <div className="grid grid-cols-2 gap-4">
+            {mode !== "auto" && (
+              <div>
+                <label className="block text-xs font-medium mb-1">Brush Size: {brushSize}px</label>
+                <input type="range" min={5} max={60} value={brushSize} onChange={(e) => setBrushSize(Number(e.target.value))}
+                  className="w-full accent-[var(--primary)]" />
+              </div>
+            )}
+            <div>
+              <label className="block text-xs font-medium mb-1">Tolerance: {tolerance}</label>
+              <input type="range" min={5} max={60} value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))}
+                className="w-full accent-[var(--primary)]" />
             </div>
           </div>
+
+          {/* Drawing canvas */}
+          {mode !== "auto" && (
+            <div className="relative">
+              <canvas
+                ref={drawCanvasRef}
+                onMouseDown={startDraw} onMouseMove={moveDraw} onMouseUp={stopDraw} onMouseLeave={stopDraw}
+                onTouchStart={startDraw} onTouchMove={moveDraw} onTouchEnd={stopDraw}
+                className="w-full rounded-xl border border-[var(--border)] cursor-crosshair touch-none"
+                style={{ maxHeight: "450px" }}
+              />
+              {points.length > 0 && (
+                <button onClick={resetDrawing}
+                  className="absolute top-2 right-2 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/90 dark:bg-black/70 text-xs font-medium shadow">
+                  <Undo2 className="w-3 h-3" /> Reset
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Process button */}
-          <button onClick={handleRemove} disabled={isProcessing}
-            className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all ${isProcessing ? "bg-[var(--primary)] text-white opacity-80 cursor-wait" : "bg-gradient-to-r from-rose-500 to-purple-600 text-white hover:shadow-lg hover:scale-[1.01] active:scale-95"}`}>
-            {isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Removing background...</>) : (<><Eraser className="w-5 h-5" />Remove Background</>)}
+          <button onClick={handleRemove} disabled={isProcessing || (mode !== "auto" && points.length < 5)}
+            className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold transition-all ${isProcessing ? "bg-[var(--primary)] text-white opacity-80 cursor-wait" : (mode !== "auto" && points.length < 5) ? "bg-[var(--muted)] text-[var(--muted-foreground)] cursor-not-allowed" : "bg-gradient-to-r from-rose-500 to-purple-600 text-white hover:shadow-lg hover:scale-[1.01] active:scale-95"}`}>
+            {isProcessing ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : (<><Eraser className="w-5 h-5" />Remove Background</>)}
           </button>
         </div>
       )}
 
-      {/* Result comparison */}
+      {/* Result */}
       {resultUrl && (
         <div className="mt-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Original */}
             <div className="rounded-2xl border border-[var(--border)] overflow-hidden">
               <div className="px-3 py-2 bg-[var(--muted)] text-xs font-medium text-[var(--muted-foreground)]">Original</div>
               {originalUrl && <img src={originalUrl} alt="Original" className="w-full object-contain max-h-[300px]" />}
             </div>
-            {/* Result */}
             <div className="rounded-2xl border border-[var(--border)] overflow-hidden">
               <div className="px-3 py-2 bg-[var(--muted)] text-xs font-medium text-[var(--muted-foreground)]">Background Removed</div>
               <div className="bg-[url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22><rect width=%2210%22 height=%2210%22 fill=%22%23f0f0f0%22/><rect x=%2210%22 y=%2210%22 width=%2210%22 height=%2210%22 fill=%22%23f0f0f0%22/></svg>')] bg-repeat">
@@ -241,31 +417,27 @@ export default function BackgroundRemover() {
               </div>
             </div>
           </div>
-
           <div className="flex justify-center gap-3">
             <button onClick={downloadResult}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-semibold shadow-lg hover:shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all">
-              <Download className="w-4 h-4" /> Download PNG (transparent)
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all">
+              <Download className="w-4 h-4" /> Download PNG
             </button>
-            <button onClick={handleRemove}
+            <button onClick={() => { setResultUrl(null); resetDrawing(); }}
               className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--border)] font-semibold hover:border-[var(--primary)] transition-all">
-              Retry with different settings
+              Try Again
             </button>
           </div>
         </div>
       )}
 
-      <canvas ref={canvasRef} className="hidden" />
-
       <div className="mt-10 p-5 rounded-2xl bg-[var(--muted)] border border-[var(--border)]">
-        <h3 className="font-semibold mb-2">Tips for best results</h3>
+        <h3 className="font-semibold mb-2">How to use</h3>
         <ul className="text-sm text-[var(--muted-foreground)] space-y-1 list-disc list-inside">
-          <li>Works best with solid or near-solid color backgrounds</li>
-          <li>Use &quot;Auto Detect&quot; for photos with uniform backgrounds</li>
-          <li>Use &quot;Remove White/Light BG&quot; for scanned documents or logos</li>
-          <li>Increase tolerance if background is not fully removed</li>
-          <li>Decrease tolerance if subject edges are being cut</li>
-          <li>Output is always PNG with transparent background</li>
+          <li><strong>Draw on subject (KEEP):</strong> Scribble over the person/object. The tool expands your selection to include similar-colored connected pixels.</li>
+          <li><strong>Draw on background (REMOVE):</strong> Mark different areas of the background. Good for complex/multi-colored backgrounds.</li>
+          <li><strong>Auto:</strong> Only works on white/light backgrounds (ID photos, documents).</li>
+          <li>Lower tolerance = more precise edges. Higher = removes more aggressively.</li>
+          <li>You don&apos;t need to be precise — just roughly mark the areas.</li>
         </ul>
       </div>
     </div>
