@@ -42,6 +42,7 @@ import {
   Wand2,
   Eraser,
   ScanLine,
+  Sparkles,
 } from "lucide-react";
 import type { ToolConfig } from "@/lib/tools-config";
 
@@ -89,6 +90,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Wand2,
   Eraser,
   ScanLine,
+  Sparkles,
 };
 
 export default function ToolCard({ tool }: { tool: ToolConfig }) {

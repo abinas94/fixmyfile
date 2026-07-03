@@ -23,6 +23,7 @@ export default function PassportPhoto() {
   const [isComplete, setIsComplete] = useState(false);
   const [selectedSize, setSelectedSize] = useState(0);
   const [copies, setCopies] = useState(8);
+  const [enhance, setEnhance] = useState(false);
 
   const handleGenerate = async () => {
     if (!files.length) return;
@@ -49,6 +50,26 @@ export default function PassportPhoto() {
       const sy = (img.height - sh) / 2;
       pCtx.drawImage(img, sx, sy, sw, sh, 0, 0, size.w, size.h);
 
+      // AI Enhance if selected (upscale quality without changing face)
+      let finalPhotoCanvas = photoCanvas;
+      if (enhance) {
+        try {
+          const Upscaler = (await import("upscaler")).default;
+          const upscaler = new Upscaler();
+          const upscaledSrc = await upscaler.upscale(photoCanvas);
+          const upImg = new window.Image();
+          await new Promise((resolve) => { upImg.onload = resolve; upImg.src = upscaledSrc; });
+          // Draw upscaled back to original size (keeps dimensions correct for printing)
+          const enhancedCanvas = document.createElement("canvas");
+          enhancedCanvas.width = size.w;
+          enhancedCanvas.height = size.h;
+          const eCtx = enhancedCanvas.getContext("2d")!;
+          eCtx.drawImage(upImg, 0, 0, size.w, size.h);
+          finalPhotoCanvas = enhancedCanvas;
+          upscaler.dispose();
+        } catch (e) { console.warn("AI enhance failed, using original", e); }
+      }
+
       // Create A4 sheet with multiple copies
       const a4W = 2480; // A4 at 300 DPI
       const a4H = 3508;
@@ -69,7 +90,7 @@ export default function PassportPhoto() {
         const row = Math.floor(i / cols);
         const x = padding + col * (size.w + padding);
         const y = padding + row * (size.h + padding);
-        ctx.drawImage(photoCanvas, x, y);
+        ctx.drawImage(finalPhotoCanvas, x, y);
         ctx.strokeStyle = "#ddd";
         ctx.strokeRect(x, y, size.w, size.h);
       }
@@ -128,6 +149,13 @@ export default function PassportPhoto() {
             <input type="range" min={1} max={20} value={copies} onChange={(e) => setCopies(Number(e.target.value))}
               className="w-full accent-[var(--primary)]" />
           </div>
+          <label className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 cursor-pointer">
+            <input type="checkbox" checked={enhance} onChange={(e) => setEnhance(e.target.checked)} className="rounded" />
+            <div>
+              <span className="text-sm font-medium">AI Enhance quality</span>
+              <p className="text-xs text-[var(--muted-foreground)]">Sharpens blurry photos (takes 10-20s extra). Does not modify face.</p>
+            </div>
+          </label>
         </div>
       )}
 

@@ -170,6 +170,15 @@ export const tools: ToolConfig[] = [
     category: "image",
   },
   {
+    id: "image-upscaler",
+    name: "AI Image Enhancer",
+    description: "Enhance blurry/low-res images — AI upscale 2x without changing faces",
+    icon: "Sparkles",
+    color: "from-amber-500 to-yellow-500",
+    href: "/tools/image-upscaler",
+    category: "image",
+  },
+  {
     id: "image-resize",
     name: "Resize Image",
     description: "Resize to exact dimensions or percentage",
