@@ -101,3 +101,21 @@ body {
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(51, 65, 85, 0.5);
 }
+
+/* Tool pages: center all content */
+.tools-page > div {
+  width: 100%;
+}
+
+.tools-page .mb-8 {
+  text-align: center;
+}
+
+.tools-page .mb-8 .flex.items-center.gap-3 {
+  justify-content: center;
+}
+
+.tools-page .mb-8 a {
+  display: inline-flex;
+  margin: 0 auto;
+}
