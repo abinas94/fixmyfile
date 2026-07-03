@@ -35,12 +35,12 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight mb-4 sm:mb-6">
               Fix your files{" "}
               <span style={{ background: "linear-gradient(135deg, #f97316, #ef4444, #ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>in seconds</span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-10">
+            <p className="text-base sm:text-lg lg:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8 sm:mb-10">
               PDF, images, documents, OCR, calculators — 50+ tools that work instantly
               in your browser. No uploads. No sign-ups. No limits. Ever.
             </p>
@@ -74,34 +74,34 @@ export default function Home() {
             </div>
 
             {/* CTAs - Feature tools */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               <Link
                 href="/tools/bg-remover"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white font-semibold shadow-lg hover:shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-600 text-white text-sm sm:text-base font-semibold shadow-lg hover:shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all"
               >
                 Background Remover
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 hidden sm:block" />
               </Link>
               <Link
                 href="/tools/doc-formatter"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white font-semibold shadow-lg hover:shadow-red-500/30 hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white text-sm sm:text-base font-semibold shadow-lg hover:shadow-red-500/30 hover:scale-105 active:scale-95 transition-all"
               >
-                Document Formatter
-                <ArrowRight className="w-4 h-4" />
+                Doc Formatter
+                <ArrowRight className="w-4 h-4 hidden sm:block" />
               </Link>
               <Link
                 href="/tools/ocr"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-700 text-white font-semibold shadow-lg hover:shadow-violet-500/30 hover:scale-105 active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-700 text-white text-sm sm:text-base font-semibold shadow-lg hover:shadow-violet-500/30 hover:scale-105 active:scale-95 transition-all"
               >
                 OCR - Extract Text
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 hidden sm:block" />
               </Link>
               <Link
-                href="/tools/pipeline"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--border)] bg-[var(--card)] font-semibold hover:border-[var(--primary)] hover:scale-105 active:scale-95 transition-all"
+                href="/tools/scan-to-pdf"
+                className="inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl border-2 border-[var(--border)] bg-[var(--card)] text-sm sm:text-base font-semibold hover:border-[var(--primary)] hover:scale-105 active:scale-95 transition-all"
               >
-                Pipeline Builder
-                <ArrowRight className="w-4 h-4" />
+                Scan to PDF
+                <ArrowRight className="w-4 h-4 hidden sm:block" />
               </Link>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function Home() {
         </p>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           {filteredTools.map((tool) => (
             <ToolCard key={tool.id} tool={tool} />
           ))}
