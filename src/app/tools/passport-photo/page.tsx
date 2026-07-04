@@ -137,8 +137,8 @@ export default function PassportPhoto() {
 
       // Show preview instead of auto-download
       if (previewUrl) URL.revokeObjectURL(previewUrl);
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
+      const sheetUrl = URL.createObjectURL(blob);
+      setPreviewUrl(sheetUrl);
       setPhotoCount(totalCopies);
       setIsComplete(true);
     } catch (error) {
