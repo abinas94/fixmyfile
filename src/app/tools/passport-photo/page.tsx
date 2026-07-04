@@ -35,6 +35,8 @@ export default function PassportPhoto() {
   const [selectedSize, setSelectedSize] = useState(0);
   const [selectedPaper, setSelectedPaper] = useState(0);
   const [enhance, setEnhance] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [photoCount, setPhotoCount] = useState(0);
 
   const handleGenerate = async () => {
     if (!files.length) return;
@@ -133,11 +135,11 @@ export default function PassportPhoto() {
         sheetCanvas.toBlob((b) => resolve(b!), "image/jpeg", 0.95);
       });
 
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `passport-photos-${size.name.replace(/\s/g, "-")}-${paperSizes[selectedPaper].name.split(" ")[0]}.jpg`;
-      a.click();
-      URL.revokeObjectURL(a.href);
+      // Show preview instead of auto-download
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
+      setPhotoCount(totalCopies);
       setIsComplete(true);
     } catch (error) {
       console.error(error);
@@ -200,10 +202,50 @@ export default function PassportPhoto() {
       )}
 
       {files.length > 0 && (
-        <div className="mt-8 flex justify-center">
-          <ProcessingButton onClick={handleGenerate} isProcessing={isProcessing} isComplete={isComplete} label="Generate & Download" />
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <ProcessingButton onClick={handleGenerate} isProcessing={isProcessing} isComplete={isComplete} label="Generate Photos" />
         </div>
       )}
+
+      {/* Preview */}
+      {previewUrl && (
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <div className="w-full max-w-md rounded-2xl border border-[var(--border)] overflow-hidden shadow-lg">
+            <div className="px-3 py-2 bg-[var(--muted)] text-xs font-medium text-center text-[var(--muted-foreground)]">
+              Preview — {photoCount} photos on {paperSizes[selectedPaper].name.split(" ")[0]} paper
+            </div>
+            <img src={previewUrl} alt="Passport photo sheet preview" className="w-full object-contain" />
+          </div>
+          <div className="flex gap-3 flex-wrap justify-center">
+            <button onClick={() => {
+              const a = document.createElement("a");
+              a.href = previewUrl;
+              a.download = "passport-photos-" + sizes[selectedSize].name.replace(/\s/g, "-") + "-" + paperSizes[selectedPaper].name.split(" ")[0] + ".jpg";
+              a.click();
+            }}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all">
+              Download
+            </button>
+            <button onClick={async () => {
+              if (!previewUrl) return;
+              const response = await fetch(previewUrl);
+              const blob = await response.blob();
+              const file = new File([blob], "passport-photos.jpg", { type: "image/jpeg" });
+              if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({ files: [file], title: "Passport Photos" });
+              }
+            }}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-500 text-white font-semibold shadow-lg hover:scale-105 active:scale-95 transition-all">
+              Share
+            </button>
+            <button onClick={() => { setPreviewUrl(null); setIsComplete(false); }}
+              className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-[var(--border)] font-semibold hover:border-[var(--primary)] transition-all">
+              Regenerate
+            </button>
+          </div>
+        </div>
+      )}
+
       <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
         Generates a printable sheet with maximum passport photos. Print at 100% scale for correct dimensions.
       </p>
