@@ -50,24 +50,38 @@ export default function PassportPhoto() {
       const sy = (img.height - sh) / 2;
       pCtx.drawImage(img, sx, sy, sw, sh, 0, 0, size.w, size.h);
 
-      // AI Enhance if selected (upscale quality without changing face)
+      // AI Enhance if selected (sharpen without changing face)
       let finalPhotoCanvas = photoCanvas;
       if (enhance) {
         try {
-          const Upscaler = (await import("upscaler")).default;
-          const upscaler = new Upscaler();
-          const upscaledSrc = await upscaler.upscale(photoCanvas);
-          const upImg = new window.Image();
-          await new Promise((resolve) => { upImg.onload = resolve; upImg.src = upscaledSrc; });
-          // Draw upscaled back to original size (keeps dimensions correct for printing)
           const enhancedCanvas = document.createElement("canvas");
           enhancedCanvas.width = size.w;
           enhancedCanvas.height = size.h;
           const eCtx = enhancedCanvas.getContext("2d")!;
-          eCtx.drawImage(upImg, 0, 0, size.w, size.h);
+          eCtx.drawImage(photoCanvas, 0, 0);
+          
+          // Apply sharpening filter
+          const imageData = eCtx.getImageData(0, 0, size.w, size.h);
+          const data = imageData.data;
+          const output = new Uint8ClampedArray(data.length);
+          const amount = 0.7;
+          for (let y = 1; y < size.h - 1; y++) {
+            for (let x = 1; x < size.w - 1; x++) {
+              const idx = (y * size.w + x) * 4;
+              for (let c = 0; c < 3; c++) {
+                const center = data[idx + c];
+                const neighbors = (data[((y-1)*size.w+x)*4+c] + data[((y+1)*size.w+x)*4+c] + data[(y*size.w+(x-1))*4+c] + data[(y*size.w+(x+1))*4+c]) / 4;
+                output[idx + c] = Math.min(255, Math.max(0, Math.round(center + amount * (center - neighbors))));
+              }
+              output[idx + 3] = data[idx + 3];
+            }
+          }
+          // Copy borders
+          for (let x = 0; x < size.w; x++) { for (let c = 0; c < 4; c++) { output[x*4+c] = data[x*4+c]; output[((size.h-1)*size.w+x)*4+c] = data[((size.h-1)*size.w+x)*4+c]; } }
+          for (let y = 0; y < size.h; y++) { for (let c = 0; c < 4; c++) { output[(y*size.w)*4+c] = data[(y*size.w)*4+c]; output[(y*size.w+(size.w-1))*4+c] = data[(y*size.w+(size.w-1))*4+c]; } }
+          eCtx.putImageData(new ImageData(output, size.w, size.h), 0, 0);
           finalPhotoCanvas = enhancedCanvas;
-          upscaler.dispose();
-        } catch (e) { console.warn("AI enhance failed, using original", e); }
+        } catch (e) { console.warn("Enhance failed, using original", e); }
       }
 
       // Create A4 sheet with multiple copies
