@@ -17,11 +17,23 @@ const sizes: PhotoSize[] = [
   { name: "US Visa (2x2 inch)", w: 600, h: 600, dpi: 300 },
 ];
 
+type PaperSize = { name: string; w: number; h: number };
+
+const paperSizes: PaperSize[] = [
+  { name: "A4 (21 × 29.7 cm)", w: 2480, h: 3508 },
+  { name: "A5 (14.8 × 21 cm)", w: 1748, h: 2480 },
+  { name: "A3 (29.7 × 42 cm)", w: 3508, h: 4960 },
+  { name: "4×6 inch (Photo paper)", w: 1200, h: 1800 },
+  { name: "5×7 inch", w: 1500, h: 2100 },
+  { name: "Letter (8.5 × 11 in)", w: 2550, h: 3300 },
+];
+
 export default function PassportPhoto() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [selectedSize, setSelectedSize] = useState(0);
+  const [selectedPaper, setSelectedPaper] = useState(0);
   const [enhance, setEnhance] = useState(false);
 
   const handleGenerate = async () => {
@@ -83,26 +95,27 @@ export default function PassportPhoto() {
         } catch (e) { console.warn("Enhance failed, using original", e); }
       }
 
-      // Create A4 sheet — auto-fill entire page with maximum copies
-      const a4W = 2480; // A4 at 300 DPI
-      const a4H = 3508;
+      // Create sheet — auto-fill entire page with maximum copies
+      const paper = paperSizes[selectedPaper];
+      const sheetW = paper.w;
+      const sheetH = paper.h;
       const padding = 20;
-      const cols = Math.floor((a4W - padding) / (size.w + padding));
-      const rows = Math.floor((a4H - padding) / (size.h + padding));
-      const totalCopies = cols * rows; // Fill entire sheet
+      const cols = Math.floor((sheetW - padding) / (size.w + padding));
+      const rows = Math.floor((sheetH - padding) / (size.h + padding));
+      const totalCopies = cols * rows;
 
       const sheetCanvas = document.createElement("canvas");
-      sheetCanvas.width = a4W;
-      sheetCanvas.height = a4H;
+      sheetCanvas.width = sheetW;
+      sheetCanvas.height = sheetH;
       const ctx = sheetCanvas.getContext("2d")!;
       ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, a4W, a4H);
+      ctx.fillRect(0, 0, sheetW, sheetH);
 
       // Center the grid on the page
       const gridWidth = cols * size.w + (cols - 1) * padding;
       const gridHeight = rows * size.h + (rows - 1) * padding;
-      const offsetX = Math.round((a4W - gridWidth) / 2);
-      const offsetY = Math.round((a4H - gridHeight) / 2);
+      const offsetX = Math.round((sheetW - gridWidth) / 2);
+      const offsetY = Math.round((sheetH - gridHeight) / 2);
 
       for (let i = 0; i < totalCopies; i++) {
         const col = i % cols;
@@ -122,7 +135,7 @@ export default function PassportPhoto() {
 
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `passport-photos-${size.name.replace(/\s/g, "-")}.jpg`;
+      a.download = `passport-photos-${size.name.replace(/\s/g, "-")}-${paperSizes[selectedPaper].name.split(" ")[0]}.jpg`;
       a.click();
       URL.revokeObjectURL(a.href);
       setIsComplete(true);
@@ -172,6 +185,17 @@ export default function PassportPhoto() {
               <p className="text-xs text-[var(--muted-foreground)]">Sharpens blurry photos (takes 10-20s extra). Does not modify face.</p>
             </div>
           </label>
+          <div>
+            <label className="block text-sm font-medium mb-2">Paper Size</label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {paperSizes.map((p, i) => (
+                <button key={i} onClick={() => { setSelectedPaper(i); setIsComplete(false); }}
+                  className={`text-left px-3 py-2 rounded-xl text-xs border transition-all ${selectedPaper === i ? "border-[var(--primary)] bg-indigo-50 dark:bg-indigo-950/20 font-semibold" : "border-[var(--border)] hover:border-[var(--primary)]"}`}>
+                  {p.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
@@ -181,7 +205,7 @@ export default function PassportPhoto() {
         </div>
       )}
       <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
-        Generates an A4 printable sheet with multiple passport photos. Print at 100% scale.
+        Generates a printable sheet with maximum passport photos. Print at 100% scale for correct dimensions.
       </p>
     </div>
   );
