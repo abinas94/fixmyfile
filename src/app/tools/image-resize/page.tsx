@@ -28,17 +28,48 @@ export default function ImageResize() {
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   };
 
+  const estimateSize = async () => {
+    if (!files.length) return;
+    try {
+      const img = new window.Image();
+      const url = URL.createObjectURL(files[0]);
+      await new Promise((resolve) => { img.onload = resolve; img.src = url; });
+      URL.revokeObjectURL(url);
+
+      let targetW = width, targetH = height;
+      if (mode === "percent") {
+        targetW = Math.round(img.width * percent / 100);
+        targetH = Math.round(img.height * percent / 100);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, targetW, targetH);
+
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((b) => resolve(b!), outputFormat, quality);
+      });
+
+      setEstimatedSize(formatFileSize(blob.size));
+    } catch { /* ignore */ }
+  };
+
   const handleFilesSelected = (newFiles: File[]) => {
     const file = newFiles[0];
     setFiles([file]);
     setIsComplete(false);
     setFileSize(file.size);
     setResultSize(null);
+    setEstimatedSize(null);
     const img = new window.Image();
     img.onload = () => {
       setOriginalSize({ w: img.width, h: img.height });
       setWidth(img.width);
       setHeight(img.height);
+      // Auto-estimate after loading
+      setTimeout(estimateSize, 200);
     };
     img.src = URL.createObjectURL(file);
   };
@@ -168,7 +199,7 @@ export default function ImageResize() {
             <label className="block text-sm font-medium mb-2">Output Format</label>
             <div className="flex gap-2">
               {([["image/jpeg", "JPG (smallest)"], ["image/png", "PNG (lossless)"], ["image/webp", "WebP (best)"]] as const).map(([fmt, label]) => (
-                <button key={fmt} onClick={() => setOutputFormat(fmt)}
+                <button key={fmt} onClick={() => { setOutputFormat(fmt); setIsComplete(false); setTimeout(estimateSize, 100); }}
                   className={`px-3 py-2 rounded-xl text-xs font-medium ${outputFormat === fmt ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
                   {label}
                 </button>
@@ -179,27 +210,24 @@ export default function ImageResize() {
             <div>
               <label className="block text-sm font-medium mb-2">Quality: {Math.round(quality * 100)}% {quality < 0.5 ? "(small file)" : quality > 0.85 ? "(best quality)" : ""}</label>
               <input type="range" min={0.1} max={1} step={0.05} value={quality}
-                onChange={(e) => setQuality(Number(e.target.value))}
+                onChange={(e) => { setQuality(Number(e.target.value)); setIsComplete(false); estimateSize(); }}
                 className="w-full accent-[var(--primary)]" />
               <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
                 <span>Small file (for forms)</span><span>Best quality</span>
               </div>
             </div>
           )}
-          {resultSize && (
-            <div className="p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-              <p className="text-sm font-medium text-green-800 dark:text-green-300">Output file size: {resultSize}</p>
+          {estimatedSize && (
+            <div className="p-4 rounded-xl bg-[var(--card)] border-2 border-[var(--primary)]">
+              <p className="text-base font-bold text-[var(--foreground)]">Estimated output size: <span className="text-[var(--primary)]">{estimatedSize}</span></p>
+              <p className="text-xs text-[var(--muted-foreground)] mt-1">Adjust quality or dimensions to change file size</p>
             </div>
           )}
-          <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-            <p className="text-xs text-blue-700 dark:text-blue-300 font-medium mb-1">Common form requirements:</p>
-            <div className="flex flex-wrap gap-2 text-xs text-blue-600 dark:text-blue-400">
-              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">Passport: 10-300 KB</span>
-              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">UPSC: 20-300 KB, 3.5x4.5cm</span>
-              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">SSC: 20-50 KB, 100x120px</span>
-              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30">Bank forms: &lt;100 KB</span>
+          {resultSize && (
+            <div className="p-4 rounded-xl bg-[var(--card)] border-2 border-green-500">
+              <p className="text-base font-bold text-[var(--foreground)]">Final output size: <span className="text-green-600 dark:text-green-400">{resultSize}</span></p>
             </div>
-          </div>
+          )}
         </div>
       )}
 
