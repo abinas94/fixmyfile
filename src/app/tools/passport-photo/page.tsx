@@ -22,7 +22,6 @@ export default function PassportPhoto() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [selectedSize, setSelectedSize] = useState(0);
-  const [copies, setCopies] = useState(8);
   const [enhance, setEnhance] = useState(false);
 
   const handleGenerate = async () => {
@@ -84,13 +83,13 @@ export default function PassportPhoto() {
         } catch (e) { console.warn("Enhance failed, using original", e); }
       }
 
-      // Create A4 sheet with multiple copies
+      // Create A4 sheet — auto-fill entire page with maximum copies
       const a4W = 2480; // A4 at 300 DPI
       const a4H = 3508;
-      const padding = 30;
+      const padding = 20;
       const cols = Math.floor((a4W - padding) / (size.w + padding));
       const rows = Math.floor((a4H - padding) / (size.h + padding));
-      const maxCopies = Math.min(copies, cols * rows);
+      const totalCopies = cols * rows; // Fill entire sheet
 
       const sheetCanvas = document.createElement("canvas");
       sheetCanvas.width = a4W;
@@ -99,13 +98,21 @@ export default function PassportPhoto() {
       ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, a4W, a4H);
 
-      for (let i = 0; i < maxCopies; i++) {
+      // Center the grid on the page
+      const gridWidth = cols * size.w + (cols - 1) * padding;
+      const gridHeight = rows * size.h + (rows - 1) * padding;
+      const offsetX = Math.round((a4W - gridWidth) / 2);
+      const offsetY = Math.round((a4H - gridHeight) / 2);
+
+      for (let i = 0; i < totalCopies; i++) {
         const col = i % cols;
         const row = Math.floor(i / cols);
-        const x = padding + col * (size.w + padding);
-        const y = padding + row * (size.h + padding);
+        const x = offsetX + col * (size.w + padding);
+        const y = offsetY + row * (size.h + padding);
         ctx.drawImage(finalPhotoCanvas, x, y);
-        ctx.strokeStyle = "#ddd";
+        // Light cut lines
+        ctx.strokeStyle = "#cccccc";
+        ctx.lineWidth = 1;
         ctx.strokeRect(x, y, size.w, size.h);
       }
 
@@ -157,11 +164,6 @@ export default function PassportPhoto() {
                 </button>
               ))}
             </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Copies on sheet: {copies}</label>
-            <input type="range" min={1} max={20} value={copies} onChange={(e) => setCopies(Number(e.target.value))}
-              className="w-full accent-[var(--primary)]" />
           </div>
           <label className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 cursor-pointer">
             <input type="checkbox" checked={enhance} onChange={(e) => setEnhance(e.target.checked)} className="rounded" />
