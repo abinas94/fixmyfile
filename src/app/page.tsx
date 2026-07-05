@@ -45,32 +45,32 @@ export default function Home() {
               in your browser. No uploads. No sign-ups. No limits. Ever.
             </p>
 
-            {/* Category highlights */}
+            {/* Category highlights - clickable, scroll to tools section */}
             <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              <button onClick={() => { setActiveCategory("pdf"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <FileText className="w-4 h-4 text-red-500" />
                 <span className="text-sm font-medium">PDF Tools</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              </button>
+              <button onClick={() => { setActiveCategory("image"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <ImageIcon className="w-4 h-4 text-purple-500" />
                 <span className="text-sm font-medium">Image Tools</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              </button>
+              <button onClick={() => { setActiveCategory("ocr"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <Workflow className="w-4 h-4 text-violet-500" />
                 <span className="text-sm font-medium">OCR & Text Extract</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              </button>
+              <button onClick={() => { setActiveCategory("documents"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <FileText className="w-4 h-4 text-orange-500" />
                 <span className="text-sm font-medium">Documents & Text</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              </button>
+              <button onClick={() => { setActiveCategory("calculators"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <Calculator className="w-4 h-4 text-green-500" />
                 <span className="text-sm font-medium">Calculators</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm">
+              </button>
+              <button onClick={() => { setActiveCategory("dev-tools"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <Code2 className="w-4 h-4 text-blue-500" />
                 <span className="text-sm font-medium">Dev Tools</span>
-              </div>
+              </button>
             </div>
 
             {/* CTAs - Feature tools */}
@@ -109,7 +109,7 @@ export default function Home() {
       </section>
 
       {/* Tools Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <section id="tools-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         {/* Category Filter */}
         <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
