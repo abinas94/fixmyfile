@@ -18,42 +18,15 @@ export default function ImageResize() {
   const [percent, setPercent] = useState(50);
   const [quality, setQuality] = useState(0.85);
   const [outputFormat, setOutputFormat] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
-  const [fileSize, setFileSize] = useState(0); // original file size in bytes
-  const [estimatedSize, setEstimatedSize] = useState<string | null>(null);
+  const [fileSize, setFileSize] = useState(0);
   const [resultSize, setResultSize] = useState<string | null>(null);
+  const [maxFileSize, setMaxFileSize] = useState(0);
+  const [maxFileSizeUnit, setMaxFileSizeUnit] = useState<"KB" | "MB">("KB");
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
-  const estimateSize = async () => {
-    if (!files.length) return;
-    try {
-      const img = new window.Image();
-      const url = URL.createObjectURL(files[0]);
-      await new Promise((resolve) => { img.onload = resolve; img.src = url; });
-      URL.revokeObjectURL(url);
-
-      let targetW = width, targetH = height;
-      if (mode === "percent") {
-        targetW = Math.round(img.width * percent / 100);
-        targetH = Math.round(img.height * percent / 100);
-      }
-
-      const canvas = document.createElement("canvas");
-      canvas.width = targetW;
-      canvas.height = targetH;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0, targetW, targetH);
-
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((b) => resolve(b!), outputFormat, quality);
-      });
-
-      setEstimatedSize(formatFileSize(blob.size));
-    } catch { /* ignore */ }
   };
 
   const handleFilesSelected = (newFiles: File[]) => {
@@ -62,14 +35,11 @@ export default function ImageResize() {
     setIsComplete(false);
     setFileSize(file.size);
     setResultSize(null);
-    setEstimatedSize(null);
     const img = new window.Image();
     img.onload = () => {
       setOriginalSize({ w: img.width, h: img.height });
       setWidth(img.width);
       setHeight(img.height);
-      // Auto-estimate after loading
-      setTimeout(estimateSize, 200);
     };
     img.src = URL.createObjectURL(file);
   };
@@ -109,9 +79,23 @@ export default function ImageResize() {
       ctx.drawImage(img, 0, 0, targetW, targetH);
       URL.revokeObjectURL(url);
 
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob((b) => resolve(b!), outputFormat, quality);
-      });
+      // If max file size is set, auto-reduce quality to meet target
+      const maxBytes = maxFileSize > 0 ? (maxFileSizeUnit === "KB" ? maxFileSize * 1024 : maxFileSize * 1024 * 1024) : 0;
+      let currentQuality = quality;
+      let blob: Blob;
+
+      if (maxBytes > 0 && outputFormat !== "image/png") {
+        // Try reducing quality until file fits within target
+        blob = await new Promise<Blob>((resolve) => { canvas.toBlob((b) => resolve(b!), outputFormat, currentQuality); });
+        let attempts = 0;
+        while (blob.size > maxBytes && currentQuality > 0.05 && attempts < 15) {
+          currentQuality -= 0.05;
+          blob = await new Promise<Blob>((resolve) => { canvas.toBlob((b) => resolve(b!), outputFormat, currentQuality); });
+          attempts++;
+        }
+      } else {
+        blob = await new Promise<Blob>((resolve) => { canvas.toBlob((b) => resolve(b!), outputFormat, currentQuality); });
+      }
 
       setResultSize(formatFileSize(blob.size));
 
@@ -199,7 +183,7 @@ export default function ImageResize() {
             <label className="block text-sm font-medium mb-2">Output Format</label>
             <div className="flex gap-2">
               {([["image/jpeg", "JPG (smallest)"], ["image/png", "PNG (lossless)"], ["image/webp", "WebP (best)"]] as const).map(([fmt, label]) => (
-                <button key={fmt} onClick={() => { setOutputFormat(fmt); setIsComplete(false); setTimeout(estimateSize, 100); }}
+                <button key={fmt} onClick={() => { setOutputFormat(fmt); setIsComplete(false); }}
                   className={`px-3 py-2 rounded-xl text-xs font-medium ${outputFormat === fmt ? "bg-[var(--primary)] text-white" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
                   {label}
                 </button>
@@ -208,24 +192,33 @@ export default function ImageResize() {
           </div>
           {outputFormat !== "image/png" && (
             <div>
-              <label className="block text-sm font-medium mb-2">Quality: {Math.round(quality * 100)}% {quality < 0.5 ? "(small file)" : quality > 0.85 ? "(best quality)" : ""}</label>
+              <label className="block text-sm font-medium mb-2">Quality: {Math.round(quality * 100)}%</label>
               <input type="range" min={0.1} max={1} step={0.05} value={quality}
-                onChange={(e) => { setQuality(Number(e.target.value)); setIsComplete(false); estimateSize(); }}
+                onChange={(e) => { setQuality(Number(e.target.value)); setIsComplete(false); }}
                 className="w-full accent-[var(--primary)]" />
               <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-                <span>Small file (for forms)</span><span>Best quality</span>
+                <span>Small file</span><span>Best quality</span>
               </div>
             </div>
           )}
-          {estimatedSize && (
-            <div className="p-4 rounded-xl bg-[var(--card)] border-2 border-[var(--primary)]">
-              <p className="text-base font-bold text-[var(--foreground)]">Estimated output size: <span className="text-[var(--primary)]">{estimatedSize}</span></p>
-              <p className="text-xs text-[var(--muted-foreground)] mt-1">Adjust quality or dimensions to change file size</p>
+          {/* Target max file size */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Max file size (optional)</label>
+            <div className="flex items-center gap-2">
+              <input type="number" min={0} value={maxFileSize} onChange={(e) => setMaxFileSize(Number(e.target.value))}
+                placeholder="e.g., 100"
+                className="w-24 px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm" />
+              <select value={maxFileSizeUnit} onChange={(e) => setMaxFileSizeUnit(e.target.value as "KB" | "MB")}
+                className="px-3 py-2 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm">
+                <option value="KB">KB</option>
+                <option value="MB">MB</option>
+              </select>
+              <span className="text-xs text-[var(--muted-foreground)]">Leave 0 for no limit</span>
             </div>
-          )}
+          </div>
           {resultSize && (
             <div className="p-4 rounded-xl bg-[var(--card)] border-2 border-green-500">
-              <p className="text-base font-bold text-[var(--foreground)]">Final output size: <span className="text-green-600 dark:text-green-400">{resultSize}</span></p>
+              <p className="text-base font-bold text-[var(--foreground)]">Output size: <span className="text-green-600 dark:text-green-400">{resultSize}</span></p>
             </div>
           )}
         </div>
