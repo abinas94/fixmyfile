@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Zap, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Code2 } from "lucide-react";
+import { Shield, Zap, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Code2, Search } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
 import { tools, categories } from "@/lib/tools-config";
 import Link from "next/link";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredTools =
-    activeCategory === "all"
-      ? tools
-      : tools.filter((tool) => tool.category === activeCategory);
+  const filteredTools = tools.filter((tool) => {
+    const matchesCategory = activeCategory === "all" || tool.category === activeCategory;
+    const matchesSearch = searchQuery === "" || 
+      tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="min-h-screen">
@@ -110,6 +114,20 @@ export default function Home() {
 
       {/* Tools Grid */}
       <section id="tools-grid" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        {/* Search Bar */}
+        <div className="flex justify-center mb-6">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-foreground)]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tools... (e.g., PDF to Word, compress, OCR)"
+              className="w-full pl-11 pr-4 py-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-[var(--primary)]"
+            />
+          </div>
+        </div>
+
         {/* Category Filter */}
         <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((cat) => (
