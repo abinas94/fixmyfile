@@ -341,15 +341,24 @@ export default function ScanToPDF() {
 
       {/* ===== CAMERA VIEW ===== */}
       {showCamera && (
-        <div className="rounded-2xl border border-[var(--border)] overflow-hidden bg-black">
-          <video ref={videoRef} className="w-full max-h-[60vh] object-contain" playsInline muted autoPlay />
-          <div className="flex justify-center gap-4 p-4 bg-[var(--card)]">
-            <button onClick={captureFrame} disabled={!cameraReady}
-              className="w-16 h-16 rounded-full bg-white border-4 border-[var(--primary)] hover:scale-110 active:scale-90 transition-transform disabled:opacity-50" />
+        <div className="fixed inset-0 z-50 bg-black flex flex-col">
+          <video ref={videoRef} className="flex-1 w-full object-cover" playsInline muted autoPlay />
+          {/* Capture controls — bottom */}
+          <div className="absolute bottom-0 left-0 right-0 pb-8 pt-4 flex items-center justify-center gap-6 bg-gradient-to-t from-black/80 to-transparent">
             <button onClick={stopCamera}
-              className="px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-medium self-center">
+              className="px-5 py-2.5 rounded-full bg-white/20 backdrop-blur text-white text-sm font-medium">
               Cancel
             </button>
+            <button onClick={captureFrame} disabled={!cameraReady}
+              className="w-18 h-18 rounded-full bg-white border-4 border-indigo-400 shadow-lg hover:scale-110 active:scale-90 transition-transform disabled:opacity-50"
+              style={{ width: "72px", height: "72px" }} />
+            <div className="w-16" /> {/* Spacer for centering */}
+          </div>
+          {/* Guide text */}
+          <div className="absolute top-12 left-0 right-0 text-center">
+            <p className="text-white/80 text-sm font-medium bg-black/30 inline-block px-4 py-1.5 rounded-full backdrop-blur">
+              Position document in frame & tap capture
+            </p>
           </div>
         </div>
       )}
@@ -420,22 +429,22 @@ export default function ScanToPDF() {
       {/* ===== CAPTURE BUTTONS ===== */}
       {!editingImage && !showCamera && (
         <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <button onClick={startCamera}
-              className="flex items-center justify-center gap-3 p-5 rounded-xl border-2 border-dashed border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--muted)] transition-all">
-              <Camera className="w-6 h-6 text-[var(--primary)]" />
-              <div className="text-left">
-                <p className="font-semibold text-sm">Live Camera Scan</p>
-                <p className="text-xs text-[var(--muted-foreground)]">Open camera & capture document</p>
+              className="flex flex-col items-center gap-2 p-6 rounded-xl border-2 border-dashed border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--muted)] transition-all">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                <Camera className="w-7 h-7 text-white" />
               </div>
+              <p className="font-semibold text-sm text-center">Scan with Camera</p>
+              <p className="text-[10px] text-[var(--muted-foreground)] text-center">Open camera to capture</p>
             </button>
             <button onClick={() => fileInputRef.current?.click()}
-              className="flex items-center justify-center gap-3 p-5 rounded-xl border-2 border-dashed border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--muted)] transition-all">
-              <Plus className="w-6 h-6 text-[var(--primary)]" />
-              <div className="text-left">
-                <p className="font-semibold text-sm">Upload Photo</p>
-                <p className="text-xs text-[var(--muted-foreground)]">Select from gallery</p>
+              className="flex flex-col items-center gap-2 p-6 rounded-xl border-2 border-dashed border-[var(--border)] hover:border-[var(--primary)] hover:bg-[var(--muted)] transition-all">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center">
+                <Plus className="w-7 h-7 text-white" />
               </div>
+              <p className="font-semibold text-sm text-center">Upload Photo</p>
+              <p className="text-[10px] text-[var(--muted-foreground)] text-center">Select from gallery</p>
             </button>
           </div>
           <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
