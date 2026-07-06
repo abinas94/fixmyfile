@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FixMyFile — Free Online File Tools
 
-## Getting Started
+**55+ free browser-based tools for PDFs, images, documents, and more.**
 
-First, run the development server:
+🔗 **Live:** [https://fixmyfile.vercel.app](https://fixmyfile.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What makes it different
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **100% client-side** — your files never leave your browser
+- **No sign-up** — use any tool instantly
+- **No file size limits** — process files of any size
+- **Works offline** — PWA with service worker caching
+- **Mobile-first** — designed for phones
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Tools
 
-To learn more about Next.js, take a look at the following resources:
+### PDF Tools
+Merge, Split, Compress, Rotate, Watermark (text + image), Add Page Numbers, Crop, Sign, Protect, Unlock, Extract Pages, PDF to Image, PDF to Word, PDF to Excel, PDF to PowerPoint, Image to PDF, HTML to PDF, Excel to PDF, Scan to PDF, Pipeline Builder
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Image Tools
+Background Remover (AI), Image Enhancer, Resize, Compress, Crop, Convert (PNG/JPG/WebP), Rotate & Flip, Watermark, Passport Photo Maker, Image to Base64
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### OCR & Text Extraction
+Image to Text (50+ languages), PDF OCR, Batch OCR, Receipt Scanner, Table Extractor
 
-## Deploy on Vercel
+### Document Tools
+Document Formatter (APA/IEEE/Corporate/Government), Word to PDF, PPT to PDF, PPT to Images, Compress PPT, Merge PPT, Word Counter, Case Converter, Text Formatter, Find & Replace, Remove Duplicates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Calculators
+EMI Calculator (with Loan Affordability Advisor), GST Calculator, SIP Calculator
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Developer Tools
+JSON Formatter, Base64 Encode/Decode, URL Encoder/Decoder, Color Picker, QR Code Generator, QR & Barcode Scanner
+
+---
+
+## Tech Stack
+
+- **Next.js 16** (React, TypeScript, Tailwind CSS)
+- **pdf-lib** — PDF manipulation
+- **Tesseract.js** — OCR engine
+- **@imgly/background-removal** — AI background removal
+- **pdfjs-dist** — PDF rendering
+- **JSZip** — ZIP file handling
+- **Deployed on Vercel** (zero cost)
+
+---
+
+## Privacy
+
+All file processing happens in the browser using JavaScript/WebAssembly. No files are ever uploaded to any server. The site works fully offline after first load.
+
+---
+
+## License
+
+MIT

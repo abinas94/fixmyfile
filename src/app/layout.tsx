@@ -8,20 +8,20 @@ import InstallBanner from "@/components/InstallBanner";
 export const metadata: Metadata = {
   title: "FixMyFile - Free Online File Tools | PDF, Image, OCR, Documents",
   description:
-    "Free online tools to fix, convert, and edit your files. PDF tools, image editor, OCR text extraction, document formatter, calculators — all in your browser. No uploads, no sign-up.",
+    "Free online tools to fix, convert, and edit your files instantly. PDF merge, split, compress. Image editor, background remover, OCR text extraction. All processing in your browser — no uploads, no sign-up, 100% private.",
   keywords: [
-    "fix my file",
-    "PDF tools",
+    "PDF tools online free",
     "merge PDF",
     "compress PDF",
-    "OCR",
+    "OCR online",
     "image to text",
+    "remove background",
     "document formatter",
     "image compress",
-    "word to PDF",
+    "pdf to word",
     "free online tools",
-    "EMI calculator",
-    "passport photo maker",
+    "no upload PDF tools",
+    "browser based tools",
   ],
 };
 
