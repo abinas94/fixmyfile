@@ -28,6 +28,12 @@ export default function Header() {
               All Tools
             </Link>
             <Link
+              href="/blog"
+              className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Blog
+            </Link>
+            <Link
               href="/tools/pipeline"
               className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
             >
