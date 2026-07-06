@@ -43,19 +43,25 @@ export default function ScanToPDF() {
 
   // ============ CAMERA ============
   const startCamera = async () => {
+    setShowCamera(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } }
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-        setCameraReady(true);
-      }
-      setShowCamera(true);
+      // Wait for ref to be available after render
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current?.play();
+            setCameraReady(true);
+          };
+        }
+      }, 100);
     } catch {
-      alert("Camera access denied. Please allow camera permission.");
+      alert("Camera access denied. Please allow camera permission and try again.");
+      setShowCamera(false);
     }
   };
 
@@ -342,7 +348,8 @@ export default function ScanToPDF() {
       {/* ===== CAMERA VIEW ===== */}
       {showCamera && (
         <div className="fixed inset-0 z-50 bg-black flex flex-col">
-          <video ref={videoRef} className="flex-1 w-full object-cover" playsInline muted autoPlay />
+          <video ref={videoRef} className="flex-1 w-full h-full object-cover" playsInline muted autoPlay
+            style={{ minHeight: "100vh" }} />
           {/* Capture controls — bottom */}
           <div className="absolute bottom-0 left-0 right-0 pb-8 pt-4 flex items-center justify-center gap-6 bg-gradient-to-t from-black/80 to-transparent">
             <button onClick={stopCamera}
