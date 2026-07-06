@@ -50,30 +50,30 @@ export default function Home() {
             </p>
 
             {/* Category highlights - clickable, scroll to tools section */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-              <button onClick={() => { setActiveCategory("pdf"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <FileText className="w-4 h-4 text-red-500" />
-                <span className="text-sm font-medium">PDF Tools</span>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
+              <button onClick={() => { setActiveCategory("pdf"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                <span className="text-xs sm:text-sm font-medium">PDF Tools</span>
               </button>
-              <button onClick={() => { setActiveCategory("image"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <ImageIcon className="w-4 h-4 text-purple-500" />
-                <span className="text-sm font-medium">Image Tools</span>
+              <button onClick={() => { setActiveCategory("image"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <ImageIcon className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500" />
+                <span className="text-xs sm:text-sm font-medium">Image Tools</span>
               </button>
-              <button onClick={() => { setActiveCategory("ocr"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <Workflow className="w-4 h-4 text-violet-500" />
-                <span className="text-sm font-medium">OCR & Text Extract</span>
+              <button onClick={() => { setActiveCategory("ocr"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <Workflow className="w-3 h-3 sm:w-4 sm:h-4 text-violet-500" />
+                <span className="text-xs sm:text-sm font-medium">OCR & Text Extract</span>
               </button>
-              <button onClick={() => { setActiveCategory("documents"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <FileText className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-medium">Documents & Text</span>
+              <button onClick={() => { setActiveCategory("documents"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
+                <span className="text-xs sm:text-sm font-medium">Documents & Text</span>
               </button>
-              <button onClick={() => { setActiveCategory("calculators"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <Calculator className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium">Calculators</span>
+              <button onClick={() => { setActiveCategory("calculators"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <Calculator className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                <span className="text-xs sm:text-sm font-medium">Calculators</span>
               </button>
-              <button onClick={() => { setActiveCategory("dev-tools"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
-                <Code2 className="w-4 h-4 text-blue-500" />
-                <span className="text-sm font-medium">Dev Tools</span>
+              <button onClick={() => { setActiveCategory("dev-tools"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <Code2 className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
+                <span className="text-xs sm:text-sm font-medium">Dev Tools</span>
               </button>
             </div>
 
@@ -129,12 +129,12 @@ export default function Home() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex items-center justify-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
                 activeCategory === cat.id
                   ? "bg-[var(--primary)] text-white shadow-lg shadow-indigo-500/20"
                   : "bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
