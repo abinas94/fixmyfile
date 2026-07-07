@@ -22,7 +22,8 @@ export default function PDFToWord() {
       const arrayBuffer = await files[0].arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-      const paragraphs: string[] = [];
+      // Extract text with size info for formatting
+      const paragraphs: { text: string; fontSize: number; isPageBreak: boolean }[] = [];
 
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
@@ -30,22 +31,27 @@ export default function PDFToWord() {
 
         let lastY: number | null = null;
         let currentLine = "";
+        let currentSize = 12;
 
         for (const item of textContent.items) {
           if (!("str" in item)) continue;
-          const textItem = item as { str: string; transform: number[] };
+          const textItem = item as { str: string; transform: number[]; height?: number };
           const y = Math.round(textItem.transform[5]);
+          const size = Math.round(Math.abs(textItem.transform[3]) || 12);
 
           if (lastY !== null && Math.abs(y - lastY) > 5) {
-            if (currentLine.trim()) paragraphs.push(currentLine.trim());
+            if (currentLine.trim()) paragraphs.push({ text: currentLine.trim(), fontSize: currentSize, isPageBreak: false });
             currentLine = textItem.str;
+            currentSize = size;
           } else {
             currentLine += textItem.str;
+            if (size > currentSize) currentSize = size;
           }
           lastY = y;
         }
-        if (currentLine.trim()) paragraphs.push(currentLine.trim());
-        paragraphs.push(""); // Page break marker
+        if (currentLine.trim()) paragraphs.push({ text: currentLine.trim(), fontSize: currentSize, isPageBreak: false });
+        // Page break after each page
+        if (i < pdf.numPages) paragraphs.push({ text: "", fontSize: 12, isPageBreak: true });
       }
 
       // Generate .docx file (docx = ZIP with XML)
@@ -73,12 +79,30 @@ export default function PDFToWord() {
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 </Relationships>`);
 
-      // Document body with paragraphs
+      // Document body with formatted paragraphs
       const escapeXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-      const bodyParagraphs = paragraphs.map((text) => {
-        if (!text) return `<w:p><w:r><w:t></w:t></w:r></w:p>`;
-        return `<w:p><w:r><w:t xml:space="preserve">${escapeXml(text)}</w:t></w:r></w:p>`;
+      const bodyParagraphs = paragraphs.map((p) => {
+        if (p.isPageBreak) {
+          return '<w:p><w:r><w:br w:type="page"/></w:r></w:p>';
+        }
+        if (!p.text) return '<w:p></w:p>';
+
+        // Determine style based on font size
+        const isHeading1 = p.fontSize >= 20;
+        const isHeading2 = p.fontSize >= 16 && p.fontSize < 20;
+        const isHeading3 = p.fontSize >= 13 && p.fontSize < 16;
+        const wordSize = Math.round(p.fontSize * 2); // Word uses half-points
+
+        let pPr = '<w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr>';
+        if (isHeading1) pPr = '<w:pPr><w:spacing w:before="360" w:after="120"/></w:pPr>';
+        else if (isHeading2) pPr = '<w:pPr><w:spacing w:before="240" w:after="80"/></w:pPr>';
+        else if (isHeading3) pPr = '<w:pPr><w:spacing w:before="200" w:after="60"/></w:pPr>';
+
+        const bold = (isHeading1 || isHeading2 || isHeading3) ? '<w:b/>' : '';
+        const rPr = '<w:rPr>' + bold + '<w:sz w:val="' + wordSize + '"/><w:szCs w:val="' + wordSize + '"/></w:rPr>';
+
+        return '<w:p>' + pPr + '<w:r>' + rPr + '<w:t xml:space="preserve">' + escapeXml(p.text) + '</w:t></w:r></w:p>';
       }).join("\n");
 
       zip.file("word/document.xml",

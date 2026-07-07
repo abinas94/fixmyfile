@@ -46,10 +46,9 @@ export default function ScanToPDF() {
     setShowCamera(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } }
+        video: { facingMode: "environment", width: { ideal: 3840 }, height: { ideal: 2160 } }
       });
       streamRef.current = stream;
-      // Wait for ref to be available after render
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -82,7 +81,7 @@ export default function ScanToPDF() {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(video, 0, 0);
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+    const dataUrl = canvas.toDataURL("image/png");
     stopCamera();
     openEdgeEditor(dataUrl);
   };
@@ -137,48 +136,64 @@ export default function ScanToPDF() {
 
       const src = corners.map((c) => ({ x: c.x * img.width, y: c.y * img.height }));
 
-      // Output size: A4 at 200 DPI (good quality, reasonable speed)
-      const destW = 1654;
-      const destH = 2339;
+      // Output size: A4 at 300 DPI (high quality)
+      const destW = 2480;
+      const destH = 3508;
 
+      // First draw original to a temp canvas to get pixel data
+      const srcCanvas = document.createElement("canvas");
+      srcCanvas.width = img.width;
+      srcCanvas.height = img.height;
+      const srcCtx = srcCanvas.getContext("2d")!;
+      srcCtx.drawImage(img, 0, 0);
+      const srcData = srcCtx.getImageData(0, 0, img.width, img.height);
+      const srcPixels = srcData.data;
+      const srcW = img.width;
+      const srcH = img.height;
+
+      // Output canvas
       const canvas = document.createElement("canvas");
       canvas.width = destW;
       canvas.height = destH;
       const ctx = canvas.getContext("2d")!;
+      const destData = ctx.createImageData(destW, destH);
+      const destPixels = destData.data;
 
-      // Perspective warp using bilinear interpolation
-      const srcQuad = [src[0], src[1], src[2], src[3]];
-      // Use drawImage with sub-pixel sampling for speed
-      // Draw in horizontal strips for better performance
-      const strips = 100;
-      for (let strip = 0; strip < strips; strip++) {
-        const v1 = strip / strips;
-        const v2 = (strip + 1) / strips;
+      // Perspective warp: for each destination pixel, find source pixel using bilinear mapping
+      const srcQuad = [src[0], src[1], src[2], src[3]]; // TL, TR, BR, BL
 
-        for (let col = 0; col < destW; col += 4) {
-          const u = col / destW;
+      for (let dy = 0; dy < destH; dy++) {
+        const v = dy / destH;
+        for (let dx = 0; dx < destW; dx++) {
+          const u = dx / destW;
 
-          const topX1 = srcQuad[0].x + (srcQuad[1].x - srcQuad[0].x) * u;
-          const topY1 = srcQuad[0].y + (srcQuad[1].y - srcQuad[0].y) * u;
-          const botX1 = srcQuad[3].x + (srcQuad[2].x - srcQuad[3].x) * u;
-          const botY1 = srcQuad[3].y + (srcQuad[2].y - srcQuad[3].y) * u;
+          // Bilinear interpolation of source coordinates
+          const topX = srcQuad[0].x + (srcQuad[1].x - srcQuad[0].x) * u;
+          const topY = srcQuad[0].y + (srcQuad[1].y - srcQuad[0].y) * u;
+          const botX = srcQuad[3].x + (srcQuad[2].x - srcQuad[3].x) * u;
+          const botY = srcQuad[3].y + (srcQuad[2].y - srcQuad[3].y) * u;
 
-          const sx = topX1 + (botX1 - topX1) * v1;
-          const sy = topY1 + (botY1 - topY1) * v1;
-          const sx2 = topX1 + (botX1 - topX1) * v2;
-          const sy2 = topY1 + (botY1 - topY1) * v2;
+          const sx = Math.round(topX + (botX - topX) * v);
+          const sy = Math.round(topY + (botY - topY) * v);
 
-          const srcW = Math.max(1, 4 * (img.width / destW));
-          const srcH = Math.max(1, (sy2 - sy));
-
-          ctx.drawImage(img, sx, sy, srcW, srcH, col, strip * (destH / strips), 4, destH / strips);
+          // Sample source pixel
+          if (sx >= 0 && sx < srcW && sy >= 0 && sy < srcH) {
+            const srcIdx = (sy * srcW + sx) * 4;
+            const destIdx = (dy * destW + dx) * 4;
+            destPixels[destIdx] = srcPixels[srcIdx];
+            destPixels[destIdx + 1] = srcPixels[srcIdx + 1];
+            destPixels[destIdx + 2] = srcPixels[srcIdx + 2];
+            destPixels[destIdx + 3] = 255;
+          }
         }
       }
+
+      ctx.putImageData(destData, 0, 0);
 
       // Apply filter
       applyFilter(ctx, destW, destH, filterMode);
 
-      const processed = canvas.toDataURL("image/jpeg", 0.85);
+      const processed = canvas.toDataURL("image/jpeg", 0.92);
       const newPage: ScannedPage = {
         id: crypto.randomUUID(),
         original: editingImage,
@@ -205,27 +220,51 @@ export default function ScanToPDF() {
     for (let i = 0; i < data.length; i += 4) {
       let r = data[i], g = data[i + 1], b = data[i + 2];
 
-      if (mode === "grayscale" || mode === "bw" || mode === "enhance") {
+      if (mode === "grayscale") {
         const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-        if (mode === "grayscale") {
-          r = g = b = gray;
-        } else if (mode === "bw") {
-          // Adaptive-like threshold
-          r = g = b = gray > 140 ? 255 : 0;
-        } else {
-          // Enhance: increase contrast, whiten background, darken text
-          const factor = 1.8;
-          let val = factor * (gray - 128) + 128;
-          val = Math.min(255, Math.max(0, val));
-          if (val > 200) val = 255; // clean white background
-          if (val < 50) val = Math.max(0, val - 20); // darker text
-          r = g = b = val;
-        }
+        data[i] = data[i + 1] = data[i + 2] = gray;
+      } else if (mode === "bw") {
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+        const val = gray > 130 ? 255 : 0;
+        data[i] = data[i + 1] = data[i + 2] = val;
+      } else if (mode === "enhance") {
+        // Convert to grayscale first
+        const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+        // Gentle contrast enhancement (not aggressive)
+        const factor = 1.4;
+        let val = factor * (gray - 128) + 128;
+        val = Math.min(255, Math.max(0, val));
+        // Soft whitening: only pure-white for very light areas
+        if (val > 220) val = 255;
+        // Soft darkening: only for very dark areas (text)
+        if (val < 40) val = 0;
+        data[i] = data[i + 1] = data[i + 2] = val;
       }
-
-      data[i] = r; data[i + 1] = g; data[i + 2] = b;
     }
     ctx.putImageData(imageData, 0, 0);
+
+    // Sharpening pass for enhance mode
+    if (mode === "enhance") {
+      const sharpData = ctx.getImageData(0, 0, w, h);
+      const sd = sharpData.data;
+      const output = new Uint8ClampedArray(sd.length);
+      const amount = 0.3;
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const idx = (y * w + x) * 4;
+          for (let c = 0; c < 3; c++) {
+            const center = sd[idx + c];
+            const neighbors = (sd[((y-1)*w+x)*4+c] + sd[((y+1)*w+x)*4+c] + sd[(y*w+(x-1))*4+c] + sd[(y*w+(x+1))*4+c]) / 4;
+            output[idx + c] = Math.min(255, Math.max(0, Math.round(center + amount * (center - neighbors))));
+          }
+          output[idx + 3] = 255;
+        }
+      }
+      // Copy edges
+      for (let x = 0; x < w; x++) { for (let c = 0; c < 4; c++) { output[x*4+c] = sd[x*4+c]; output[((h-1)*w+x)*4+c] = sd[((h-1)*w+x)*4+c]; } }
+      for (let y = 0; y < h; y++) { for (let c = 0; c < 4; c++) { output[(y*w)*4+c] = sd[(y*w)*4+c]; output[(y*w+(w-1))*4+c] = sd[(y*w+(w-1))*4+c]; } }
+      ctx.putImageData(new ImageData(output, w, h), 0, 0);
+    }
   }
 
   // ============ PAGE MANAGEMENT ============
@@ -380,7 +419,7 @@ export default function ScanToPDF() {
           {/* Image with corners */}
           <div
             ref={editorRef}
-            className="relative mx-auto max-w-lg touch-none select-none"
+            className="relative mx-auto w-full touch-none select-none"
             onMouseMove={handlePointerMove} onMouseUp={handlePointerEnd} onMouseLeave={handlePointerEnd}
             onTouchMove={handlePointerMove} onTouchEnd={handlePointerEnd}
           >
