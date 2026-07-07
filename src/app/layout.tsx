@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PWARegister from "@/components/PWARegister";
 import InstallBanner from "@/components/InstallBanner";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "FixMyFile - Free Online File Tools | PDF, Image, OCR, Documents",
@@ -40,6 +41,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
       <body className="min-h-screen flex flex-col">
+        <Analytics />
         <PWARegister />
         <Header />
         <main className="flex-1">{children}</main>
