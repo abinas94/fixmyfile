@@ -6,6 +6,7 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
+import ServerNotice from "@/components/ServerNotice";
 
 export default function PDFToWord() {
   const [files, setFiles] = useState<File[]>([]);
@@ -49,7 +50,8 @@ export default function PDFToWord() {
       <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
 
       {files.length > 0 && (
-        <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="mt-6 flex flex-col items-center gap-4">
+          <ServerNotice />
           <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to Word (.docx)" />
           {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
           <p className="text-xs text-[var(--muted-foreground)] text-center max-w-md">

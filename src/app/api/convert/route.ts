@@ -131,6 +131,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         input: [convertTaskId],
+        inline: false,
       }),
     });
 
@@ -140,6 +141,12 @@ export async function POST(request: NextRequest) {
 
     const exportTaskData = await exportTaskRes.json();
     const exportTaskId = exportTaskData.data.id;
+
+    // Step 5b: Delete the uploaded file from CloudConvert (privacy)
+    fetch(`${BASE_URL}/tasks/${uploadTaskId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    }).catch(() => {}); // Fire and forget
 
     // Step 6: Wait for export and get download URL
     let exportUrl = "";
@@ -175,6 +182,12 @@ export async function POST(request: NextRequest) {
     }
 
     const convertedBuffer = await fileRes.arrayBuffer();
+
+    // Cleanup: delete all tasks from CloudConvert (files removed from their servers)
+    Promise.all([
+      fetch(`${BASE_URL}/tasks/${convertTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }),
+      fetch(`${BASE_URL}/tasks/${exportTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }),
+    ]).catch(() => {});
 
     const contentTypes: Record<string, string> = {
       docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

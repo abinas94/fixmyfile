@@ -6,6 +6,7 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
+import ServerNotice from "@/components/ServerNotice";
 
 export default function PDFToPPT() {
   const [files, setFiles] = useState<File[]>([]);
@@ -36,7 +37,8 @@ export default function PDFToPPT() {
       <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
       {files.length > 0 && (
         <div className="mt-8 flex flex-col items-center gap-3">
-          <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to PowerPoint (.pptx)" />
+          <ServerNotice />
+ <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to PowerPoint (.pptx)" />
           {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
           <p className="text-xs text-[var(--muted-foreground)]">Each PDF page becomes an editable slide with text and images.</p>
         </div>

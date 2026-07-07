@@ -6,6 +6,7 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
+import ServerNotice from "@/components/ServerNotice";
 
 export default function PPTToImages() {
   const [files, setFiles] = useState<File[]>([]);
@@ -64,7 +65,8 @@ export default function PPTToImages() {
       <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pptx,.ppt" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
       {files.length > 0 && (
         <div className="mt-8 flex flex-col items-center gap-3">
-          <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to Images (ZIP)" />
+          <ServerNotice />
+ <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to Images (ZIP)" />
           {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
           <p className="text-xs text-[var(--muted-foreground)]">Full-quality PNG render of each slide with all graphics and formatting.</p>
         </div>
