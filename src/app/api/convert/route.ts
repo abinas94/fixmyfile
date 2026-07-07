@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const API_KEY = process.env.CLOUDCONVERT_API_KEY;
 const BASE_URL = "https://api.cloudconvert.com/v2";
 
-export const maxDuration = 60; // 60 second timeout for Vercel
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   if (!API_KEY) {
@@ -20,110 +20,148 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing file, inputFormat, or outputFormat" }, { status: 400 });
     }
 
-    // Step 1: Create a job with upload task + convert task + export task
-    const jobResponse = await fetch(`${BASE_URL}/jobs`, {
+    // Step 1: Create upload task
+    const uploadTaskRes = await fetch(`${BASE_URL}/import/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!uploadTaskRes.ok) {
+      const err = await uploadTaskRes.text();
+      console.error("Upload task creation failed:", err);
+      return NextResponse.json({ error: "Service unavailable" }, { status: 502 });
+    }
+
+    const uploadTaskData = await uploadTaskRes.json();
+    const uploadTaskId = uploadTaskData.data.id;
+    const uploadUrl = uploadTaskData.data.result.form.url;
+    const uploadParams = uploadTaskData.data.result.form.parameters;
+
+    // Step 2: Upload the file
+    const uploadForm = new FormData();
+    for (const [key, value] of Object.entries(uploadParams)) {
+      uploadForm.append(key, value as string);
+    }
+    const fileBuffer = await file.arrayBuffer();
+    uploadForm.append("file", new Blob([fileBuffer]), file.name);
+
+    const uploadRes = await fetch(uploadUrl, {
+      method: "POST",
+      body: uploadForm,
+    });
+
+    if (!uploadRes.ok) {
+      console.error("File upload failed:", await uploadRes.text());
+      return NextResponse.json({ error: "File upload failed" }, { status: 502 });
+    }
+
+    // Step 3: Create convert task
+    const convertTaskRes = await fetch(`${BASE_URL}/convert`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        tasks: {
-          "upload-file": {
-            operation: "import/upload",
-          },
-          "convert-file": {
-            operation: "convert",
-            input: ["upload-file"],
-            input_format: inputFormat,
-            output_format: outputFormat,
-          },
-          "export-file": {
-            operation: "export/url",
-            input: ["convert-file"],
-          },
-        },
+        input: [uploadTaskId],
+        input_format: inputFormat,
+        output_format: outputFormat,
       }),
     });
 
-    if (!jobResponse.ok) {
-      const err = await jobResponse.text();
-      console.error("Job creation failed:", err);
-      return NextResponse.json({ error: "Conversion service error" }, { status: 502 });
+    if (!convertTaskRes.ok) {
+      const err = await convertTaskRes.text();
+      console.error("Convert task failed:", err);
+      return NextResponse.json({ error: "Conversion failed" }, { status: 502 });
     }
 
-    const job = await jobResponse.json();
+    const convertTaskData = await convertTaskRes.json();
+    const convertTaskId = convertTaskData.data.id;
 
-    // Step 2: Find the upload task and upload the file
-    const uploadTask = job.data.tasks.find((t: { name: string }) => t.name === "upload-file");
-    if (!uploadTask || !uploadTask.result || !uploadTask.result.form) {
-      return NextResponse.json({ error: "Upload task not ready" }, { status: 502 });
-    }
-
-    const uploadForm = new FormData();
-    // Add all form parameters from CloudConvert
-    for (const [key, value] of Object.entries(uploadTask.result.form.parameters)) {
-      uploadForm.append(key, value as string);
-    }
-    // Add the actual file
-    const fileBuffer = await file.arrayBuffer();
-    uploadForm.append("file", new Blob([fileBuffer]), file.name);
-
-    const uploadResponse = await fetch(uploadTask.result.form.url, {
-      method: "POST",
-      body: uploadForm,
-    });
-
-    if (!uploadResponse.ok) {
-      return NextResponse.json({ error: "File upload failed" }, { status: 502 });
-    }
-
-    // Step 3: Wait for job completion (poll)
+    // Step 4: Wait for conversion to finish
+    let convertStatus = "";
     let attempts = 0;
-    let jobStatus = "";
-    let exportUrl = "";
-
     while (attempts < 30) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       attempts++;
 
-      const statusResponse = await fetch(`${BASE_URL}/jobs/${job.data.id}`, {
+      const statusRes = await fetch(`${BASE_URL}/tasks/${convertTaskId}`, {
         headers: { Authorization: `Bearer ${API_KEY}` },
       });
 
-      if (!statusResponse.ok) continue;
+      if (!statusRes.ok) continue;
+      const statusData = await statusRes.json();
+      convertStatus = statusData.data.status;
 
-      const statusData = await statusResponse.json();
-      jobStatus = statusData.data.status;
+      if (convertStatus === "finished") break;
+      if (convertStatus === "error") {
+        console.error("Conversion error:", statusData.data.message);
+        return NextResponse.json({ error: "Conversion failed: " + (statusData.data.message || "unknown") }, { status: 502 });
+      }
+    }
 
-      if (jobStatus === "finished") {
-        const exportTask = statusData.data.tasks.find(
-          (t: { name: string; status: string }) => t.name === "export-file" && t.status === "finished"
-        );
-        if (exportTask && exportTask.result && exportTask.result.files && exportTask.result.files.length > 0) {
-          exportUrl = exportTask.result.files[0].url;
-        }
+    if (convertStatus !== "finished") {
+      return NextResponse.json({ error: "Conversion timed out" }, { status: 504 });
+    }
+
+    // Step 5: Create export task
+    const exportTaskRes = await fetch(`${BASE_URL}/export/url`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        input: [convertTaskId],
+      }),
+    });
+
+    if (!exportTaskRes.ok) {
+      return NextResponse.json({ error: "Export failed" }, { status: 502 });
+    }
+
+    const exportTaskData = await exportTaskRes.json();
+    const exportTaskId = exportTaskData.data.id;
+
+    // Step 6: Wait for export and get download URL
+    let exportUrl = "";
+    attempts = 0;
+    while (attempts < 15) {
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      attempts++;
+
+      const statusRes = await fetch(`${BASE_URL}/tasks/${exportTaskId}`, {
+        headers: { Authorization: `Bearer ${API_KEY}` },
+      });
+
+      if (!statusRes.ok) continue;
+      const statusData = await statusRes.json();
+
+      if (statusData.data.status === "finished" && statusData.data.result?.files?.length > 0) {
+        exportUrl = statusData.data.result.files[0].url;
         break;
-      } else if (jobStatus === "error") {
-        const errorTask = statusData.data.tasks.find((t: { status: string }) => t.status === "error");
-        console.error("Conversion error:", errorTask?.message);
-        return NextResponse.json({ error: "Conversion failed: " + (errorTask?.message || "unknown error") }, { status: 502 });
+      }
+      if (statusData.data.status === "error") {
+        return NextResponse.json({ error: "Export failed" }, { status: 502 });
       }
     }
 
     if (!exportUrl) {
-      return NextResponse.json({ error: "Conversion timed out" }, { status: 504 });
+      return NextResponse.json({ error: "Export timed out" }, { status: 504 });
     }
 
-    // Step 4: Download the converted file and return it
-    const fileResponse = await fetch(exportUrl);
-    if (!fileResponse.ok) {
-      return NextResponse.json({ error: "Failed to download converted file" }, { status: 502 });
+    // Step 7: Download and return the converted file
+    const fileRes = await fetch(exportUrl);
+    if (!fileRes.ok) {
+      return NextResponse.json({ error: "Download failed" }, { status: 502 });
     }
 
-    const convertedBuffer = await fileResponse.arrayBuffer();
+    const convertedBuffer = await fileRes.arrayBuffer();
 
-    // Determine content type
     const contentTypes: Record<string, string> = {
       docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -140,7 +178,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Conversion API error:", error);
+    console.error("API route error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
