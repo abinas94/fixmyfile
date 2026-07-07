@@ -60,17 +60,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 3: Create convert task
+    const convertBody: Record<string, unknown> = {
+      input: [uploadTaskId],
+      input_format: inputFormat,
+      output_format: outputFormat,
+    };
+
+    // Add quality options for specific conversions
+    if (inputFormat === "pdf" && outputFormat === "docx") {
+      convertBody.engine = "libreoffice"; // Best for PDF to Word
+    } else if (inputFormat === "pdf" && outputFormat === "xlsx") {
+      convertBody.engine = "libreoffice";
+    } else if (inputFormat === "pdf" && outputFormat === "pptx") {
+      convertBody.engine = "libreoffice";
+    } else if (outputFormat === "pdf") {
+      convertBody.engine = "libreoffice"; // Best for any-to-PDF
+      convertBody.pdf_a = false; // Standard PDF, not archival
+    }
+
     const convertTaskRes = await fetch(`${BASE_URL}/convert`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        input: [uploadTaskId],
-        input_format: inputFormat,
-        output_format: outputFormat,
-      }),
+      body: JSON.stringify(convertBody),
     });
 
     if (!convertTaskRes.ok) {
