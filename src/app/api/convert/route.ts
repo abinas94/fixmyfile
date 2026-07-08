@@ -68,15 +68,14 @@ export async function POST(request: NextRequest) {
 
     // Add quality options for specific conversions
     if (inputFormat === "pdf" && outputFormat === "docx") {
-      convertBody.engine = "libreoffice"; // Best for PDF to Word
-    } else if (inputFormat === "pdf" && outputFormat === "xlsx") {
       convertBody.engine = "libreoffice";
     } else if (inputFormat === "pdf" && outputFormat === "pptx") {
       convertBody.engine = "libreoffice";
     } else if (outputFormat === "pdf") {
-      convertBody.engine = "libreoffice"; // Best for any-to-PDF
-      convertBody.pdf_a = false; // Standard PDF, not archival
+      convertBody.engine = "libreoffice";
+      convertBody.pdf_a = false;
     }
+    // Note: pdf to xlsx - don't specify engine, let CloudConvert auto-select
 
     const convertTaskRes = await fetch(`${BASE_URL}/convert`, {
       method: "POST",
@@ -90,7 +89,7 @@ export async function POST(request: NextRequest) {
     if (!convertTaskRes.ok) {
       const err = await convertTaskRes.text();
       console.error("Convert task failed:", err);
-      return NextResponse.json({ error: "Conversion failed" }, { status: 502 });
+      return NextResponse.json({ error: "Conversion not supported for this file type. Try a different file." }, { status: 502 });
     }
 
     const convertTaskData = await convertTaskRes.json();
@@ -113,8 +112,8 @@ export async function POST(request: NextRequest) {
 
       if (convertStatus === "finished") break;
       if (convertStatus === "error") {
-        console.error("Conversion error:", statusData.data.message);
-        return NextResponse.json({ error: "Conversion failed: " + (statusData.data.message || "unknown") }, { status: 502 });
+        console.error("Conversion error:", statusData.data.message || statusData.data.code);
+        return NextResponse.json({ error: "Conversion failed: " + (statusData.data.message || "unsupported format") }, { status: 502 });
       }
     }
 
