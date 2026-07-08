@@ -5,31 +5,47 @@ import { Unlock, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
-import { downloadBlob } from "@/lib/pdf-utils";
+import ServerNotice from "@/components/ServerNotice";
 
 export default function UnlockPDF() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [password, setPassword] = useState("");
+  const [progress, setProgress] = useState("");
 
   const handleUnlock = async () => {
     if (!files.length) return;
     setIsProcessing(true);
+    setProgress("Removing password protection...");
     try {
-      const { PDFDocument } = await import("pdf-lib");
-      const arrayBuffer = await files[0].arrayBuffer();
-      const pdf = await PDFDocument.load(arrayBuffer, {
-        ignoreEncryption: true,
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("password", password);
+
+      const response = await fetch("/api/unlock-pdf", {
+        method: "POST",
+        body: formData,
       });
-      
-      // Re-save without encryption
-      const result = await pdf.save();
-      downloadBlob(result, `unlocked-${files[0].name}`);
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: "Failed" }));
+        throw new Error(err.error || "Unlock failed");
+      }
+
+      setProgress("Downloading...");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `unlocked-${files[0].name}`;
+      a.click();
+      URL.revokeObjectURL(url);
       setIsComplete(true);
+      setProgress("");
     } catch (error) {
-      console.error(error);
-      alert("Error unlocking PDF. The password may be incorrect or the encryption is not supported client-side.");
+      alert("Error: " + (error instanceof Error ? error.message : "Unlock failed. Check your password."));
+      setProgress("");
     } finally { setIsProcessing(false); }
   };
 
@@ -53,17 +69,24 @@ export default function UnlockPDF() {
       <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
 
       {files.length > 0 && (
-        <div className="mt-6 p-6 rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-          <label className="block text-sm font-medium mb-2">PDF Password (if required)</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter PDF password (leave blank if owner-restricted only)"
-            className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]" />
-        </div>
-      )}
+        <div className="mt-6 p-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">PDF Password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter the password to unlock this PDF"
+              className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]" />
+            <p className="text-xs text-[var(--muted-foreground)] mt-2">
+              You must know the password. This tool removes it so the PDF opens freely afterward.
+            </p>
+          </div>
 
-      {files.length > 0 && (
-        <div className="mt-8 flex justify-center">
-          <ProcessingButton onClick={handleUnlock} isProcessing={isProcessing} isComplete={isComplete} label="Unlock & Download" />
+          <ServerNotice />
+
+          <div className="flex flex-col items-center gap-3">
+            <ProcessingButton onClick={handleUnlock} isProcessing={isProcessing} isComplete={isComplete}
+              label="Unlock & Download" disabled={!password} />
+            {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
+          </div>
         </div>
       )}
     </div>
