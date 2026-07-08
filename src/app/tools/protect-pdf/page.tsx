@@ -5,44 +5,52 @@ import { Lock, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ServerNotice from "@/components/ServerNotice";
 
 export default function ProtectPDF() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [progress, setProgress] = useState("");
 
   const handleProtect = async () => {
     if (!files.length || !password) return;
+    if (password !== confirmPassword) { alert("Passwords don't match"); return; }
+    if (password.length < 4) { alert("Password must be at least 4 characters"); return; }
+
     setIsProcessing(true);
+    setProgress("Encrypting PDF with AES-256...");
     try {
-      // pdf-lib doesn't support encryption natively
-      // We use a workaround: re-save with metadata indicating protection
-      // For real encryption, we'd need a library like pdf-encrypt
-      // Here we demonstrate the UI flow and use pdf-lib's basic save
-      const { PDFDocument } = await import("pdf-lib");
-      const arrayBuffer = await files[0].arrayBuffer();
-      const pdf = await PDFDocument.load(arrayBuffer);
-      
-      // Add password info as metadata (visual indicator)
-      pdf.setTitle(`Protected - ${files[0].name}`);
-      pdf.setSubject("Password protected document");
-      
-      const result = await pdf.save();
-      const blob = new Blob([result as unknown as BlobPart], { type: "application/pdf" });
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("password", password);
+
+      const response = await fetch("/api/protect-pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({ error: "Failed" }));
+        throw new Error(err.error || "Protection failed");
+      }
+
+      setProgress("Downloading...");
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = `protected-${files[0].name}`;
-      document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
       URL.revokeObjectURL(url);
       setIsComplete(true);
+      setProgress("");
     } catch (error) {
-      console.error(error);
-      alert("Error protecting PDF.");
+      alert("Error: " + (error instanceof Error ? error.message : "Protection failed"));
+      setProgress("");
     } finally { setIsProcessing(false); }
   };
 
@@ -58,7 +66,7 @@ export default function ProtectPDF() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Protect PDF</h1>
-            <p className="text-[var(--muted-foreground)]">Add password protection to your PDF</p>
+            <p className="text-[var(--muted-foreground)]">Encrypt with AES-256 password protection</p>
           </div>
         </div>
       </div>
@@ -66,28 +74,47 @@ export default function ProtectPDF() {
       <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
 
       {files.length > 0 && (
-        <div className="mt-6 p-6 rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-          <label className="block text-sm font-medium mb-2">Set Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"} value={password}
-              onChange={(e) => { setPassword(e.target.value); setIsComplete(false); }}
-              placeholder="Enter a strong password"
-              className="w-full px-4 py-3 pr-12 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
-            />
-            <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]">
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-            </button>
+        <div className="mt-6 p-5 rounded-2xl border border-[var(--border)] bg-[var(--card)] space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Set Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"} value={password}
+                onChange={(e) => { setPassword(e.target.value); setIsComplete(false); }}
+                placeholder="Enter a strong password"
+                className="w-full px-4 py-3 pr-12 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
+              />
+              <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]">
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-[var(--muted-foreground)] mt-2">
-            Note: Full AES encryption requires server-side processing. This adds basic protection metadata.
-          </p>
-        </div>
-      )}
 
-      {files.length > 0 && password && (
-        <div className="mt-8 flex justify-center">
-          <ProcessingButton onClick={handleProtect} isProcessing={isProcessing} isComplete={isComplete} label="Protect & Download" />
+          <div>
+            <label className="block text-sm font-medium mb-2">Confirm Password</label>
+            <input
+              type={showPassword ? "text" : "password"} value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter password"
+              className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
+            />
+            {confirmPassword && password !== confirmPassword && (
+              <p className="text-xs text-red-500 mt-1">Passwords don&apos;t match</p>
+            )}
+          </div>
+
+          <ServerNotice />
+
+          <div className="flex flex-col items-center gap-3">
+            <ProcessingButton onClick={handleProtect} isProcessing={isProcessing} isComplete={isComplete}
+              label="Encrypt & Download" disabled={!password || password.length < 4 || password !== confirmPassword} />
+            {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
+          </div>
+
+          <div className="p-3 rounded-xl bg-[var(--muted)] text-xs text-[var(--muted-foreground)]">
+            <p><strong>AES-256 encryption</strong> — the same standard used by banks and governments.</p>
+            <p className="mt-1">Anyone opening this PDF will need to enter the password. Without it, the file cannot be read.</p>
+          </div>
         </div>
       )}
     </div>
