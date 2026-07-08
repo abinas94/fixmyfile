@@ -4,7 +4,7 @@ export async function convertFile(
   outputFormat: string,
   onProgress?: (msg: string) => void
 ): Promise<Blob> {
-  onProgress?.("Uploading file...");
+  onProgress?.("Converting...");
 
   const formData = new FormData();
   formData.append("file", file);

@@ -23,33 +23,42 @@ export default function CompressPDF() {
     try {
       const originalSize = files[0].size;
 
-      const formData = new FormData();
-      formData.append("file", files[0]);
-      formData.append("inputFormat", "pdf");
-      formData.append("outputFormat", "pdf");
-      formData.append("quality", quality);
+      // Try server-side first (best quality)
+      try {
+        const formData = new FormData();
+        formData.append("file", files[0]);
+        formData.append("inputFormat", "pdf");
+        formData.append("outputFormat", "pdf");
+        formData.append("quality", quality);
 
-      const response = await fetch("/api/compress-pdf", {
-        method: "POST",
-        body: formData,
-      });
+        const response = await fetch("/api/compress-pdf", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({ error: "Compression failed" }));
-        throw new Error(err.error || "Compression failed");
-      }
+        if (response.ok) {
+          setProgress("Downloading...");
+          const blob = await response.blob();
+          const newSize = blob.size;
+          setResult({ originalSize, newSize });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = `compressed-${files[0].name}`; a.click();
+          URL.revokeObjectURL(url);
+          setIsComplete(true);
+          setProgress("");
+          return;
+        }
+      } catch { /* Server failed, fall through to client-side */ }
 
-      setProgress("Downloading...");
-      const blob = await response.blob();
-      const newSize = blob.size;
+      // Fallback: client-side compression (basic but works)
+      setProgress("Using local compression...");
+      const { compressPDF, downloadBlob } = await import("@/lib/pdf-utils");
+      const qualityMap = { maximum: "high" as const, balanced: "medium" as const, minimum: "low" as const };
+      const compressed = await compressPDF(files[0], qualityMap[quality]);
+      const newSize = compressed.length;
       setResult({ originalSize, newSize });
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `compressed-${files[0].name}`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadBlob(compressed, `compressed-${files[0].name}`);
       setIsComplete(true);
       setProgress("");
     } catch (error) {
