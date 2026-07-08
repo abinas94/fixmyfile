@@ -68,14 +68,15 @@ export async function POST(request: NextRequest) {
 
     // Add quality options for specific conversions
     if (inputFormat === "pdf" && outputFormat === "docx") {
-      convertBody.engine = "libreoffice";
+      // Let CloudConvert auto-select engine (Apryse for PDF to Office)
     } else if (inputFormat === "pdf" && outputFormat === "pptx") {
-      convertBody.engine = "libreoffice";
+      // Let CloudConvert auto-select engine (Apryse for PDF to Office)
+    } else if (inputFormat === "pdf" && outputFormat === "xlsx") {
+      // Let CloudConvert auto-select engine
     } else if (outputFormat === "pdf") {
       convertBody.engine = "libreoffice";
       convertBody.pdf_a = false;
     }
-    // Note: pdf to xlsx - don't specify engine, let CloudConvert auto-select
 
     const convertTaskRes = await fetch(`${BASE_URL}/convert`, {
       method: "POST",

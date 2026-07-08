@@ -1,70 +1,95 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, ArrowLeft } from "lucide-react";
+import { FileText, ArrowLeft, Info } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ServerNotice from "@/components/ServerNotice";
+import { convertFile, downloadBlob } from "@/lib/convert-api";
 
 export default function PDFToPPT() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [progress, setProgress] = useState("");
+  const [usedFallback, setUsedFallback] = useState(false);
 
   const handleConvert = async () => {
     if (!files.length) return;
     setIsProcessing(true);
-    setProgress("Loading PDF...");
+    setProgress("Converting PDF to editable PowerPoint...");
+    setUsedFallback(false);
+
     try {
-      const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-
-      const arrayBuffer = await files[0].arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      const numPages = pdf.numPages;
-
-      const JSZip = (await import("jszip")).default;
-      const zip = new JSZip();
-
-      // PPTX structure
-      zip.file("[Content_Types].xml", buildContentTypes(numPages));
-      zip.file("_rels/.rels", buildRootRels());
-      zip.file("ppt/presentation.xml", buildPresentation(numPages));
-      zip.file("ppt/_rels/presentation.xml.rels", buildPresentationRels(numPages));
-
-      for (let i = 1; i <= numPages; i++) {
-        setProgress(`Rendering slide ${i}/${numPages}...`);
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvas = document.createElement("canvas");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const ctx = canvas.getContext("2d")!;
-        await (page.render({ canvasContext: ctx, viewport, canvas } as unknown as Parameters<typeof page.render>[0]).promise);
-
-        const blob = await new Promise<Blob>((r) => canvas.toBlob((b) => r(b!), "image/jpeg", 0.90));
-        zip.file(`ppt/media/image${i}.jpeg`, await blob.arrayBuffer());
-        zip.file(`ppt/slides/slide${i}.xml`, buildSlide(i));
-        zip.file(`ppt/slides/_rels/slide${i}.xml.rels`, buildSlideRels(i));
-      }
-
-      setProgress("Creating PowerPoint...");
-      const pptxBlob = await zip.generateAsync({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation" });
-
-      const url = URL.createObjectURL(pptxBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = files[0].name.replace(/\.pdf$/i, ".pptx");
-      a.click();
-      URL.revokeObjectURL(url);
+      // Try server-side conversion first (produces editable text/shapes)
+      const blob = await convertFile(files[0], "pdf", "pptx", setProgress);
+      const filename = files[0].name.replace(/\.pdf$/i, ".pptx");
+      downloadBlob(blob, filename);
       setIsComplete(true);
       setProgress("");
     } catch (error) {
-      console.error(error);
-      alert("Error converting PDF to PowerPoint.");
-      setProgress("");
-    } finally { setIsProcessing(false); }
+      console.warn("Server conversion failed, falling back to client-side:", error);
+      // Fallback: client-side image-based conversion
+      try {
+        setProgress("Server busy — using local conversion (image-based slides)...");
+        await clientSideConvert();
+        setUsedFallback(true);
+        setIsComplete(true);
+        setProgress("");
+      } catch (fallbackError) {
+        console.error(fallbackError);
+        alert("Conversion failed. Please try again later.");
+        setProgress("");
+      }
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const clientSideConvert = async () => {
+    setProgress("Loading PDF...");
+    const pdfjsLib = await import("pdfjs-dist");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+
+    const arrayBuffer = await files[0].arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const numPages = pdf.numPages;
+
+    const JSZip = (await import("jszip")).default;
+    const zip = new JSZip();
+
+    // PPTX structure
+    zip.file("[Content_Types].xml", buildContentTypes(numPages));
+    zip.file("_rels/.rels", buildRootRels());
+    zip.file("ppt/presentation.xml", buildPresentation(numPages));
+    zip.file("ppt/_rels/presentation.xml.rels", buildPresentationRels(numPages));
+
+    for (let i = 1; i <= numPages; i++) {
+      setProgress(`Rendering slide ${i}/${numPages}...`);
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 3 });
+      const canvas = document.createElement("canvas");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext("2d")!;
+      await (page.render({ canvasContext: ctx, viewport, canvas } as unknown as Parameters<typeof page.render>[0]).promise);
+
+      const blob = await new Promise<Blob>((r) => canvas.toBlob((b) => r(b!), "image/jpeg", 0.92));
+      zip.file(`ppt/media/image${i}.jpeg`, await blob.arrayBuffer());
+      zip.file(`ppt/slides/slide${i}.xml`, buildSlide(i));
+      zip.file(`ppt/slides/_rels/slide${i}.xml.rels`, buildSlideRels(i));
+    }
+
+    setProgress("Creating PowerPoint...");
+    const pptxBlob = await zip.generateAsync({ type: "blob", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation" });
+
+    const url = URL.createObjectURL(pptxBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = files[0].name.replace(/\.pdf$/i, ".pptx");
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -79,27 +104,41 @@ export default function PDFToPPT() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">PDF to PowerPoint</h1>
-            <p className="text-[var(--muted-foreground)]">Convert each PDF page into a PowerPoint slide</p>
+            <p className="text-[var(--muted-foreground)]">Convert PDF to editable PowerPoint slides</p>
           </div>
         </div>
       </div>
 
-      <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => setFiles([])} />
+      <ServerNotice />
+
+      <FileDropZone onFilesSelected={(f) => { setFiles([f[0]]); setIsComplete(false); setUsedFallback(false); }} accept=".pdf" multiple={false} maxFiles={1} files={files} onRemoveFile={() => { setFiles([]); setUsedFallback(false); }} />
 
       {files.length > 0 && (
         <div className="mt-8 flex flex-col items-center gap-3">
           <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert to PowerPoint (.pptx)" />
           {progress && <p className="text-xs text-[var(--primary)] font-medium">{progress}</p>}
-          <p className="text-xs text-[var(--muted-foreground)] text-center max-w-md">
-            Each PDF page becomes a full-quality slide image. Works 100% in your browser — no upload needed.
-          </p>
+          
+          {usedFallback && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 max-w-md">
+              <Info className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-amber-700 dark:text-amber-300">
+                Server was busy — used local conversion. Slides are high-quality images (not editable text). Try again later for editable output.
+              </p>
+            </div>
+          )}
+
+          <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 max-w-md">
+            <p className="text-xs text-blue-700 dark:text-blue-300 text-center">
+              <strong>How it works:</strong> Uses CloudConvert&apos;s Apryse engine to produce editable slides with real text, shapes, and formatting. If the server is unavailable, falls back to high-quality image-based slides.
+            </p>
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-// PPTX XML builders
+// PPTX XML builders (fallback)
 function buildContentTypes(n: number) {
   const slides = Array.from({ length: n }, (_, i) => `<Override PartName="/ppt/slides/slide${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`).join("");
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>${slides}</Types>`;
