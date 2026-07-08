@@ -138,9 +138,8 @@ export default function SplitPDF() {
       {/* Options */}
       {files.length > 0 && pageCount && (
         <div className="mt-6 p-6 rounded-2xl border border-[var(--border)] bg-[var(--card)]">
-          <p className="text-sm text-[var(--muted-foreground)] mb-4">
-            Document has <strong>{pageCount}</strong> page
-            {pageCount > 1 ? "s" : ""}
+          <p className="text-sm mb-4 font-medium">
+            📄 Document has <strong className="text-[var(--primary)]">{pageCount}</strong> page{pageCount > 1 ? "s" : ""}
           </p>
 
           <div className="flex gap-4 mb-4">
@@ -169,15 +168,21 @@ export default function SplitPDF() {
           {splitMode === "range" && (
             <div>
               <label className="block text-sm font-medium mb-2">
-                Page ranges
+                Page ranges (total: {pageCount} pages)
               </label>
               <input
                 type="text"
                 value={rangeInput}
                 onChange={(e) => setRangeInput(e.target.value)}
-                placeholder="e.g., 1-3, 5, 7-10"
+                placeholder={`e.g., 1-${Math.min(3, pageCount)}, ${Math.min(5, pageCount)}, ${Math.min(7, pageCount)}-${pageCount}`}
                 className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--background)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ring)]"
               />
+              <div className="flex flex-wrap gap-2 mt-2">
+                <button onClick={() => setRangeInput(`1-${pageCount}`)} className="text-xs px-2 py-1 rounded-lg bg-[var(--muted)] hover:bg-[var(--accent)]">All (1-{pageCount})</button>
+                <button onClick={() => setRangeInput(`1-${Math.ceil(pageCount / 2)}, ${Math.ceil(pageCount / 2) + 1}-${pageCount}`)} className="text-xs px-2 py-1 rounded-lg bg-[var(--muted)] hover:bg-[var(--accent)]">Split in half</button>
+                <button onClick={() => setRangeInput("1")} className="text-xs px-2 py-1 rounded-lg bg-[var(--muted)] hover:bg-[var(--accent)]">First page only</button>
+                <button onClick={() => setRangeInput(String(pageCount))} className="text-xs px-2 py-1 rounded-lg bg-[var(--muted)] hover:bg-[var(--accent)]">Last page only</button>
+              </div>
               <p className="text-xs text-[var(--muted-foreground)] mt-2">
                 Separate ranges with commas. Each range creates a separate PDF.
               </p>
