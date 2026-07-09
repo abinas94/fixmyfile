@@ -154,7 +154,7 @@ export const tools: ToolConfig[] = [
     icon: "FileImage",
     color: "from-purple-500 to-violet-600",
     href: "/tools/image-to-pdf",
-    category: "pdf",
+    category: "image",
   },
   {
     id: "html-to-pdf",
