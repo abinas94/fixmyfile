@@ -238,41 +238,94 @@ export async function addImageWatermark(
   return pdf.save();
 }
 
-// Convert images to PDF
-export async function imagesToPDF(files: File[]): Promise<Uint8Array> {
+// Convert images to PDF (full quality, no re-encoding for JPG/PNG)
+export async function imagesToPDF(files: File[], options?: { fitToPage?: boolean }): Promise<Uint8Array> {
   const pdf = await PDFDocument.create();
+  const fitToPage = options?.fitToPage ?? true;
+
+  // A4 dimensions in points (595.28 x 841.89)
+  const A4_WIDTH = 595.28;
+  const A4_HEIGHT = 841.89;
+  const MARGIN = 0; // No margin — image fills the page
 
   for (const file of files) {
     const arrayBuffer = await file.arrayBuffer();
     let image;
+    let imageBytes: ArrayBuffer = arrayBuffer;
 
     if (file.type === "image/png") {
       image = await pdf.embedPng(arrayBuffer);
     } else if (file.type === "image/jpeg" || file.type === "image/jpg") {
       image = await pdf.embedJpg(arrayBuffer);
     } else {
-      // For other formats, try to convert via canvas
+      // For WebP and other formats — convert to JPEG at max quality to preserve detail
       const bitmap = await createImageBitmap(new Blob([arrayBuffer]));
       const canvas = document.createElement("canvas");
       canvas.width = bitmap.width;
       canvas.height = bitmap.height;
       const ctx = canvas.getContext("2d")!;
       ctx.drawImage(bitmap, 0, 0);
-      const pngData = await new Promise<ArrayBuffer>((resolve) => {
+      
+      // Use JPEG at quality 1.0 (maximum) to avoid quality loss
+      imageBytes = await new Promise<ArrayBuffer>((resolve) => {
         canvas.toBlob((blob) => {
           blob!.arrayBuffer().then(resolve);
-        }, "image/png");
+        }, "image/jpeg", 1.0);
       });
-      image = await pdf.embedPng(pngData);
+      image = await pdf.embedJpg(imageBytes);
+      bitmap.close();
     }
 
-    const page = pdf.addPage([image.width, image.height]);
-    page.drawImage(image, {
-      x: 0,
-      y: 0,
-      width: image.width,
-      height: image.height,
-    });
+    const imgWidth = image.width;
+    const imgHeight = image.height;
+
+    if (fitToPage) {
+      // Determine page orientation based on image aspect ratio
+      const imgAspect = imgWidth / imgHeight;
+      let pageWidth: number;
+      let pageHeight: number;
+
+      if (imgAspect > 1) {
+        // Landscape image → landscape page
+        pageWidth = A4_HEIGHT;
+        pageHeight = A4_WIDTH;
+      } else {
+        // Portrait or square image → portrait page
+        pageWidth = A4_WIDTH;
+        pageHeight = A4_HEIGHT;
+      }
+
+      // Scale image to fill page while preserving aspect ratio
+      const availableWidth = pageWidth - 2 * MARGIN;
+      const availableHeight = pageHeight - 2 * MARGIN;
+      const scaleX = availableWidth / imgWidth;
+      const scaleY = availableHeight / imgHeight;
+      const scale = Math.min(scaleX, scaleY);
+
+      const drawWidth = imgWidth * scale;
+      const drawHeight = imgHeight * scale;
+
+      // Center the image on the page
+      const x = (pageWidth - drawWidth) / 2;
+      const y = (pageHeight - drawHeight) / 2;
+
+      const page = pdf.addPage([pageWidth, pageHeight]);
+      page.drawImage(image, {
+        x,
+        y,
+        width: drawWidth,
+        height: drawHeight,
+      });
+    } else {
+      // Original behavior: page sized exactly to image pixels (1px = 1pt)
+      const page = pdf.addPage([imgWidth, imgHeight]);
+      page.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: imgWidth,
+        height: imgHeight,
+      });
+    }
   }
 
   return pdf.save();

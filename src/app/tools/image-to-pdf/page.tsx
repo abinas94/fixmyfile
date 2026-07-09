@@ -11,6 +11,7 @@ export default function ImageToPDF() {
   const [files, setFiles] = useState<File[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [pageSize, setPageSize] = useState<"fit" | "original">("fit");
 
   const handleFilesSelected = (newFiles: File[]) => {
     setFiles((prev) => [...prev, ...newFiles]);
@@ -30,13 +31,13 @@ export default function ImageToPDF() {
     if (files.length === 0) return;
     setIsProcessing(true);
     try {
-      const pdfData = await imagesToPDF(files);
+      const pdfData = await imagesToPDF(files, { fitToPage: pageSize === "fit" });
       downloadBlob(pdfData, "images-combined.pdf");
       setIsComplete(true);
     } catch (error) {
       console.error("Error converting images to PDF:", error);
       alert(
-        "Error converting images. Please make sure all files are valid images (JPG, PNG)."
+        "Error converting images. Please make sure all files are valid images (JPG, PNG, WebP)."
       );
     } finally {
       setIsProcessing(false);
@@ -61,7 +62,7 @@ export default function ImageToPDF() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Image to PDF</h1>
             <p className="text-[var(--muted-foreground)]">
-              Convert images (JPG, PNG, WebP) into a single PDF
+              Convert images (JPG, PNG, WebP) into a single PDF — full quality, no compression
             </p>
           </div>
         </div>
@@ -78,9 +79,43 @@ export default function ImageToPDF() {
         onReorderFiles={handleReorderFiles}
       />
 
+      {/* Options */}
+      {files.length > 0 && (
+        <div className="mt-6 p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+          <h3 className="text-sm font-semibold mb-3">Page Size</h3>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setPageSize("fit")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                pageSize === "fit"
+                  ? "bg-[var(--primary)] text-white shadow-md"
+                  : "bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+              }`}
+            >
+              Fit to A4 (recommended)
+            </button>
+            <button
+              onClick={() => setPageSize("original")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                pageSize === "original"
+                  ? "bg-[var(--primary)] text-white shadow-md"
+                  : "bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+              }`}
+            >
+              Original Size (1px = 1pt)
+            </button>
+          </div>
+          <p className="text-xs text-[var(--muted-foreground)] mt-2">
+            {pageSize === "fit"
+              ? "Images are scaled to fit A4 pages (auto landscape/portrait). Full resolution is preserved in the PDF."
+              : "Each page is sized exactly to the image pixel dimensions. Best for printing at exact size."}
+          </p>
+        </div>
+      )}
+
       {/* Action */}
       {files.length > 0 && (
-        <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="mt-6 flex flex-col items-center gap-3">
           <ProcessingButton
             onClick={handleConvert}
             isProcessing={isProcessing}
@@ -95,10 +130,10 @@ export default function ImageToPDF() {
 
       {/* Info */}
       <div className="mt-12 p-6 rounded-2xl bg-[var(--muted)] border border-[var(--border)]">
-        <h3 className="font-semibold mb-2">Supported formats</h3>
+        <h3 className="font-semibold mb-2">Zero quality loss</h3>
         <p className="text-sm text-[var(--muted-foreground)]">
-          JPG/JPEG, PNG, and WebP images are supported. Each image becomes one
-          page in the output PDF, sized to the image dimensions.
+          JPG and PNG images are embedded directly into the PDF at their original quality — no re-encoding or compression.
+          WebP images are converted to maximum-quality JPEG before embedding. Everything runs in your browser.
         </p>
       </div>
     </div>
