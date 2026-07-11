@@ -583,7 +583,7 @@ export const tools: ToolConfig[] = [
   },
 
   // ============================================================
-  // TEXT UTILITIES
+  // TEXT UTILITIES (under dev-tools category)
   // ============================================================
   {
     id: "character-map",
@@ -592,7 +592,7 @@ export const tools: ToolConfig[] = [
     icon: "Type",
     color: "from-indigo-500 to-blue-600",
     href: "/tools/character-map",
-    category: "text-utilities",
+    category: "dev-tools",
   },
   {
     id: "lorem-ipsum",
@@ -601,7 +601,7 @@ export const tools: ToolConfig[] = [
     icon: "FileText",
     color: "from-gray-500 to-slate-700",
     href: "/tools/lorem-ipsum",
-    category: "text-utilities",
+    category: "dev-tools",
   },
   {
     id: "text-diff",
@@ -610,7 +610,7 @@ export const tools: ToolConfig[] = [
     icon: "GitCompare",
     color: "from-emerald-500 to-green-700",
     href: "/tools/text-diff",
-    category: "text-utilities",
+    category: "dev-tools",
   },
   {
     id: "line-sorter",
@@ -619,7 +619,7 @@ export const tools: ToolConfig[] = [
     icon: "ArrowUpDown",
     color: "from-sky-500 to-blue-600",
     href: "/tools/line-sorter",
-    category: "text-utilities",
+    category: "dev-tools",
   },
   {
     id: "text-reverser",
@@ -628,7 +628,7 @@ export const tools: ToolConfig[] = [
     icon: "Undo2",
     color: "from-orange-500 to-red-500",
     href: "/tools/text-reverser",
-    category: "text-utilities",
+    category: "dev-tools",
   },
   {
     id: "color-palette",
@@ -637,7 +637,7 @@ export const tools: ToolConfig[] = [
     icon: "Palette",
     color: "from-rose-400 to-purple-600",
     href: "/tools/color-palette",
-    category: "text-utilities",
+    category: "dev-tools",
   },
 ];
 
@@ -647,7 +647,6 @@ export const categories = [
   { id: "image", name: "Image Tools" },
   { id: "ocr", name: "OCR & Text Extract" },
   { id: "documents", name: "Documents & Text" },
-  { id: "text-utilities", name: "Text Utilities" },
   { id: "calculators", name: "Calculators" },
   { id: "dev-tools", name: "Developer Tools" },
 ];
