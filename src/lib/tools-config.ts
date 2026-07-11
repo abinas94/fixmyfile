@@ -572,37 +572,10 @@ export const tools: ToolConfig[] = [
     href: "/tools/css-gradient",
     category: "dev-tools",
   },
-  {
-    id: "ip-lookup",
-    name: "What's My IP",
-    description: "View your public IP, location, ISP, and network info",
-    icon: "Globe",
-    color: "from-blue-600 to-cyan-600",
-    href: "/tools/ip-lookup",
-    category: "dev-tools",
-  },
 
   // ============================================================
   // TEXT UTILITIES (under documents category)
   // ============================================================
-  {
-    id: "character-map",
-    name: "Character Map",
-    description: "Find and copy special characters, symbols, arrows, emojis",
-    icon: "Type",
-    color: "from-indigo-500 to-blue-600",
-    href: "/tools/character-map",
-    category: "documents",
-  },
-  {
-    id: "lorem-ipsum",
-    name: "Lorem Ipsum Generator",
-    description: "Generate placeholder text by paragraphs, sentences, or words",
-    icon: "FileText",
-    color: "from-gray-500 to-slate-700",
-    href: "/tools/lorem-ipsum",
-    category: "documents",
-  },
   {
     id: "text-diff",
     name: "Text Diff Checker",
@@ -619,15 +592,6 @@ export const tools: ToolConfig[] = [
     icon: "ArrowUpDown",
     color: "from-sky-500 to-blue-600",
     href: "/tools/line-sorter",
-    category: "documents",
-  },
-  {
-    id: "text-reverser",
-    name: "Text Reverser",
-    description: "Reverse text by character, word, or line",
-    icon: "Undo2",
-    color: "from-orange-500 to-red-500",
-    href: "/tools/text-reverser",
     category: "documents",
   },
   {

@@ -318,23 +318,8 @@
     <lastmod>2026-07-11</lastmod>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/ip-lookup</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.8</priority>
-  </url>
 
-  <!-- Text Utilities -->
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/character-map</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/lorem-ipsum</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.8</priority>
-  </url>
+  <!-- Text & Document Utilities -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/text-diff</loc>
     <lastmod>2026-07-11</lastmod>
@@ -344,11 +329,6 @@
     <loc>https://fixmyfile.vercel.app/tools/line-sorter</loc>
     <lastmod>2026-07-11</lastmod>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/text-reverser</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/color-palette</loc>
