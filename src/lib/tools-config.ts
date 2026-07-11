@@ -6,6 +6,7 @@ export interface ToolConfig {
   color: string;
   href: string;
   category: string;
+  processing: "local" | "server" | "hybrid";
 }
 
 export const tools: ToolConfig[] = [
@@ -20,6 +21,7 @@ export const tools: ToolConfig[] = [
     color: "from-red-500 to-rose-600",
     href: "/tools/merge",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "split",
@@ -29,6 +31,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-500 to-amber-600",
     href: "/tools/split",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "compress",
@@ -38,6 +41,7 @@ export const tools: ToolConfig[] = [
     color: "from-green-500 to-emerald-600",
     href: "/tools/compress",
     category: "pdf",
+    processing: "hybrid",
   },
   {
     id: "extract-pages",
@@ -47,6 +51,7 @@ export const tools: ToolConfig[] = [
     color: "from-amber-500 to-yellow-600",
     href: "/tools/extract-pages",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "rotate",
@@ -56,6 +61,7 @@ export const tools: ToolConfig[] = [
     color: "from-teal-500 to-cyan-600",
     href: "/tools/rotate",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "watermark",
@@ -65,6 +71,7 @@ export const tools: ToolConfig[] = [
     color: "from-pink-500 to-rose-600",
     href: "/tools/watermark",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "page-numbers",
@@ -74,6 +81,7 @@ export const tools: ToolConfig[] = [
     color: "from-violet-500 to-purple-600",
     href: "/tools/page-numbers",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "crop-pdf",
@@ -83,6 +91,7 @@ export const tools: ToolConfig[] = [
     color: "from-lime-500 to-green-600",
     href: "/tools/crop-pdf",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "sign-pdf",
@@ -92,6 +101,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-indigo-600",
     href: "/tools/sign-pdf",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "protect-pdf",
@@ -101,6 +111,7 @@ export const tools: ToolConfig[] = [
     color: "from-red-600 to-red-700",
     href: "/tools/protect-pdf",
     category: "pdf",
+    processing: "server",
   },
   {
     id: "unlock-pdf",
@@ -110,6 +121,7 @@ export const tools: ToolConfig[] = [
     color: "from-emerald-500 to-green-600",
     href: "/tools/unlock-pdf",
     category: "pdf",
+    processing: "server",
   },
   {
     id: "pdf-to-image",
@@ -119,6 +131,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-cyan-600",
     href: "/tools/pdf-to-image",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "pdf-to-word",
@@ -128,6 +141,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-600 to-blue-800",
     href: "/tools/pdf-to-word",
     category: "pdf",
+    processing: "server",
   },
   {
     id: "pdf-to-excel",
@@ -137,6 +151,7 @@ export const tools: ToolConfig[] = [
     color: "from-green-600 to-emerald-700",
     href: "/tools/pdf-to-excel",
     category: "pdf",
+    processing: "server",
   },
   {
     id: "pdf-to-ppt",
@@ -146,6 +161,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-500 to-red-600",
     href: "/tools/pdf-to-ppt",
     category: "pdf",
+    processing: "server",
   },
   {
     id: "image-to-pdf",
@@ -155,6 +171,7 @@ export const tools: ToolConfig[] = [
     color: "from-purple-500 to-violet-600",
     href: "/tools/image-to-pdf",
     category: "image",
+    processing: "local",
   },
   {
     id: "html-to-pdf",
@@ -164,6 +181,7 @@ export const tools: ToolConfig[] = [
     color: "from-sky-500 to-blue-600",
     href: "/tools/html-to-pdf",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "excel-to-pdf",
@@ -173,6 +191,7 @@ export const tools: ToolConfig[] = [
     color: "from-green-500 to-emerald-600",
     href: "/tools/excel-to-pdf",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "pipeline",
@@ -182,6 +201,7 @@ export const tools: ToolConfig[] = [
     color: "from-indigo-500 to-purple-600",
     href: "/tools/pipeline",
     category: "pdf",
+    processing: "local",
   },
   {
     id: "scan-to-pdf",
@@ -191,6 +211,7 @@ export const tools: ToolConfig[] = [
     color: "from-slate-700 to-slate-900",
     href: "/tools/scan-to-pdf",
     category: "pdf",
+    processing: "local",
   },
 
   // ============================================================
@@ -204,6 +225,7 @@ export const tools: ToolConfig[] = [
     color: "from-rose-500 to-purple-600",
     href: "/tools/bg-remover",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-upscaler",
@@ -213,6 +235,7 @@ export const tools: ToolConfig[] = [
     color: "from-amber-500 to-yellow-500",
     href: "/tools/image-upscaler",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-resize",
@@ -222,6 +245,7 @@ export const tools: ToolConfig[] = [
     color: "from-fuchsia-500 to-pink-600",
     href: "/tools/image-resize",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-compress",
@@ -231,6 +255,7 @@ export const tools: ToolConfig[] = [
     color: "from-emerald-500 to-teal-600",
     href: "/tools/image-compress",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-crop",
@@ -240,6 +265,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-500 to-red-600",
     href: "/tools/image-crop",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-convert",
@@ -249,6 +275,7 @@ export const tools: ToolConfig[] = [
     color: "from-cyan-500 to-blue-600",
     href: "/tools/image-convert",
     category: "image",
+    processing: "local",
   },
   {
     id: "passport-photo",
@@ -258,6 +285,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-600 to-blue-800",
     href: "/tools/passport-photo",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-rotate",
@@ -267,6 +295,7 @@ export const tools: ToolConfig[] = [
     color: "from-indigo-500 to-blue-600",
     href: "/tools/image-rotate",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-watermark",
@@ -276,6 +305,7 @@ export const tools: ToolConfig[] = [
     color: "from-pink-400 to-rose-500",
     href: "/tools/image-watermark",
     category: "image",
+    processing: "local",
   },
   {
     id: "image-to-base64",
@@ -285,6 +315,7 @@ export const tools: ToolConfig[] = [
     color: "from-slate-500 to-gray-700",
     href: "/tools/image-to-base64",
     category: "image",
+    processing: "local",
   },
 
   // ============================================================
@@ -298,6 +329,7 @@ export const tools: ToolConfig[] = [
     color: "from-violet-600 to-indigo-700",
     href: "/tools/ocr",
     category: "ocr",
+    processing: "local",
   },
   {
     id: "pdf-ocr",
@@ -307,6 +339,7 @@ export const tools: ToolConfig[] = [
     color: "from-indigo-500 to-violet-600",
     href: "/tools/pdf-ocr",
     category: "ocr",
+    processing: "local",
   },
   {
     id: "batch-ocr",
@@ -316,6 +349,7 @@ export const tools: ToolConfig[] = [
     color: "from-purple-500 to-indigo-600",
     href: "/tools/batch-ocr",
     category: "ocr",
+    processing: "local",
   },
   {
     id: "receipt-scanner",
@@ -325,6 +359,7 @@ export const tools: ToolConfig[] = [
     color: "from-emerald-500 to-teal-600",
     href: "/tools/receipt-scanner",
     category: "ocr",
+    processing: "local",
   },
   {
     id: "table-ocr",
@@ -334,6 +369,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-sky-600",
     href: "/tools/table-ocr",
     category: "ocr",
+    processing: "local",
   },
 
   // ============================================================
@@ -347,6 +383,7 @@ export const tools: ToolConfig[] = [
     color: "from-amber-500 to-orange-600",
     href: "/tools/doc-formatter",
     category: "documents",
+    processing: "local",
   },
   {
     id: "word-to-pdf",
@@ -356,6 +393,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-600 to-blue-800",
     href: "/tools/word-to-pdf",
     category: "documents",
+    processing: "server",
   },
   {
     id: "ppt-to-pdf",
@@ -365,6 +403,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-500 to-red-500",
     href: "/tools/ppt-to-pdf",
     category: "documents",
+    processing: "server",
   },
   {
     id: "ppt-to-images",
@@ -374,6 +413,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-400 to-amber-500",
     href: "/tools/ppt-to-images",
     category: "documents",
+    processing: "server",
   },
   {
     id: "ppt-compress",
@@ -383,6 +423,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-600 to-red-600",
     href: "/tools/ppt-compress",
     category: "documents",
+    processing: "local",
   },
   {
     id: "ppt-merge",
@@ -392,6 +433,7 @@ export const tools: ToolConfig[] = [
     color: "from-red-400 to-orange-500",
     href: "/tools/ppt-merge",
     category: "documents",
+    processing: "local",
   },
   {
     id: "word-counter",
@@ -401,6 +443,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-indigo-600",
     href: "/tools/word-counter",
     category: "documents",
+    processing: "local",
   },
   {
     id: "case-converter",
@@ -410,6 +453,7 @@ export const tools: ToolConfig[] = [
     color: "from-purple-500 to-indigo-600",
     href: "/tools/case-converter",
     category: "documents",
+    processing: "local",
   },
   {
     id: "text-formatter",
@@ -419,6 +463,7 @@ export const tools: ToolConfig[] = [
     color: "from-indigo-500 to-violet-600",
     href: "/tools/text-formatter",
     category: "documents",
+    processing: "local",
   },
   {
     id: "find-replace",
@@ -428,6 +473,7 @@ export const tools: ToolConfig[] = [
     color: "from-sky-500 to-blue-600",
     href: "/tools/find-replace",
     category: "documents",
+    processing: "local",
   },
   {
     id: "remove-duplicates",
@@ -437,6 +483,7 @@ export const tools: ToolConfig[] = [
     color: "from-rose-500 to-red-600",
     href: "/tools/remove-duplicates",
     category: "documents",
+    processing: "local",
   },
 
   // ============================================================
@@ -450,6 +497,7 @@ export const tools: ToolConfig[] = [
     color: "from-green-600 to-emerald-700",
     href: "/tools/emi-calculator",
     category: "calculators",
+    processing: "local",
   },
   {
     id: "gst-calculator",
@@ -459,6 +507,7 @@ export const tools: ToolConfig[] = [
     color: "from-orange-500 to-orange-700",
     href: "/tools/gst-calculator",
     category: "calculators",
+    processing: "local",
   },
   {
     id: "sip-calculator",
@@ -468,6 +517,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-blue-700",
     href: "/tools/sip-calculator",
     category: "calculators",
+    processing: "local",
   },
 
   // ============================================================
@@ -481,6 +531,7 @@ export const tools: ToolConfig[] = [
     color: "from-yellow-500 to-amber-600",
     href: "/tools/json-formatter",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "base64",
@@ -490,6 +541,7 @@ export const tools: ToolConfig[] = [
     color: "from-slate-600 to-gray-800",
     href: "/tools/base64",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "url-encoder",
@@ -499,6 +551,7 @@ export const tools: ToolConfig[] = [
     color: "from-blue-500 to-indigo-600",
     href: "/tools/url-encoder",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "color-picker",
@@ -508,6 +561,7 @@ export const tools: ToolConfig[] = [
     color: "from-rose-400 to-pink-500",
     href: "/tools/color-picker",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "qr-code",
@@ -517,6 +571,7 @@ export const tools: ToolConfig[] = [
     color: "from-gray-700 to-gray-900",
     href: "/tools/qr-code",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "qr-scanner",
@@ -526,6 +581,7 @@ export const tools: ToolConfig[] = [
     color: "from-emerald-500 to-teal-600",
     href: "/tools/qr-scanner",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "regex-tester",
@@ -535,6 +591,7 @@ export const tools: ToolConfig[] = [
     color: "from-purple-600 to-indigo-700",
     href: "/tools/regex-tester",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "hash-generator",
@@ -544,6 +601,7 @@ export const tools: ToolConfig[] = [
     color: "from-green-600 to-emerald-800",
     href: "/tools/hash-generator",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "password-generator",
@@ -553,6 +611,7 @@ export const tools: ToolConfig[] = [
     color: "from-red-500 to-rose-700",
     href: "/tools/password-generator",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "timestamp-converter",
@@ -562,6 +621,7 @@ export const tools: ToolConfig[] = [
     color: "from-amber-500 to-orange-600",
     href: "/tools/timestamp-converter",
     category: "dev-tools",
+    processing: "local",
   },
   {
     id: "css-gradient",
@@ -571,6 +631,7 @@ export const tools: ToolConfig[] = [
     color: "from-pink-500 to-violet-600",
     href: "/tools/css-gradient",
     category: "dev-tools",
+    processing: "local",
   },
 
   // ============================================================
@@ -584,6 +645,7 @@ export const tools: ToolConfig[] = [
     color: "from-emerald-500 to-green-700",
     href: "/tools/text-diff",
     category: "documents",
+    processing: "local",
   },
   {
     id: "line-sorter",
@@ -593,6 +655,7 @@ export const tools: ToolConfig[] = [
     color: "from-sky-500 to-blue-600",
     href: "/tools/line-sorter",
     category: "documents",
+    processing: "local",
   },
   {
     id: "color-palette",
@@ -602,6 +665,7 @@ export const tools: ToolConfig[] = [
     color: "from-rose-400 to-purple-600",
     href: "/tools/color-palette",
     category: "dev-tools",
+    processing: "local",
   },
 ];
 

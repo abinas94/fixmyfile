@@ -43,6 +43,13 @@ import {
   Eraser,
   ScanLine,
   Sparkles,
+  Code2,
+  ShieldCheck,
+  KeyRound,
+  Clock,
+  Paintbrush,
+  GitCompareArrows,
+  ArrowUpDown,
 } from "lucide-react";
 import type { ToolConfig } from "@/lib/tools-config";
 
@@ -91,10 +98,23 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Eraser,
   ScanLine,
   Sparkles,
+  Code2,
+  ShieldCheck,
+  KeyRound,
+  Clock,
+  Paintbrush,
+  GitCompare: GitCompareArrows,
+  ArrowUpDown,
 };
 
 export default function ToolCard({ tool }: { tool: ToolConfig }) {
   const Icon = iconMap[tool.icon] || Layers;
+
+  const badge = {
+    local: { label: "100% Local", shortLabel: "Local", bg: "bg-green-50 dark:bg-green-900/20", text: "text-green-700 dark:text-green-400", dot: "bg-green-500" },
+    server: { label: "Server", shortLabel: "Server", bg: "bg-blue-50 dark:bg-blue-900/20", text: "text-blue-700 dark:text-blue-400", dot: "bg-blue-500" },
+    hybrid: { label: "Hybrid", shortLabel: "Hybrid", bg: "bg-amber-50 dark:bg-amber-900/20", text: "text-amber-700 dark:text-amber-400", dot: "bg-amber-500" },
+  }[tool.processing] || { label: "100% Local", shortLabel: "Local", bg: "bg-green-50 dark:bg-green-900/20", text: "text-green-700 dark:text-green-400", dot: "bg-green-500" };
 
   return (
     <Link href={tool.href} className="group block">
@@ -110,10 +130,10 @@ export default function ToolCard({ tool }: { tool: ToolConfig }) {
         <p className="text-[10px] sm:text-xs lg:text-sm text-[var(--muted-foreground)] line-clamp-2 hidden sm:block">
           {tool.description}
         </p>
-        <div className="mt-2 sm:mt-3 lg:mt-4 inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[9px] sm:text-xs font-medium">
-          <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="hidden sm:inline">Client-side</span>
-          <span className="sm:hidden">Free</span>
+        <div className={`mt-2 sm:mt-3 lg:mt-4 inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full ${badge.bg} ${badge.text} text-[9px] sm:text-xs font-medium`}>
+          <span className={`w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${badge.dot} ${tool.processing === "local" ? "animate-pulse" : ""}`} />
+          <span className="hidden sm:inline">{badge.label}</span>
+          <span className="sm:hidden">{badge.shortLabel}</span>
         </div>
       </div>
     </Link>

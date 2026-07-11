@@ -35,7 +35,7 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 mb-6">
               <Shield className="w-4 h-4 text-green-600" />
               <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                100% Free &bull; No Sign-up &bull; Files never leave your browser
+                100% Free &bull; No Sign-up &bull; Most tools run locally in your browser
               </span>
             </div>
 
@@ -45,8 +45,8 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8 sm:mb-10">
-              PDF, images, documents, OCR, calculators — 67+ tools that work instantly
-              in your browser. No uploads. No sign-ups. No limits. Ever.
+              PDF, images, documents, OCR, dev tools — 63+ tools that work instantly.
+              Most run locally in your browser. A few use secure servers for best quality. Always free.
             </p>
 
             {/* Category highlights - clickable, scroll to tools section */}
@@ -215,16 +215,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl font-bold gradient-text">67+</p>
+              <p className="text-3xl font-bold gradient-text">63+</p>
               <p className="text-sm text-[var(--muted-foreground)] mt-1">Free Tools</p>
             </div>
             <div>
-              <p className="text-3xl font-bold gradient-text">0</p>
-              <p className="text-sm text-[var(--muted-foreground)] mt-1">Files Uploaded</p>
+              <p className="text-3xl font-bold gradient-text">55+</p>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1">100% Local Tools</p>
             </div>
             <div>
-              <p className="text-3xl font-bold gradient-text">100%</p>
-              <p className="text-sm text-[var(--muted-foreground)] mt-1">Client-Side</p>
+              <p className="text-3xl font-bold gradient-text">8</p>
+              <p className="text-sm text-[var(--muted-foreground)] mt-1">Server-Enhanced</p>
             </div>
             <div>
               <p className="text-3xl font-bold gradient-text">0</p>
