@@ -45,7 +45,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8 sm:mb-10">
-              PDF, images, documents, OCR, calculators — 50+ tools that work instantly
+              PDF, images, documents, OCR, calculators — 67+ tools that work instantly
               in your browser. No uploads. No sign-ups. No limits. Ever.
             </p>
 
@@ -74,6 +74,10 @@ export default function Home() {
               <button onClick={() => { setActiveCategory("dev-tools"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
                 <Code2 className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
                 <span className="text-xs sm:text-sm font-medium">Dev Tools</span>
+              </button>
+              <button onClick={() => { setActiveCategory("text-utilities"); document.getElementById("tools-grid")?.scrollIntoView({ behavior: "smooth" }); }} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:border-[var(--primary)] hover:scale-105 transition-all cursor-pointer">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-slate-500" />
+                <span className="text-xs sm:text-sm font-medium">Text Utilities</span>
               </button>
             </div>
 
@@ -215,7 +219,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl font-bold gradient-text">30+</p>
+              <p className="text-3xl font-bold gradient-text">67+</p>
               <p className="text-sm text-[var(--muted-foreground)] mt-1">Free Tools</p>
             </div>
             <div>
