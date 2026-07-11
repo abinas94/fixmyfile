@@ -583,7 +583,7 @@ export const tools: ToolConfig[] = [
   },
 
   // ============================================================
-  // TEXT UTILITIES (under dev-tools category)
+  // TEXT UTILITIES (under documents category)
   // ============================================================
   {
     id: "character-map",
@@ -592,7 +592,7 @@ export const tools: ToolConfig[] = [
     icon: "Type",
     color: "from-indigo-500 to-blue-600",
     href: "/tools/character-map",
-    category: "dev-tools",
+    category: "documents",
   },
   {
     id: "lorem-ipsum",
@@ -601,7 +601,7 @@ export const tools: ToolConfig[] = [
     icon: "FileText",
     color: "from-gray-500 to-slate-700",
     href: "/tools/lorem-ipsum",
-    category: "dev-tools",
+    category: "documents",
   },
   {
     id: "text-diff",
@@ -610,7 +610,7 @@ export const tools: ToolConfig[] = [
     icon: "GitCompare",
     color: "from-emerald-500 to-green-700",
     href: "/tools/text-diff",
-    category: "dev-tools",
+    category: "documents",
   },
   {
     id: "line-sorter",
@@ -619,7 +619,7 @@ export const tools: ToolConfig[] = [
     icon: "ArrowUpDown",
     color: "from-sky-500 to-blue-600",
     href: "/tools/line-sorter",
-    category: "dev-tools",
+    category: "documents",
   },
   {
     id: "text-reverser",
@@ -628,7 +628,7 @@ export const tools: ToolConfig[] = [
     icon: "Undo2",
     color: "from-orange-500 to-red-500",
     href: "/tools/text-reverser",
-    category: "dev-tools",
+    category: "documents",
   },
   {
     id: "color-palette",
