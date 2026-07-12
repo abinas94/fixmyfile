@@ -5,48 +5,38 @@ import { QrCode, ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
 
 export default function QRCodeGenerator() {
-  const [text, setText] = useState("https://example.com");
+  const [text, setText] = useState("https://fixmyfile.vercel.app");
   const [size, setSize] = useState(256);
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrReady, setQrReady] = useState(false);
 
-  // Simple QR code generation using Canvas API and a minimal QR encoder
   useEffect(() => {
     if (!text.trim()) { setQrReady(false); return; }
     generateQR();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, size, fgColor, bgColor]);
 
   const generateQR = async () => {
     const canvas = canvasRef.current;
     if (!canvas || !text.trim()) return;
 
-    const ctx = canvas.getContext("2d")!;
-    canvas.width = size;
-    canvas.height = size;
-
-    // Use a QR encoding approach via the qr-code API available in modern browsers
-    // Fallback: generate using an image from a public API for display purposes
-    // For client-side, we'll use a simple matrix generation
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, size, size);
-
-    // Generate QR matrix using a simple implementation
-    const modules = encodeQR(text);
-    const moduleCount = modules.length;
-    const moduleSize = size / moduleCount;
-
-    ctx.fillStyle = fgColor;
-    for (let row = 0; row < moduleCount; row++) {
-      for (let col = 0; col < moduleCount; col++) {
-        if (modules[row][col]) {
-          ctx.fillRect(col * moduleSize, row * moduleSize, moduleSize, moduleSize);
-        }
-      }
+    try {
+      const QRCode = (await import("qrcode")).default;
+      await QRCode.toCanvas(canvas, text, {
+        width: size,
+        margin: 2,
+        color: {
+          dark: fgColor,
+          light: bgColor,
+        },
+        errorCorrectionLevel: "M",
+      });
+      setQrReady(true);
+    } catch (err) {
+      console.error("QR generation error:", err);
+      setQrReady(false);
     }
-    setQrReady(true);
   };
 
   const downloadQR = () => {
@@ -57,68 +47,6 @@ export default function QRCodeGenerator() {
     a.href = canvas.toDataURL("image/png");
     a.click();
   };
-
-  // Minimal QR Code encoder (Version 1-4, Alphanumeric/Byte mode)
-  // This is a simplified implementation for demonstration
-  function encodeQR(data: string): boolean[][] {
-    const size = Math.max(21, Math.min(25, 21 + Math.floor(data.length / 20) * 4));
-    const matrix: boolean[][] = Array.from({ length: size }, () => Array(size).fill(false));
-
-    // Add finder patterns
-    addFinderPattern(matrix, 0, 0);
-    addFinderPattern(matrix, size - 7, 0);
-    addFinderPattern(matrix, 0, size - 7);
-
-    // Add timing patterns
-    for (let i = 8; i < size - 8; i++) {
-      matrix[6][i] = i % 2 === 0;
-      matrix[i][6] = i % 2 === 0;
-    }
-
-    // Encode data as a simple bit pattern
-    const bits = Array.from(data).flatMap((c) => {
-      const code = c.charCodeAt(0);
-      return Array.from({ length: 8 }, (_, i) => ((code >> (7 - i)) & 1) === 1);
-    });
-
-    // Place data bits in the matrix (simplified placement)
-    let bitIndex = 0;
-    for (let col = size - 1; col >= 1; col -= 2) {
-      if (col === 6) col--;
-      for (let row = 0; row < size; row++) {
-        for (let c = 0; c < 2; c++) {
-          const x = col - c;
-          const y = (col + 1) % 4 < 2 ? size - 1 - row : row;
-          if (y >= 0 && y < size && x >= 0 && x < size && !isReserved(y, x, size)) {
-            matrix[y][x] = bitIndex < bits.length ? bits[bitIndex] : (bitIndex + y + x) % 2 === 0;
-            bitIndex++;
-          }
-        }
-      }
-    }
-
-    return matrix;
-  }
-
-  function isReserved(row: number, col: number, size: number): boolean {
-    // Finder patterns + separator
-    if (row < 9 && col < 9) return true;
-    if (row < 9 && col >= size - 8) return true;
-    if (row >= size - 8 && col < 9) return true;
-    // Timing patterns
-    if (row === 6 || col === 6) return true;
-    return false;
-  }
-
-  function addFinderPattern(matrix: boolean[][], startRow: number, startCol: number) {
-    for (let r = 0; r < 7; r++) {
-      for (let c = 0; c < 7; c++) {
-        matrix[startRow + r][startCol + c] =
-          r === 0 || r === 6 || c === 0 || c === 6 ||
-          (r >= 2 && r <= 4 && c >= 2 && c <= 4);
-      }
-    }
-  }
 
   const presets = [
     { label: "URL", placeholder: "https://example.com" },
@@ -141,7 +69,7 @@ export default function QRCodeGenerator() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">QR Code Generator</h1>
-            <p className="text-[var(--muted-foreground)]">Generate QR codes for URLs, UPI, WiFi, and more</p>
+            <p className="text-[var(--muted-foreground)]">Generate scannable QR codes for URLs, UPI, WiFi, and more</p>
           </div>
         </div>
       </div>
@@ -149,7 +77,6 @@ export default function QRCodeGenerator() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4">
-          {/* Presets */}
           <div className="flex flex-wrap gap-2">
             {presets.map((p) => (
               <button key={p.label} onClick={() => setText(p.placeholder)}
@@ -203,6 +130,9 @@ export default function QRCodeGenerator() {
               <Download className="w-4 h-4" /> Download PNG
             </button>
           )}
+          <p className="text-xs text-[var(--muted-foreground)] text-center">
+            Uses proper Reed-Solomon error correction. QR codes scan reliably with any reader.
+          </p>
         </div>
       </div>
     </div>
