@@ -13,19 +13,11 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const quality = formData.get("quality") as string || "balanced";
+    const quality = (formData.get("quality") as string) || "balanced";
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
-
-    // DPI settings based on quality level
-    const dpiMap: Record<string, number> = {
-      maximum: 72,    // Aggressive — smallest file
-      balanced: 150,  // Good balance
-      minimum: 300,   // Light compression
-    };
-    const targetDpi = dpiMap[quality] || 150;
 
     // Step 1: Create upload task
     const uploadTaskRes = await fetch(`${BASE_URL}/import/upload`, {
@@ -55,145 +47,80 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Upload failed" }, { status: 502 });
     }
 
-    // Step 3: Create optimize task (PDF-specific compression)
-    const optimizeRes = await fetch(`${BASE_URL}/optimize`, {
+    // Step 3: Use convert (pdf to pdf) with Ghostscript engine for REAL compression
+    // Ghostscript actually recompresses images and reduces quality
+    const profileMap: Record<string, string> = {
+      maximum: "ebook",     // ~150dpi — aggressive compression
+      balanced: "printer",  // ~300dpi — good balance
+      minimum: "prepress",  // ~300dpi high quality — light compression
+    };
+    const profile = profileMap[quality] || "printer";
+
+    const convertRes = await fetch(`${BASE_URL}/convert`, {
       method: "POST",
       headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         input: [uploadTaskId],
         input_format: "pdf",
-        engine: "qpdf",
-        profile: quality === "maximum" ? "web" : quality === "minimum" ? "print" : "default",
+        output_format: "pdf",
+        engine: "ghostscript",
+        engine_version: "10",
+        pdf_a: false,
+        pages: null,
+        // Ghostscript profiles: screen (72dpi), ebook (150dpi), printer (300dpi), prepress (300dpi HQ)
+        ghostscript_pdfsettings: `/${profile === "ebook" ? "ebook" : profile === "prepress" ? "prepress" : "printer"}`,
       }),
     });
 
-    if (!optimizeRes.ok) {
-      // Fallback: use convert (pdf to pdf) with compression settings
-      const convertRes = await fetch(`${BASE_URL}/convert`, {
+    if (!convertRes.ok) {
+      const err = await convertRes.text();
+      console.error("Convert task failed:", err);
+      
+      // Fallback: try optimize with different engine
+      const optimizeRes = await fetch(`${BASE_URL}/optimize`, {
         method: "POST",
         headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           input: [uploadTaskId],
           input_format: "pdf",
-          output_format: "pdf",
-          engine: "libreoffice",
         }),
       });
 
-      if (!convertRes.ok) {
-        return NextResponse.json({ error: "Compression failed" }, { status: 502 });
+      if (!optimizeRes.ok) {
+        return NextResponse.json({ error: "Compression not available" }, { status: 502 });
       }
 
-      const convertData = await convertRes.json();
-      const convertTaskId = convertData.data.id;
+      const optimizeData = await optimizeRes.json();
+      const taskId = optimizeData.data.id;
+      const result = await waitForTask(taskId);
+      if (!result) return NextResponse.json({ error: "Compression timeout" }, { status: 504 });
 
-      // Wait for conversion
-      let attempts = 0;
-      while (attempts < 30) {
-        await new Promise((r) => setTimeout(r, 2000));
-        attempts++;
-        const statusRes = await fetch(`${BASE_URL}/tasks/${convertTaskId}`, {
-          headers: { Authorization: `Bearer ${API_KEY}` },
-        });
-        if (!statusRes.ok) continue;
-        const status = await statusRes.json();
-        if (status.data.status === "finished") break;
-        if (status.data.status === "error") {
-          return NextResponse.json({ error: "Compression failed" }, { status: 502 });
-        }
-      }
+      const buffer = await downloadResult(taskId);
+      if (!buffer) return NextResponse.json({ error: "Download failed" }, { status: 502 });
 
-      // Export
-      const exportRes = await fetch(`${BASE_URL}/export/url`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ input: [convertTaskId] }),
-      });
-      const exportData = await exportRes.json();
-      const exportTaskId = exportData.data.id;
-
-      attempts = 0;
-      let exportUrl = "";
-      while (attempts < 15) {
-        await new Promise((r) => setTimeout(r, 1500));
-        attempts++;
-        const statusRes = await fetch(`${BASE_URL}/tasks/${exportTaskId}`, {
-          headers: { Authorization: `Bearer ${API_KEY}` },
-        });
-        const status = await statusRes.json();
-        if (status.data.status === "finished" && status.data.result?.files?.length) {
-          exportUrl = status.data.result.files[0].url;
-          break;
-        }
-      }
-
-      if (!exportUrl) return NextResponse.json({ error: "Timeout" }, { status: 504 });
-      const fileRes = await fetch(exportUrl);
-      const buffer = await fileRes.arrayBuffer();
-
-      // Cleanup
-      fetch(`${BASE_URL}/tasks/${uploadTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
-      fetch(`${BASE_URL}/tasks/${convertTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
-      fetch(`${BASE_URL}/tasks/${exportTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
-
+      cleanup([uploadTaskId, taskId]);
       return new NextResponse(buffer, {
         headers: { "Content-Type": "application/pdf", "Content-Disposition": 'attachment; filename="compressed.pdf"' },
       });
     }
 
-    // Optimize task succeeded
-    const optimizeData = await optimizeRes.json();
-    const optimizeTaskId = optimizeData.data.id;
+    const convertData = await convertRes.json();
+    const convertTaskId = convertData.data.id;
 
-    // Wait for optimization
-    let attempts = 0;
-    while (attempts < 30) {
-      await new Promise((r) => setTimeout(r, 2000));
-      attempts++;
-      const statusRes = await fetch(`${BASE_URL}/tasks/${optimizeTaskId}`, {
-        headers: { Authorization: `Bearer ${API_KEY}` },
-      });
-      if (!statusRes.ok) continue;
-      const status = await statusRes.json();
-      if (status.data.status === "finished") break;
-      if (status.data.status === "error") {
-        return NextResponse.json({ error: "Optimization failed: " + (status.data.message || "") }, { status: 502 });
-      }
+    // Step 4: Wait for conversion
+    const finished = await waitForTask(convertTaskId);
+    if (!finished) {
+      return NextResponse.json({ error: "Compression timed out" }, { status: 504 });
     }
 
-    // Export
-    const exportRes = await fetch(`${BASE_URL}/export/url`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ input: [optimizeTaskId] }),
-    });
-    const exportData = await exportRes.json();
-    const exportTaskId = exportData.data.id;
-
-    attempts = 0;
-    let exportUrl = "";
-    while (attempts < 15) {
-      await new Promise((r) => setTimeout(r, 1500));
-      attempts++;
-      const statusRes = await fetch(`${BASE_URL}/tasks/${exportTaskId}`, {
-        headers: { Authorization: `Bearer ${API_KEY}` },
-      });
-      const status = await statusRes.json();
-      if (status.data.status === "finished" && status.data.result?.files?.length) {
-        exportUrl = status.data.result.files[0].url;
-        break;
-      }
+    // Step 5: Download result
+    const buffer = await downloadResult(convertTaskId);
+    if (!buffer) {
+      return NextResponse.json({ error: "Download failed" }, { status: 502 });
     }
 
-    if (!exportUrl) return NextResponse.json({ error: "Timeout" }, { status: 504 });
-
-    const fileRes = await fetch(exportUrl);
-    const buffer = await fileRes.arrayBuffer();
-
-    // Cleanup all tasks
-    fetch(`${BASE_URL}/tasks/${uploadTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
-    fetch(`${BASE_URL}/tasks/${optimizeTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
-    fetch(`${BASE_URL}/tasks/${exportTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
+    // Cleanup
+    cleanup([uploadTaskId, convertTaskId]);
 
     return new NextResponse(buffer, {
       headers: { "Content-Type": "application/pdf", "Content-Disposition": 'attachment; filename="compressed.pdf"' },
@@ -201,5 +128,63 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Compress API error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+async function waitForTask(taskId: string): Promise<boolean> {
+  for (let i = 0; i < 30; i++) {
+    await new Promise((r) => setTimeout(r, 2000));
+    const res = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
+    if (!res.ok) continue;
+    const data = await res.json();
+    if (data.data.status === "finished") return true;
+    if (data.data.status === "error") {
+      console.error("Task error:", data.data.message);
+      return false;
+    }
+  }
+  return false;
+}
+
+async function downloadResult(taskId: string): Promise<ArrayBuffer | null> {
+  // Create export
+  const exportRes = await fetch(`${BASE_URL}/export/url`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ input: [taskId] }),
+  });
+  if (!exportRes.ok) return null;
+
+  const exportData = await exportRes.json();
+  const exportTaskId = exportData.data.id;
+
+  // Wait for export
+  for (let i = 0; i < 15; i++) {
+    await new Promise((r) => setTimeout(r, 1500));
+    const res = await fetch(`${BASE_URL}/tasks/${exportTaskId}`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
+    if (!res.ok) continue;
+    const data = await res.json();
+    if (data.data.status === "finished" && data.data.result?.files?.length) {
+      const fileUrl = data.data.result.files[0].url;
+      const fileRes = await fetch(fileUrl);
+      if (!fileRes.ok) return null;
+
+      // Clean export task
+      fetch(`${BASE_URL}/tasks/${exportTaskId}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
+
+      return fileRes.arrayBuffer();
+    }
+    if (data.data.status === "error") return null;
+  }
+  return null;
+}
+
+function cleanup(taskIds: string[]) {
+  for (const id of taskIds) {
+    fetch(`${BASE_URL}/tasks/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${API_KEY}` } }).catch(() => {});
   }
 }
