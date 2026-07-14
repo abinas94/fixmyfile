@@ -1,9 +1,12 @@
+
 "use client";
 
 import { useState, useRef } from "react";
 import { Eraser, ArrowLeft, Download, Loader2, Share2 } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function BackgroundRemover() {
   const [files, setFiles] = useState<File[]>([]);
@@ -160,6 +163,8 @@ export default function BackgroundRemover() {
           <li>Output is PNG with transparent background</li>
         </ul>
       </div>
+
+      <ToolContent {...toolContentData.bgRemover} />
     </div>
   );
 }

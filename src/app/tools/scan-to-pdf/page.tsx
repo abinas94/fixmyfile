@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
@@ -7,6 +8,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 interface ScannedPage {
   id: string;
@@ -589,6 +592,8 @@ export default function ScanToPDF() {
           <p>📱 Works offline after first load (PWA)</p>
         </div>
       </div>
+
+      <ToolContent {...toolContentData.scanToPdf} />
     </div>
   );
 }

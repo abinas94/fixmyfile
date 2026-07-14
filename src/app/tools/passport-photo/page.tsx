@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -5,6 +6,8 @@ import { UserSquare2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 type PhotoSize = { name: string; w: number; h: number; dpi: number };
 
@@ -249,6 +252,8 @@ export default function PassportPhoto() {
       <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
         Generates a printable sheet with maximum passport photos. Print at 100% scale for correct dimensions.
       </p>
+
+      <ToolContent {...toolContentData.passportPhoto} />
     </div>
   );
 }

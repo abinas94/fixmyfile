@@ -1,8 +1,11 @@
+
 "use client";
 
 import { useState, useRef, useCallback } from "react";
 import { FileDown, ArrowLeft, Download, Trash2, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 interface ProcessedImage {
   id: string;
@@ -326,6 +329,8 @@ export default function ImageCompress() {
           SVGs are optimized using SVGO. HEIC files are decoded locally.
         </p>
       </div>
+
+      <ToolContent {...toolContentData.imageCompress} />
     </div>
   );
 }

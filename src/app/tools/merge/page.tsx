@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { mergePDFs, downloadBlob } from "@/lib/pdf-utils";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function MergePDF() {
   const [files, setFiles] = useState<File[]>([]);
@@ -102,6 +105,8 @@ export default function MergePDF() {
           <li>Your merged PDF will download automatically.</li>
         </ol>
       </div>
+
+      <ToolContent {...toolContentData.merge} />
     </div>
   );
 }

@@ -12,6 +12,8 @@ import {
   downloadBlob,
   downloadAsZip,
 } from "@/lib/pdf-utils";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 type SplitMode = "all" | "range";
 
@@ -202,6 +204,8 @@ export default function SplitPDF() {
           />
         </div>
       )}
+
+      <ToolContent {...toolContentData.split} />
     </div>
   );
 }

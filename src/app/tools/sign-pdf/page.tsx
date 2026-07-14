@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from "react";
@@ -7,6 +8,8 @@ import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { downloadBlob } from "@/lib/pdf-utils";
 import { PDFDocument } from "pdf-lib";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 type SignMode = "draw" | "upload" | "type";
 type Position = "bottom-right" | "bottom-left" | "bottom-center" | "top-right" | "top-left";
@@ -277,6 +280,8 @@ export default function SignPDF() {
           </div>
         </div>
       )}
+
+      <ToolContent {...toolContentData.signPdf} />
     </div>
   );
 }

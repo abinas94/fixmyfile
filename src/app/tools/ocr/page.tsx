@@ -1,9 +1,12 @@
+
 "use client";
 
 import { useState } from "react";
 import { ScanText, ArrowLeft, Copy, Check, Loader2, Download, FileText, Share2 } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function OCRTool() {
   const [files, setFiles] = useState<File[]>([]);
@@ -272,6 +275,8 @@ export default function OCRTool() {
           <li>First run downloads the language model (~2-4 MB), subsequent runs are faster</li>
         </ul>
       </div>
+
+      <ToolContent {...toolContentData.ocr} />
     </div>
   );
 }
