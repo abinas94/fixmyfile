@@ -5,6 +5,27 @@ import { ArrowRight, FileText } from "lucide-react";
 
 const posts = [
   {
+    slug: "how-to-convert-pdf-to-word-free",
+    title: "How to Convert PDF to Word Free Without Losing Formatting (2025)",
+    description: "Step-by-step guide to converting PDF files to editable Word documents while preserving tables, images, and fonts. Free, no signup required.",
+    date: "July 11, 2026",
+    readTime: "5 min read",
+  },
+  {
+    slug: "scan-documents-to-pdf-phone",
+    title: "How to Scan Documents to PDF With Your Phone (Free, No App)",
+    description: "Turn your phone camera into a document scanner. Scan papers, receipts, and documents to clean PDFs with edge detection and enhancement.",
+    date: "July 11, 2026",
+    readTime: "4 min read",
+  },
+  {
+    slug: "image-compression-guide",
+    title: "Image Compression Guide: JPEG vs PNG vs WebP vs AVIF (2025)",
+    description: "Complete guide to image formats. Learn when to use each for the smallest file size with best quality.",
+    date: "July 11, 2026",
+    readTime: "6 min read",
+  },
+  {
     slug: "compress-pdf-without-uploading",
     title: "How to Compress PDF Without Uploading Files (2025)",
     description: "Learn how to reduce PDF file size for free without uploading your documents to any server. 100% private, works in your browser.",
