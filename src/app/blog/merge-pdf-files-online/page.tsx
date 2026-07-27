@@ -64,15 +64,14 @@ export default function MergePDFPost() {
               <tr className="border-b border-[var(--border)]">
                 <th className="text-left py-2 pr-4">Feature</th>
                 <th className="text-center py-2 px-2">FixMyFile</th>
-                <th className="text-center py-2 px-2">iLovePDF</th>
-                <th className="text-center py-2 px-2">SmallPDF</th>
+                <th className="text-center py-2 px-2">Other Online Tools</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Processes locally</td><td className="text-center">✅</td><td className="text-center">❌</td><td className="text-center">❌</td></tr>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No file limit</td><td className="text-center">✅</td><td className="text-center">⚠️ 25 files</td><td className="text-center">❌ 2/day</td></tr>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No sign-up</td><td className="text-center">✅</td><td className="text-center">⚠️</td><td className="text-center">❌</td></tr>
-              <tr><td className="py-2 pr-4">Reorder by drag</td><td className="text-center">✅</td><td className="text-center">✅</td><td className="text-center">✅</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Processes locally</td><td className="text-center">✅</td><td className="text-center">❌ (upload to server)</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No file limit</td><td className="text-center">✅</td><td className="text-center">⚠️ 2-25 files/day</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No sign-up</td><td className="text-center">✅</td><td className="text-center">⚠️ Often required</td></tr>
+              <tr><td className="py-2 pr-4">Reorder by drag</td><td className="text-center">✅</td><td className="text-center">✅</td></tr>
             </tbody>
           </table>
         </div>

@@ -18,7 +18,7 @@ export default function BlogPost() {
 
       <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">
         <p className="text-lg text-[var(--muted-foreground)]">
-          You don&apos;t need Adobe Scan, CamScanner, or any app to scan documents to PDF. Your phone&apos;s browser is all you need. Here&apos;s how to turn physical papers into clean, professional PDFs in under 30 seconds.
+          You don&apos;t need any dedicated scanner app or software to scan documents to PDF. Your phone&apos;s browser is all you need. Here&apos;s how to turn physical papers into clean, professional PDFs in under 30 seconds.
         </p>
 
         <h2 className="text-2xl font-bold mt-8">Why Not Just Take a Photo?</h2>
@@ -84,22 +84,22 @@ export default function BlogPost() {
           <li><strong>PDF embedding</strong> — each page is embedded as a full-resolution image in the PDF using pdf-lib</li>
         </ul>
 
-        <h2 className="text-2xl font-bold mt-8">FixMyFile vs Adobe Scan vs CamScanner</h2>
+        <h2 className="text-2xl font-bold mt-8">FixMyFile vs Typical Scanner Apps</h2>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-[var(--border)] text-sm">
             <thead>
               <tr className="bg-[var(--muted)]">
                 <th className="border border-[var(--border)] p-2 text-left">Feature</th>
                 <th className="border border-[var(--border)] p-2 text-left">FixMyFile</th>
-                <th className="border border-[var(--border)] p-2 text-left">Adobe Scan</th>
-                <th className="border border-[var(--border)] p-2 text-left">CamScanner</th>
+                <th className="border border-[var(--border)] p-2 text-left">Paid Scanner Apps</th>
+                <th className="border border-[var(--border)] p-2 text-left">Free Scanner Apps</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td className="border border-[var(--border)] p-2">Price</td><td className="border border-[var(--border)] p-2 font-medium">Free</td><td className="border border-[var(--border)] p-2">$9.99/mo</td><td className="border border-[var(--border)] p-2">Free (with ads)</td></tr>
+              <tr><td className="border border-[var(--border)] p-2">Price</td><td className="border border-[var(--border)] p-2 font-medium">Free</td><td className="border border-[var(--border)] p-2">$5-10/mo</td><td className="border border-[var(--border)] p-2">Free (with ads)</td></tr>
               <tr><td className="border border-[var(--border)] p-2">App download</td><td className="border border-[var(--border)] p-2 font-medium">No (web-based)</td><td className="border border-[var(--border)] p-2">Yes</td><td className="border border-[var(--border)] p-2">Yes</td></tr>
-              <tr><td className="border border-[var(--border)] p-2">Privacy</td><td className="border border-[var(--border)] p-2 font-medium">100% local</td><td className="border border-[var(--border)] p-2">Uploads to Adobe cloud</td><td className="border border-[var(--border)] p-2">Uploads to server</td></tr>
-              <tr><td className="border border-[var(--border)] p-2">OCR</td><td className="border border-[var(--border)] p-2">Yes (optional)</td><td className="border border-[var(--border)] p-2">Yes</td><td className="border border-[var(--border)] p-2">Yes (paid)</td></tr>
+              <tr><td className="border border-[var(--border)] p-2">Privacy</td><td className="border border-[var(--border)] p-2 font-medium">100% local</td><td className="border border-[var(--border)] p-2">Uploads to cloud</td><td className="border border-[var(--border)] p-2">Uploads to server</td></tr>
+              <tr><td className="border border-[var(--border)] p-2">OCR</td><td className="border border-[var(--border)] p-2">Yes (optional)</td><td className="border border-[var(--border)] p-2">Yes</td><td className="border border-[var(--border)] p-2">Paid only</td></tr>
               <tr><td className="border border-[var(--border)] p-2">Multi-page</td><td className="border border-[var(--border)] p-2">Yes</td><td className="border border-[var(--border)] p-2">Yes</td><td className="border border-[var(--border)] p-2">Yes</td></tr>
               <tr><td className="border border-[var(--border)] p-2">Watermark</td><td className="border border-[var(--border)] p-2 font-medium">None</td><td className="border border-[var(--border)] p-2">None</td><td className="border border-[var(--border)] p-2">Yes (free tier)</td></tr>
             </tbody>

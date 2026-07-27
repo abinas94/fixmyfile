@@ -32,7 +32,7 @@ export default function BestPDFToolsPost() {
         <h2 className="text-2xl font-bold mt-8">1. FixMyFile (Best Overall — 100% Private)</h2>
         <p><a href="https://fixmyfile.vercel.app" className="text-[var(--primary)] underline">fixmyfile.vercel.app</a></p>
         <ul className="list-disc list-inside space-y-1 pl-4">
-          <li>55+ tools (merge, split, compress, convert, OCR, watermark, sign)</li>
+          <li>63+ tools (merge, split, compress, convert, OCR, watermark, sign)</li>
           <li>100% client-side — files never leave your browser</li>
           <li>No sign-up, no limits, works on mobile</li>
           <li>Includes non-PDF tools: image editor, background remover, calculators</li>
@@ -44,30 +44,30 @@ export default function BestPDFToolsPost() {
         <p>Mozilla&apos;s open-source PDF viewer. Not a tool suite, but great for viewing and basic annotation.</p>
         <p><strong>Best for:</strong> Developers who need to embed PDF viewing.</p>
 
-        <h2 className="text-2xl font-bold mt-8">3. iLovePDF</h2>
-        <p>Popular tool suite with 25+ PDF tools. Clean interface.</p>
+        <h2 className="text-2xl font-bold mt-8">3. Server-Based PDF Suites</h2>
+        <p>Many popular online PDF platforms offer 20-30 tools with a clean interface.</p>
         <ul className="list-disc list-inside space-y-1 pl-4">
-          <li>Uploads files to their server (privacy concern)</li>
-          <li>Free tier has daily limits</li>
-          <li>Requires account for some features</li>
+          <li>Upload files to their servers (privacy concern)</li>
+          <li>Free tiers have daily limits (typically 2-5 tasks/day)</li>
+          <li>Often require account creation for full access</li>
         </ul>
         <p><strong>Best for:</strong> Users who don&apos;t mind uploading files and want a polished UI.</p>
 
-        <h2 className="text-2xl font-bold mt-8">4. SmallPDF</h2>
-        <p>Well-known PDF platform with conversion tools.</p>
+        <h2 className="text-2xl font-bold mt-8">4. Cloud-Based PDF Platforms</h2>
+        <p>Well-known platforms with conversion and editing tools.</p>
         <ul className="list-disc list-inside space-y-1 pl-4">
-          <li>Limited to 2 free tasks per day</li>
-          <li>Requires sign-up for full access</li>
+          <li>Typically limited to 2 free tasks per day</li>
+          <li>Require sign-up for full access</li>
           <li>Files processed on their servers</li>
         </ul>
         <p><strong>Best for:</strong> Occasional use when you only need 1-2 operations.</p>
 
-        <h2 className="text-2xl font-bold mt-8">5. Sejda PDF</h2>
-        <p>Feature-rich PDF editor with a generous free tier.</p>
+        <h2 className="text-2xl font-bold mt-8">5. Desktop PDF Editors</h2>
+        <p>Feature-rich PDF editors with generous free tiers.</p>
         <ul className="list-disc list-inside space-y-1 pl-4">
-          <li>3 free tasks per day</li>
+          <li>3-5 free tasks per day</li>
           <li>50 page / 50MB file limit on free tier</li>
-          <li>Files uploaded to server</li>
+          <li>Some require software installation</li>
         </ul>
         <p><strong>Best for:</strong> Users who need PDF editing (not just conversion).</p>
 
@@ -78,8 +78,8 @@ export default function BestPDFToolsPost() {
               <tr className="border-b border-[var(--border)]">
                 <th className="text-left py-2 pr-4">Feature</th>
                 <th className="text-center py-2 px-2">FixMyFile</th>
-                <th className="text-center py-2 px-2">iLovePDF</th>
-                <th className="text-center py-2 px-2">SmallPDF</th>
+                <th className="text-center py-2 px-2">Server-Based</th>
+                <th className="text-center py-2 px-2">Cloud Platforms</th>
               </tr>
             </thead>
             <tbody>
@@ -88,16 +88,16 @@ export default function BestPDFToolsPost() {
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No daily limit</td><td className="text-center">✅</td><td className="text-center">⚠️ Limited</td><td className="text-center">❌ (2/day)</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Works offline</td><td className="text-center">✅</td><td className="text-center">❌</td><td className="text-center">❌</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Mobile friendly</td><td className="text-center">✅</td><td className="text-center">✅</td><td className="text-center">✅</td></tr>
-              <tr><td className="py-2 pr-4">Non-PDF tools</td><td className="text-center">✅ (55+)</td><td className="text-center">❌</td><td className="text-center">❌</td></tr>
+              <tr><td className="py-2 pr-4">Non-PDF tools</td><td className="text-center">✅ (63+)</td><td className="text-center">❌</td><td className="text-center">❌</td></tr>
             </tbody>
           </table>
         </div>
 
         <h2 className="text-2xl font-bold mt-8">Conclusion</h2>
-        <p>If privacy matters to you (and it should — especially for financial documents, contracts, or personal files), the only option that processes everything locally is <strong>FixMyFile</strong>. For casual use where privacy isn&apos;t a concern, iLovePDF and SmallPDF work fine.</p>
+        <p>If privacy matters to you (and it should — especially for financial documents, contracts, or personal files), the only option that processes everything locally is <strong>FixMyFile</strong>. For casual use where privacy isn&apos;t a concern, server-based tools work fine — but always check their data retention policies.</p>
 
         <div className="mt-10 p-6 rounded-2xl bg-[var(--muted)] border border-[var(--border)] text-center">
-          <p className="font-semibold mb-2">Try FixMyFile — 55+ tools, zero uploads</p>
+          <p className="font-semibold mb-2">Try FixMyFile — 63+ tools, zero uploads</p>
           <Link href="/" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--primary)] text-white font-semibold hover:opacity-90">
             Explore All Tools →
           </Link>

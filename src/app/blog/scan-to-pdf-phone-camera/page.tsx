@@ -56,19 +56,19 @@ export default function ScanToPDFPost() {
           <li><strong>Dark background</strong> — use a dark desk/surface so white paper edges are clear</li>
         </ul>
 
-        <h2 className="text-2xl font-bold mt-8">Why Not Just Use CamScanner?</h2>
+        <h2 className="text-2xl font-bold mt-8">Why Not Just Use a Scanner App?</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
                 <th className="text-left py-2 pr-4">Feature</th>
                 <th className="text-center py-2 px-2">FixMyFile</th>
-                <th className="text-center py-2 px-2">CamScanner</th>
+                <th className="text-center py-2 px-2">Typical Scanner Apps</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Free (no watermark)</td><td className="text-center">✅</td><td className="text-center">❌ (watermark on free)</td></tr>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No app install</td><td className="text-center">✅ (web-based)</td><td className="text-center">❌ (requires app)</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Free (no watermark)</td><td className="text-center">✅</td><td className="text-center">❌ (watermark on free tier)</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No app install</td><td className="text-center">✅ (web-based)</td><td className="text-center">❌ (requires download)</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No account</td><td className="text-center">✅</td><td className="text-center">❌</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Privacy</td><td className="text-center">✅ Local processing</td><td className="text-center">⚠️ Uploads to server</td></tr>
               <tr><td className="py-2 pr-4">Multi-page PDF</td><td className="text-center">✅</td><td className="text-center">✅</td></tr>

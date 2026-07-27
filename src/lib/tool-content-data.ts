@@ -190,7 +190,7 @@ export const toolContentData: Record<string, {
   },
   scanToPdf: {
     title: "Document Scanner (Scan to PDF)",
-    description: "Scan physical documents using your phone or webcam camera and convert them to clean, professional PDFs. Features live camera preview, edge detection, perspective correction, image enhancement filters, and multi-page support. Works like Adobe Scan but completely free with no app download required.",
+    description: "Scan physical documents using your phone or webcam camera and convert them to clean, professional PDFs. Features live camera preview, edge detection, perspective correction, image enhancement filters, and multi-page support. Completely free with no app download required.",
     howTo: [
       "Open the tool on your phone (works best with rear camera)",
       "Point the camera at your document",

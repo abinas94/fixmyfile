@@ -18,7 +18,7 @@ export default function ProtectPDFPost() {
       <p className="text-[var(--muted-foreground)] mb-8">July 22, 2026 • 4 min read</p>
 
       <div className="prose prose-lg dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">
-        <p className="text-lg">Need to password-protect a PDF before sharing it via email or cloud? Here&apos;s how to do it in seconds — no Adobe Acrobat, no paid software, just a free online tool.</p>
+        <p className="text-lg">Need to password-protect a PDF before sharing it via email or cloud? Here&apos;s how to do it in seconds — no paid software, no desktop apps, just a free online tool.</p>
 
         <h2 className="text-2xl font-bold mt-8">Why Password Protect a PDF?</h2>
         <ul className="list-disc list-inside space-y-2 pl-4">
@@ -61,15 +61,15 @@ export default function ProtectPDFPost() {
               <tr className="border-b border-[var(--border)]">
                 <th className="text-left py-2 pr-4">Feature</th>
                 <th className="text-center py-2 px-2">FixMyFile</th>
-                <th className="text-center py-2 px-2">Adobe Acrobat</th>
-                <th className="text-center py-2 px-2">iLovePDF</th>
+                <th className="text-center py-2 px-2">Paid Desktop Software</th>
+                <th className="text-center py-2 px-2">Other Online Tools</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Free</td><td className="text-center">✅</td><td className="text-center">❌ ($20/mo)</td><td className="text-center">⚠️ Limited</td></tr>
+              <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">Free</td><td className="text-center">✅</td><td className="text-center">❌ ($15-25/mo)</td><td className="text-center">⚠️ Limited</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">AES-256</td><td className="text-center">✅</td><td className="text-center">✅</td><td className="text-center">✅</td></tr>
               <tr className="border-b border-[var(--border)]"><td className="py-2 pr-4">No sign-up</td><td className="text-center">✅</td><td className="text-center">❌</td><td className="text-center">⚠️</td></tr>
-              <tr><td className="py-2 pr-4">Auto-delete files</td><td className="text-center">✅ (immediate)</td><td className="text-center">N/A</td><td className="text-center">2 hours</td></tr>
+              <tr><td className="py-2 pr-4">Auto-delete files</td><td className="text-center">✅ (immediate)</td><td className="text-center">N/A</td><td className="text-center">1-2 hours</td></tr>
             </tbody>
           </table>
         </div>

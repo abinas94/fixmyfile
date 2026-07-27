@@ -74,8 +74,7 @@ export default function BlogPost() {
             </thead>
             <tbody>
               <tr><td className="border border-[var(--border)] p-2 font-medium">FixMyFile</td><td className="border border-[var(--border)] p-2">High (Apryse engine)</td><td className="border border-[var(--border)] p-2">~75/day</td><td className="border border-[var(--border)] p-2">No</td></tr>
-              <tr><td className="border border-[var(--border)] p-2">iLovePDF</td><td className="border border-[var(--border)] p-2">High</td><td className="border border-[var(--border)] p-2">2/day</td><td className="border border-[var(--border)] p-2">Yes (for more)</td></tr>
-              <tr><td className="border border-[var(--border)] p-2">SmallPDF</td><td className="border border-[var(--border)] p-2">High</td><td className="border border-[var(--border)] p-2">2/day</td><td className="border border-[var(--border)] p-2">Yes</td></tr>
+              <tr><td className="border border-[var(--border)] p-2">Online PDF suites</td><td className="border border-[var(--border)] p-2">High</td><td className="border border-[var(--border)] p-2">2-5/day</td><td className="border border-[var(--border)] p-2">Often required</td></tr>
               <tr><td className="border border-[var(--border)] p-2">Google Docs</td><td className="border border-[var(--border)] p-2">Medium (loses formatting)</td><td className="border border-[var(--border)] p-2">Unlimited</td><td className="border border-[var(--border)] p-2">Yes (Google account)</td></tr>
             </tbody>
           </table>
