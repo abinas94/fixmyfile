@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FileText, Shield, Zap, Globe } from "lucide-react";
 
 export default function Footer() {
@@ -51,6 +52,14 @@ export default function Footer() {
               <span className="text-[var(--foreground)]">FixMy</span>
               <span style={{ background: "linear-gradient(135deg, #f97316, #ef4444, #ec4899)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>File</span>
             </span>
+          </div>
+          <div className="flex items-center gap-4 mb-4 sm:mb-0">
+            <Link href="/blog" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+              Blog
+            </Link>
+            <Link href="/contact" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+              Contact Us
+            </Link>
           </div>
           <p className="text-sm text-[var(--muted-foreground)]">
             Built with privacy in mind. Your files never leave your device.

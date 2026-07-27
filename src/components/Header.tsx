@@ -74,6 +74,12 @@ export default function Header() {
             >
               Pipeline
             </Link>
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Contact
+            </Link>
             {canInstall && (
               <button
                 onClick={handleInstall}
@@ -127,6 +133,13 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Pipeline
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm font-medium px-3 py-2 rounded-lg hover:bg-[var(--accent)]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
               </Link>
               {canInstall && (
                 <button
