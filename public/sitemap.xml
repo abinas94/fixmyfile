@@ -2,360 +2,398 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://fixmyfile.vercel.app/</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/contact</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.6</priority>
   </url>
 
   <!-- PDF Tools -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/merge</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/split</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/compress</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/extract-pages</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/rotate</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/watermark</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/page-numbers</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/crop-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/sign-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/protect-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/unlock-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pdf-to-image</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pdf-to-word</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pdf-to-excel</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pdf-to-ppt</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/html-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/excel-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pipeline</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/scan-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
 
   <!-- Image Tools -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/bg-remover</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-upscaler</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-resize</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-compress</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-crop</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-convert</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/passport-photo</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-rotate</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-watermark</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/image-to-base64</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
 
   <!-- OCR & Text Extraction -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/ocr</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/pdf-ocr</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/batch-ocr</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/receipt-scanner</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/table-ocr</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
 
   <!-- Document & Text Tools -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/doc-formatter</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/word-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/ppt-to-pdf</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/ppt-to-images</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/ppt-compress</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/ppt-merge</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/word-counter</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/case-converter</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/text-formatter</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/find-replace</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/remove-duplicates</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/tools/text-diff</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/tools/line-sorter</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.8</priority>
   </url>
 
   <!-- Calculators -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/emi-calculator</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/gst-calculator</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/sip-calculator</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
 
   <!-- Developer Tools -->
   <url>
     <loc>https://fixmyfile.vercel.app/tools/json-formatter</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/base64</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/url-encoder</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/color-picker</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/qr-code</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/qr-scanner</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/regex-tester</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/hash-generator</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/password-generator</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/timestamp-converter</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/css-gradient</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Text & Document Utilities -->
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/text-diff</loc>
-    <lastmod>2026-07-11</lastmod>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://fixmyfile.vercel.app/tools/line-sorter</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://fixmyfile.vercel.app/tools/color-palette</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.8</priority>
   </url>
 
   <!-- Blog -->
   <url>
     <loc>https://fixmyfile.vercel.app/blog</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://fixmyfile.vercel.app/blog/compress-pdf-without-uploading</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://fixmyfile.vercel.app/blog/protect-pdf-with-password</loc>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fixmyfile.vercel.app/blog/remove-background-free</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://fixmyfile.vercel.app/blog/unlock-pdf-remove-password</loc>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fixmyfile.vercel.app/blog/best-free-pdf-tools-2025</loc>
-    <lastmod>2026-07-02</lastmod>
+    <loc>https://fixmyfile.vercel.app/blog/convert-pdf-to-excel-free</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/convert-pdf-to-powerpoint</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/convert-word-to-pdf-free</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/compress-powerpoint-reduce-size</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/convert-ppt-to-pdf-free</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/merge-pdf-files-online</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/ocr-extract-text-from-images</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/scan-to-pdf-phone-camera</loc>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
@@ -371,6 +409,21 @@
   <url>
     <loc>https://fixmyfile.vercel.app/blog/image-compression-guide</loc>
     <lastmod>2026-07-11</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/compress-pdf-without-uploading</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/remove-background-free</loc>
+    <lastmod>2026-07-02</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/blog/best-free-pdf-tools-2025</loc>
+    <lastmod>2026-07-22</lastmod>
     <priority>0.9</priority>
   </url>
 </urlset>
