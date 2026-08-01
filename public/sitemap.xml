@@ -11,6 +11,21 @@
     <lastmod>2026-07-22</lastmod>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/about</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/privacy</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://fixmyfile.vercel.app/terms</loc>
+    <lastmod>2026-07-22</lastmod>
+    <priority>0.5</priority>
+  </url>
 
   <!-- PDF Tools -->
   <url>

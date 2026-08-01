@@ -54,11 +54,20 @@ export default function Footer() {
             </span>
           </div>
           <div className="flex items-center gap-4 mb-4 sm:mb-0">
+            <Link href="/about" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+              About
+            </Link>
             <Link href="/blog" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
               Blog
             </Link>
             <Link href="/contact" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
               Contact Us
+            </Link>
+            <Link href="/privacy" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+              Terms
             </Link>
           </div>
           <p className="text-sm text-[var(--muted-foreground)]">
