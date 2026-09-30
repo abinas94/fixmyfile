@@ -12,12 +12,14 @@ import { toolContentData } from "@/lib/tool-content-data";
 type PhotoSize = { name: string; w: number; h: number; dpi: number };
 
 const sizes: PhotoSize[] = [
-  { name: "Indian Passport (3.5x4.5 cm)", w: 413, h: 531, dpi: 300 },
-  { name: "Indian Visa (2x2 inch)", w: 600, h: 600, dpi: 300 },
-  { name: "Aadhaar Card (3.5x4.5 cm)", w: 413, h: 531, dpi: 300 },
-  { name: "PAN Card (2.5x2.5 cm)", w: 295, h: 295, dpi: 300 },
-  { name: "Stamp Size (2x2.5 cm)", w: 236, h: 295, dpi: 300 },
-  { name: "US Visa (2x2 inch)", w: 600, h: 600, dpi: 300 },
+  { name: "Passport (3.5 × 4.5 cm)", w: 413, h: 531, dpi: 300 },
+  { name: "Exam Photo (3 × 4 cm)", w: 354, h: 472, dpi: 300 },
+  { name: "Mini / Postal (2.5 × 3.5 cm)", w: 295, h: 413, dpi: 300 },
+  { name: "Indian Visa (2 × 2 inch)", w: 600, h: 600, dpi: 300 },
+  { name: "Aadhaar Card (3.5 × 4.5 cm)", w: 413, h: 531, dpi: 300 },
+  { name: "PAN Card (2.5 × 2.5 cm)", w: 295, h: 295, dpi: 300 },
+  { name: "Stamp Size (2 × 2.5 cm)", w: 236, h: 295, dpi: 300 },
+  { name: "US Visa (2 × 2 inch)", w: 600, h: 600, dpi: 300 },
 ];
 
 type PaperSize = { name: string; w: number; h: number };
@@ -38,6 +40,7 @@ export default function PassportPhoto() {
   const [selectedSize, setSelectedSize] = useState(0);
   const [selectedPaper, setSelectedPaper] = useState(0);
   const [enhance, setEnhance] = useState(false);
+  const [border, setBorder] = useState(true);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [photoCount, setPhotoCount] = useState(0);
 
@@ -128,10 +131,18 @@ export default function PassportPhoto() {
         const x = offsetX + col * (size.w + padding);
         const y = offsetY + row * (size.h + padding);
         ctx.drawImage(finalPhotoCanvas, x, y);
-        // Light cut lines
-        ctx.strokeStyle = "#cccccc";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(x, y, size.w, size.h);
+        if (border) {
+          // Thin black border drawn just inside the photo edges so it isn't clipped
+          const bw = Math.max(2, Math.round(size.w * 0.006));
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = bw;
+          ctx.strokeRect(x + bw / 2, y + bw / 2, size.w - bw, size.h - bw);
+        } else {
+          // Light cut lines
+          ctx.strokeStyle = "#cccccc";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x, y, size.w, size.h);
+        }
       }
 
       const blob = await new Promise<Blob>((resolve) => {
@@ -162,7 +173,7 @@ export default function PassportPhoto() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Passport Photo Maker</h1>
-            <p className="text-[var(--muted-foreground)]">Create passport-size photos (Indian standards)</p>
+            <p className="text-[var(--muted-foreground)]">Create passport & exam photos — 3.5×4.5 cm, 3×4 cm, mini/postal & more</p>
           </div>
         </div>
       </div>
@@ -184,10 +195,17 @@ export default function PassportPhoto() {
             </div>
           </div>
           <label className="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 cursor-pointer">
-            <input type="checkbox" checked={enhance} onChange={(e) => setEnhance(e.target.checked)} className="rounded" />
+            <input type="checkbox" checked={enhance} onChange={(e) => { setEnhance(e.target.checked); setIsComplete(false); }} className="rounded" />
             <div>
               <span className="text-sm font-medium">AI Enhance quality</span>
               <p className="text-xs text-[var(--muted-foreground)]">Sharpens blurry photos (takes 10-20s extra). Does not modify face.</p>
+            </div>
+          </label>
+          <label className="flex items-center gap-3 p-3 rounded-xl bg-[var(--muted)] border border-[var(--border)] cursor-pointer">
+            <input type="checkbox" checked={border} onChange={(e) => { setBorder(e.target.checked); setIsComplete(false); }} className="rounded" />
+            <div>
+              <span className="text-sm font-medium">Thin black border</span>
+              <p className="text-xs text-[var(--muted-foreground)]">Adds a crisp black outline around each photo (helps cutting). Uncheck for light gray cut lines.</p>
             </div>
           </label>
           <div>
