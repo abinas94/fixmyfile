@@ -50,6 +50,7 @@ import {
   Paintbrush,
   GitCompareArrows,
   ArrowUpDown,
+  Images,
 } from "lucide-react";
 import type { ToolConfig } from "@/lib/tools-config";
 
@@ -105,6 +106,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Paintbrush,
   GitCompare: GitCompareArrows,
   ArrowUpDown,
+  Images,
 };
 
 export default function ToolCard({ tool }: { tool: ToolConfig }) {

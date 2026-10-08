@@ -216,6 +216,33 @@ export const toolContentData: Record<string, {
       { q: "Is the PDF searchable?", a: "Enable the OCR toggle before exporting. This adds an invisible text layer so you can search and copy text from the PDF." },
     ],
   },
+  imageMerge: {
+    title: "Merge Images Online",
+    description: "Combine two or more images into a single picture, right in your browser. Place photos side by side, stack them vertically, or arrange them in a grid. Control the spacing, pick a background color (or keep it transparent), reorder images by dragging, and export as PNG or JPG. Nothing is uploaded — all processing happens locally on your device.",
+    howTo: [
+      "Add two or more images by dragging them in or clicking to browse",
+      "Drag the thumbnails to set the order they appear",
+      "Choose a layout: side by side, stacked, or grid",
+      "Adjust spacing, background color, and output format (PNG or JPG)",
+      "Click Merge Images, then download the combined picture",
+    ],
+    features: [
+      "Three layouts: horizontal, vertical, and grid with adjustable columns",
+      "Adjustable spacing between images",
+      "Custom background color or transparent background (PNG)",
+      "Reorder images by dragging before merging",
+      "Export as PNG (lossless) or JPG",
+      "Works with JPG, PNG, WebP and other common formats",
+      "100% client-side — images never leave your browser",
+      "No sign-up, no watermark, no file size limits",
+    ],
+    faqs: [
+      { q: "How many images can I merge?", a: "Up to 30 images at once. For a clean grid, 2 to 9 images usually works best." },
+      { q: "Can I keep a transparent background?", a: "Yes. Choose PNG as the output format and tick 'Transparent background'. Gaps and empty grid cells stay transparent. JPG does not support transparency." },
+      { q: "Will my images be uploaded to a server?", a: "No. Merging happens entirely in your browser using the HTML canvas, so your images never leave your device." },
+      { q: "How are different image sizes handled?", a: "Side-by-side matches heights, stacked matches widths, and grid fits each image inside a uniform cell while keeping its aspect ratio." },
+    ],
+  },
   passportPhoto: {
     title: "Passport Photo Maker",
     description: "Create standard passport-size photos for Indian passport, visa, and ID card applications. Automatically sizes and arranges photos on a printable sheet (A4, A5, 4x6, 5x7, or Letter). Just upload a photo with a plain background — the tool handles cropping and layout.",

@@ -298,6 +298,16 @@ export const tools: ToolConfig[] = [
     processing: "local",
   },
   {
+    id: "image-merge",
+    name: "Merge Images",
+    description: "Combine multiple images into one, side by side or in a grid",
+    icon: "Images",
+    color: "from-fuchsia-500 to-purple-600",
+    href: "/tools/image-merge",
+    category: "image",
+    processing: "local",
+  },
+  {
     id: "image-watermark",
     name: "Watermark Image",
     description: "Add tiled text watermark to images",

@@ -171,6 +171,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://fixmyfile.vercel.app/tools/image-merge</loc>
+    <lastmod>2026-09-30</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://fixmyfile.vercel.app/tools/image-watermark</loc>
     <lastmod>2026-07-22</lastmod>
     <priority>0.7</priority>
