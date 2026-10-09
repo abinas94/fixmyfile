@@ -81,6 +81,74 @@ export async function compressPDF(
   return pdf.save(saveOptions);
 }
 
+// Real client-side compression: rasterize each page via pdf.js, re-encode as
+// JPEG at a quality-dependent scale, and rebuild the PDF. This genuinely
+// reduces size for image-heavy / scanned PDFs (the common case) without a server.
+// Returns whichever is smaller: the rasterized result or the original bytes.
+export async function compressPDFRaster(
+  file: File,
+  quality: "low" | "medium" | "high" = "medium",
+  onProgress?: (page: number, total: number) => void
+): Promise<Uint8Array> {
+  const original = new Uint8Array(await file.arrayBuffer());
+
+  // Quality → render scale (controls output DPI) and JPEG quality.
+  // "low" = maximum compression, "high" = light compression.
+  const settings = {
+    low: { scale: 1.0, jpeg: 0.5 },
+    medium: { scale: 1.4, jpeg: 0.65 },
+    high: { scale: 2.0, jpeg: 0.8 },
+  }[quality];
+
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+
+  const loadingTask = pdfjsLib.getDocument({ data: original.slice() });
+  const srcDoc = await loadingTask.promise;
+  const outPdf = await PDFDocument.create();
+
+  for (let i = 1; i <= srcDoc.numPages; i++) {
+    onProgress?.(i, srcDoc.numPages);
+    const page = await srcDoc.getPage(i);
+    const viewport = page.getViewport({ scale: settings.scale });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.floor(viewport.width));
+    canvas.height = Math.max(1, Math.floor(viewport.height));
+    const ctx = canvas.getContext("2d")!;
+    // White background so transparent regions don't turn black in JPEG
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    await page.render({
+      canvasContext: ctx,
+      viewport,
+      canvas,
+    } as unknown as Parameters<typeof page.render>[0]).promise;
+
+    const jpegBlob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Encode failed"))), "image/jpeg", settings.jpeg);
+    });
+    const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer());
+    const embedded = await outPdf.embedJpg(jpegBytes);
+
+    // Use original page dimensions (points) so the page size is preserved
+    const base = page.getViewport({ scale: 1 });
+    const outPage = outPdf.addPage([base.width, base.height]);
+    outPage.drawImage(embedded, { x: 0, y: 0, width: base.width, height: base.height });
+
+    canvas.width = 0;
+    canvas.height = 0;
+  }
+
+  await loadingTask.destroy();
+
+  const rasterized = await outPdf.save({ useObjectStreams: true });
+
+  // Never hand back something larger than the input.
+  return rasterized.length < original.length ? rasterized : original;
+}
+
 // Rotate PDF pages
 export async function rotatePDF(
   file: File,

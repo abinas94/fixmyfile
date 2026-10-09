@@ -25,7 +25,8 @@ export default function CompressPDF() {
     try {
       const originalSize = files[0].size;
 
-      // Try server-side first (best quality)
+      // Try server-side first (best quality via Ghostscript). Only fall back to
+      // client-side when the server is genuinely unavailable, not on every error.
       try {
         const formData = new FormData();
         formData.append("file", files[0]);
@@ -51,18 +52,29 @@ export default function CompressPDF() {
           setProgress("");
           return;
         }
-      } catch { /* Server failed, fall through to client-side */ }
+        // Server responded but failed (e.g. quota exceeded). Log why, then fall back.
+        console.warn("Server compression unavailable, using local compression:", response.status);
+      } catch {
+        console.warn("Server compression request failed, using local compression");
+      }
 
-      // Fallback: client-side compression (basic but works)
-      setProgress("Using local compression...");
-      const { compressPDF, downloadBlob } = await import("@/lib/pdf-utils");
-      const qualityMap = { maximum: "high" as const, balanced: "medium" as const, minimum: "low" as const };
-      const compressed = await compressPDF(files[0], qualityMap[quality]);
+      // Fallback: real client-side compression — rasterizes pages and re-encodes
+      // images, which actually reduces size (works offline, no server needed).
+      setProgress("Compressing locally...");
+      const { compressPDFRaster, downloadBlob } = await import("@/lib/pdf-utils");
+      const qualityMap = { maximum: "low" as const, balanced: "medium" as const, minimum: "high" as const };
+      const compressed = await compressPDFRaster(files[0], qualityMap[quality], (page, total) => {
+        setProgress(`Compressing locally… page ${page} of ${total}`);
+      });
       const newSize = compressed.length;
       setResult({ originalSize, newSize });
+      if (newSize >= originalSize) {
+        setProgress("This PDF is already optimized — no further reduction possible.");
+      } else {
+        setProgress("");
+      }
       downloadBlob(compressed, `compressed-${files[0].name}`);
       setIsComplete(true);
-      setProgress("");
     } catch (error) {
       alert("Error: " + (error instanceof Error ? error.message : "Compression failed"));
       setProgress("");
