@@ -5,7 +5,7 @@ import { QrCode, ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
 
 export default function QRCodeGenerator() {
-  const [text, setText] = useState("https://fixmyfile.vercel.app");
+  const [text, setText] = useState("https://fixmyfile.co.in");
   const [size, setSize] = useState(256);
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");

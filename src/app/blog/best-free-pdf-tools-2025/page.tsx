@@ -30,7 +30,7 @@ export default function BestPDFToolsPost() {
         </ul>
 
         <h2 className="text-2xl font-bold mt-8">1. FixMyFile (Best Overall — 100% Private)</h2>
-        <p><a href="https://fixmyfile.vercel.app" className="text-[var(--primary)] underline">fixmyfile.vercel.app</a></p>
+        <p><a href="https://fixmyfile.co.in" className="text-[var(--primary)] underline">fixmyfile.co.in</a></p>
         <ul className="list-disc list-inside space-y-1 pl-4">
           <li>63+ tools (merge, split, compress, convert, OCR, watermark, sign)</li>
           <li>100% client-side — files never leave your browser</li>

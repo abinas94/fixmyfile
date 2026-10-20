@@ -40,7 +40,7 @@ export default function RemoveBackgroundPost() {
 
         <h2 className="text-2xl font-bold mt-8">How to Remove Background (Step by Step)</h2>
         <ol className="list-decimal list-inside space-y-3 pl-4">
-          <li>Open <a href="https://fixmyfile.vercel.app/tools/bg-remover" className="text-[var(--primary)] underline">FixMyFile Background Remover</a></li>
+          <li>Open <a href="https://fixmyfile.co.in/tools/bg-remover" className="text-[var(--primary)] underline">FixMyFile Background Remover</a></li>
           <li>Upload any photo (person, product, pet, logo — anything)</li>
           <li>Click &quot;Remove Background (AI)&quot;</li>
           <li>Wait 5-10 seconds while the AI processes</li>

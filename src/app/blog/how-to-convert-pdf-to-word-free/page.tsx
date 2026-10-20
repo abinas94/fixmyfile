@@ -38,7 +38,7 @@ export default function BlogPost() {
 
         <h2 className="text-2xl font-bold mt-8">Step-by-Step: Convert PDF to Word on FixMyFile</h2>
         <ol className="list-decimal pl-6 space-y-2">
-          <li><strong>Go to</strong> <Link href="/tools/pdf-to-word" className="text-[var(--primary)] hover:underline">fixmyfile.vercel.app/tools/pdf-to-word</Link></li>
+          <li><strong>Go to</strong> <Link href="/tools/pdf-to-word" className="text-[var(--primary)] hover:underline">fixmyfile.co.in/tools/pdf-to-word</Link></li>
           <li><strong>Upload your PDF</strong> — drag and drop or click to browse</li>
           <li><strong>Click &quot;Convert to Word&quot;</strong> — processing takes 5-15 seconds</li>
           <li><strong>Download your .docx</strong> — open in Microsoft Word, Google Docs, or LibreOffice</li>

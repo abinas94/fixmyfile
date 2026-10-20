@@ -34,7 +34,7 @@ export default function CompressPDFPost() {
 
         <h2 className="text-2xl font-bold mt-8">How to Compress PDF Privately (Step by Step)</h2>
         <ol className="list-decimal list-inside space-y-3 pl-4">
-          <li>Open <a href="https://fixmyfile.vercel.app/tools/compress" className="text-[var(--primary)] underline">FixMyFile PDF Compressor</a></li>
+          <li>Open <a href="https://fixmyfile.co.in/tools/compress" className="text-[var(--primary)] underline">FixMyFile PDF Compressor</a></li>
           <li>Drop your PDF file onto the page (or click to browse)</li>
           <li>Select compression level: Maximum, Balanced, or Minimum</li>
           <li>Click &quot;Compress & Download&quot;</li>

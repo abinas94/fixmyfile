@@ -35,7 +35,7 @@ export default function BlogPost() {
         <h2 className="text-2xl font-bold mt-8">How to Scan with FixMyFile (Step-by-Step)</h2>
         <ol className="list-decimal pl-6 space-y-3">
           <li>
-            <strong>Open the scanner</strong> — Go to <Link href="/tools/scan-to-pdf" className="text-[var(--primary)] hover:underline">fixmyfile.vercel.app/tools/scan-to-pdf</Link> on your phone
+            <strong>Open the scanner</strong> — Go to <Link href="/tools/scan-to-pdf" className="text-[var(--primary)] hover:underline">fixmyfile.co.in/tools/scan-to-pdf</Link> on your phone
           </li>
           <li>
             <strong>Allow camera access</strong> — The tool uses your rear camera at maximum resolution (up to 4K)

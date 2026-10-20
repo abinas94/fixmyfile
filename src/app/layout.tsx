@@ -7,9 +7,27 @@ import InstallBanner from "@/components/InstallBanner";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fixmyfile.co.in"),
+  alternates: {
+    canonical: "/",
+  },
   title: "FixMyFile - Free Online File Tools | PDF, Image, OCR, Documents",
   description:
     "Free online tools to fix, convert, and edit your files instantly. PDF merge, split, compress. Image editor, background remover, OCR text extraction. All processing in your browser — no uploads, no sign-up, 100% private.",
+  openGraph: {
+    type: "website",
+    url: "https://fixmyfile.co.in",
+    siteName: "FixMyFile",
+    title: "FixMyFile - Free Online File Tools | PDF, Image, OCR, Documents",
+    description:
+      "55+ free browser-based tools for PDFs, images, documents and OCR. No uploads, no sign-up, 100% private.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FixMyFile - Free Online File Tools",
+    description:
+      "55+ free browser-based tools for PDFs, images, documents and OCR. No uploads, no sign-up.",
+  },
   keywords: [
     "PDF tools online free",
     "merge PDF",
