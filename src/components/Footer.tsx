@@ -74,6 +74,14 @@ export default function Footer() {
             Built with privacy in mind. Your files never leave your device.
           </p>
         </div>
+
+        {/* LaunchBuff badge */}
+        <div className="flex justify-center pt-8">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <a href="https://launchbuff.com/products/fixmyfile-erx1t0" target="_blank" rel="noopener noreferrer" title="Featured on LaunchBuff">
+            <img src="https://launchbuff.com/badge-featured-dark.svg" alt="Featured on LaunchBuff" width="256" height="80" />
+          </a>
+        </div>
       </div>
     </footer>
   );
