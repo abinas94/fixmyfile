@@ -216,6 +216,33 @@ export const toolContentData: Record<string, {
       { q: "Is the PDF searchable?", a: "Enable the OCR toggle before exporting. This adds an invisible text layer so you can search and copy text from the PDF." },
     ],
   },
+  resizeToKb: {
+    title: "Resize Image to KB",
+    description: "Compress a photo or signature to an exact file size — like 20KB, 50KB, or 100KB — to meet the limits on exam, job, passport, banking, and government portal upload forms. Pick a target size, and the tool automatically adjusts quality (and dimensions if needed) to land just under your limit. Everything runs in your browser, so your documents are never uploaded to a server.",
+    howTo: [
+      "Upload your photo or signature image",
+      "Choose a target size (20KB, 50KB, 100KB) or type a custom KB value",
+      "Pick JPG, or WebP for an even smaller file",
+      "Click Resize — the tool finds the best quality that fits under your limit",
+      "Download the resized image ready for your form upload",
+    ],
+    features: [
+      "Hit exact KB targets for portal upload limits",
+      "Presets for 10, 20, 50, 100, 200, 500 KB plus custom sizes",
+      "Automatic quality search — no manual trial and error",
+      "Optional dimension reduction when quality alone isn't enough",
+      "Works for passport photos, signatures, and scanned documents",
+      "JPG and WebP output",
+      "100% client-side — files never leave your browser",
+      "No sign-up, no watermark",
+    ],
+    faqs: [
+      { q: "Why do exam and job forms need photos under a certain KB?", a: "Government and exam portals (SSC, UPSC, banking, passport, university forms) cap upload size — often 20KB–100KB for photos and 10KB–50KB for signatures — to save storage and bandwidth. This tool hits those limits exactly." },
+      { q: "How does it reach the exact size?", a: "It binary-searches the JPG/WebP quality to find the largest version that stays under your target. If quality alone can't get there, it optionally shrinks the dimensions until it fits." },
+      { q: "Will my photo look bad at 20KB?", a: "Very small targets reduce quality, but the tool keeps the highest quality that fits. For strict limits, WebP usually looks better than JPG at the same size." },
+      { q: "Is my document uploaded anywhere?", a: "No. All resizing happens in your browser, so your photo, signature, or document never leaves your device." },
+    ],
+  },
   imageMerge: {
     title: "Merge Images Online",
     description: "Combine two or more images into a single picture, right in your browser. Place photos side by side, stack them vertically, or arrange them in a grid. Control the spacing, pick a background color (or keep it transparent), reorder images by dragging, and export as PNG or JPG. Nothing is uploaded — all processing happens locally on your device.",

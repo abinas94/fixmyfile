@@ -51,6 +51,7 @@ import {
   GitCompareArrows,
   ArrowUpDown,
   Images,
+  Gauge,
 } from "lucide-react";
 import type { ToolConfig } from "@/lib/tools-config";
 
@@ -107,6 +108,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   GitCompare: GitCompareArrows,
   ArrowUpDown,
   Images,
+  Gauge,
 };
 
 export default function ToolCard({ tool }: { tool: ToolConfig }) {

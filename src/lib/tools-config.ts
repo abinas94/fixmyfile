@@ -238,6 +238,16 @@ export const tools: ToolConfig[] = [
     processing: "local",
   },
   {
+    id: "resize-to-kb",
+    name: "Resize Image to KB",
+    description: "Compress photo/signature to 20KB, 50KB, 100KB for form uploads",
+    icon: "Gauge",
+    color: "from-emerald-500 to-green-700",
+    href: "/tools/resize-to-kb",
+    category: "image",
+    processing: "local",
+  },
+  {
     id: "image-resize",
     name: "Resize Image",
     description: "Resize to exact dimensions or percentage",
