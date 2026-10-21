@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { KeyRound, ArrowLeft, Copy, Check, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 function generatePassword(length: number, options: { uppercase: boolean; lowercase: boolean; numbers: boolean; symbols: boolean }): string {
   let chars = "";
@@ -138,6 +140,8 @@ export default function PasswordGenerator() {
           Generate Password
         </button>
       </div>
+    
+      <ToolContent {...toolContentData.passwordGenerator} />
     </div>
   );
 }

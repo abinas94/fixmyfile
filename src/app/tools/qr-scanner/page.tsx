@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { ScanLine, ArrowLeft, Camera, Upload, Copy, Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function QRScanner() {
   const [result, setResult] = useState<string | null>(null);
@@ -232,6 +234,8 @@ export default function QRScanner() {
         </div>
         <p className="text-xs text-[var(--muted-foreground)] mt-3">Works best in Chrome and Edge. Camera scanning requires HTTPS.</p>
       </div>
+    
+      <ToolContent {...toolContentData.qrScanner} />
     </div>
   );
 }

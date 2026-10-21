@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ListX, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function RemoveDuplicates() {
   const [text, setText] = useState("");
@@ -97,6 +99,8 @@ export default function RemoveDuplicates() {
           Removed <strong>{stats.removed}</strong> duplicate lines. {stats.original} → {stats.unique} lines.
         </div>
       )}
+    
+      <ToolContent {...toolContentData.removeDuplicates} />
     </div>
   );
 }

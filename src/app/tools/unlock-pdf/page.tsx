@@ -6,6 +6,8 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import ServerNotice from "@/components/ServerNotice";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function UnlockPDF() {
   const [files, setFiles] = useState<File[]>([]);
@@ -89,6 +91,8 @@ export default function UnlockPDF() {
           </div>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.unlockPdf} />
     </div>
   );
 }

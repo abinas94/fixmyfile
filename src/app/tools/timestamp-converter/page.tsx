@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Clock, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function TimestampConverter() {
   const [timestamp, setTimestamp] = useState("");
@@ -124,6 +126,8 @@ export default function TimestampConverter() {
           </div>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.timestampConverter} />
     </div>
   );
 }

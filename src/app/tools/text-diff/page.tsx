@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ArrowLeft, GitCompareArrows } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function TextDiff() {
   const [textA, setTextA] = useState("");
@@ -123,6 +125,8 @@ export default function TextDiff() {
           </div>
         </>
       )}
+    
+      <ToolContent {...toolContentData.textDiff} />
     </div>
   );
 }

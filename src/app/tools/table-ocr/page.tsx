@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Table, ArrowLeft, Loader2, Download, Copy, Check } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function TableOCR() {
   const [files, setFiles] = useState<File[]>([]);
@@ -165,6 +167,8 @@ export default function TableOCR() {
           <li>The output can be pasted directly into Excel or Google Sheets</li>
         </ul>
       </div>
+    
+      <ToolContent {...toolContentData.tableOcr} />
     </div>
   );
 }

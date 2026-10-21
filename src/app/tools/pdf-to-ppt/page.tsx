@@ -7,6 +7,8 @@ import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import ServerNotice from "@/components/ServerNotice";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function PDFToPPT() {
   const [files, setFiles] = useState<File[]>([]);
@@ -134,6 +136,8 @@ export default function PDFToPPT() {
           </div>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pdfToPpt} />
     </div>
   );
 }

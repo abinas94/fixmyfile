@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react";
 import { TrendingUp, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function SIPCalculator() {
   const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
@@ -106,6 +108,8 @@ export default function SIPCalculator() {
           </div>
         </div>
       </div>
+    
+      <ToolContent {...toolContentData.sipCalculator} />
     </div>
   );
 }

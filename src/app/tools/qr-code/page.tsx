@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { QrCode, ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function QRCodeGenerator() {
   const [text, setText] = useState("https://fixmyfile.co.in");
@@ -135,6 +137,8 @@ export default function QRCodeGenerator() {
           </p>
         </div>
       </div>
+    
+      <ToolContent {...toolContentData.qrCode} />
     </div>
   );
 }

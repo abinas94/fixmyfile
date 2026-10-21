@@ -6,6 +6,8 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { addWatermark, addImageWatermark, downloadBlob } from "@/lib/pdf-utils";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 type WatermarkMode = "text" | "image";
 type Position = "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
@@ -512,6 +514,8 @@ export default function WatermarkPDF() {
           />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.watermark} />
     </div>
   );
 }

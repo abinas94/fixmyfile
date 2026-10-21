@@ -5,6 +5,8 @@ import { Layers, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function PPTMerge() {
   const [files, setFiles] = useState<File[]>([]);
@@ -118,6 +120,8 @@ export default function PPTMerge() {
           <p className="text-xs text-[var(--muted-foreground)]">Slides from all files will be combined in order</p>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pptMerge} />
     </div>
   );
 }

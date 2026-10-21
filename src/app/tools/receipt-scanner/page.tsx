@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ReceiptText, ArrowLeft, Loader2, Copy, Check, Download } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 interface ReceiptData {
   rawText: string;
@@ -181,6 +183,8 @@ export default function ReceiptScanner() {
           </details>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.receiptScanner} />
     </div>
   );
 }

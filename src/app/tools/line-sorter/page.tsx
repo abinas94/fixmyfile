@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ArrowUpDown, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function LineSorter() {
   const [input, setInput] = useState("");
@@ -99,6 +101,8 @@ export default function LineSorter() {
           </p>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.lineSorter} />
     </div>
   );
 }

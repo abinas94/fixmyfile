@@ -7,6 +7,8 @@ import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { downloadBlob } from "@/lib/pdf-utils";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 type Position = "bottom-center" | "bottom-right" | "bottom-left" | "top-center" | "top-right" | "top-left";
 
@@ -114,6 +116,8 @@ export default function PageNumbers() {
           <ProcessingButton onClick={handleProcess} isProcessing={isProcessing} isComplete={isComplete} label="Add Numbers & Download" />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pageNumbers} />
     </div>
   );
 }

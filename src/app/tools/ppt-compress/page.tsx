@@ -5,6 +5,8 @@ import { Minimize2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function PPTCompress() {
   const [files, setFiles] = useState<File[]>([]);
@@ -127,6 +129,8 @@ export default function PPTCompress() {
           <ProcessingButton onClick={handleCompress} isProcessing={isProcessing} isComplete={isComplete} label="Compress & Download" />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pptCompress} />
     </div>
   );
 }

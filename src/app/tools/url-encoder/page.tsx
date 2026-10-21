@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Link as LinkIcon, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function URLEncoder() {
   const [input, setInput] = useState("");
@@ -81,6 +83,8 @@ export default function URLEncoder() {
             className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--muted)] text-sm font-mono resize-y" />
         </div>
       </div>
+    
+      <ToolContent {...toolContentData.urlEncoder} />
     </div>
   );
 }

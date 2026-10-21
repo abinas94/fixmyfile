@@ -5,6 +5,8 @@ import { Image as ImageIcon, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function PDFToImage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -180,6 +182,8 @@ export default function PDFToImage() {
           />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pdfToImage} />
     </div>
   );
 }

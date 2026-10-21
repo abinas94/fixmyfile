@@ -4,6 +4,8 @@ import { useState } from "react";
 import { FileSearch, ArrowLeft, Copy, Check, Loader2, Download } from "lucide-react";
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function PDFOCRTool() {
   const [files, setFiles] = useState<File[]>([]);
@@ -165,6 +167,8 @@ export default function PDFOCRTool() {
             className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--muted)] text-sm resize-y font-mono whitespace-pre-wrap" />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.pdfOcr} />
     </div>
   );
 }

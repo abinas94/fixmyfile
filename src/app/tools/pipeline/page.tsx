@@ -18,6 +18,8 @@ import {
 import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import {
   mergePDFs,
   compressPDF,
@@ -429,6 +431,8 @@ export default function PipelineBuilder() {
           browser — nothing is uploaded to any server.
         </p>
       </div>
+    
+      <ToolContent {...toolContentData.pipeline} />
     </div>
   );
 }

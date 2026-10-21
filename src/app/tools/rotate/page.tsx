@@ -6,6 +6,8 @@ import Link from "next/link";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { rotatePDF, downloadBlob } from "@/lib/pdf-utils";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function RotatePDF() {
   const [files, setFiles] = useState<File[]>([]);
@@ -115,6 +117,8 @@ export default function RotatePDF() {
           />
         </div>
       )}
+    
+      <ToolContent {...toolContentData.rotate} />
     </div>
   );
 }

@@ -7,6 +7,8 @@ import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
 import ServerNotice from "@/components/ServerNotice";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function WordToPDF() {
   const [files, setFiles] = useState<File[]>([]);
@@ -43,6 +45,8 @@ export default function WordToPDF() {
           <p className="text-xs text-[var(--muted-foreground)]">Preserves fonts, images, tables, headers, footers — exactly as in Word.</p>
         </div>
       )}
+    
+      <ToolContent {...toolContentData.wordToPdf} />
     </div>
   );
 }
