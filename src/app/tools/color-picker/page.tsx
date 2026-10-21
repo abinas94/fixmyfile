@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Palette, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function ColorPicker() {
   const [color, setColor] = useState("#6366f1");
@@ -146,6 +148,8 @@ export default function ColorPicker() {
           </div>
         </div>
       </div>
+
+      <ToolContent {...toolContentData.colorPicker} />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Binary, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function Base64Tool() {
   const [input, setInput] = useState("");
@@ -96,6 +98,8 @@ export default function Base64Tool() {
             className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--muted)] text-sm font-mono resize-y" />
         </div>
       </div>
+
+      <ToolContent {...toolContentData.base64} />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Paintbrush, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function CSSGradient() {
   const [color1, setColor1] = useState("#6366f1");
@@ -118,6 +120,8 @@ export default function CSSGradient() {
         <p className="text-xs font-medium mb-2">CSS Code</p>
         <code className="text-sm font-mono block">{fullCSS}</code>
       </div>
+
+      <ToolContent {...toolContentData.cssGradient} />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Crop, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { downloadBlob } from "@/lib/pdf-utils";
@@ -253,6 +255,8 @@ export default function CropPDF() {
       <div className="mt-8 p-4 rounded-2xl bg-[var(--muted)] border border-[var(--border)] text-center">
         <p className="text-xs text-[var(--muted-foreground)]">Crop is applied to ALL pages. The dark overlay shows what will be removed.</p>
       </div>
+
+      <ToolContent {...toolContentData.cropPdf} />
     </div>
   );
 }

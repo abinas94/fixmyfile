@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { FileOutput, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { splitPDF, getPDFPageCount, downloadBlob, downloadAsZip } from "@/lib/pdf-utils";
@@ -86,6 +88,8 @@ export default function ExtractPages() {
           <ProcessingButton onClick={handleExtract} isProcessing={isProcessing} isComplete={isComplete} label="Extract & Download" />
         </div>
       )}
+
+      <ToolContent {...toolContentData.extractPages} />
     </div>
   );
 }

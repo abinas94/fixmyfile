@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { FolderSearch, ArrowLeft, Loader2, Download } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 
 interface OCRResult { fileName: string; text: string; confidence: number; }
@@ -151,6 +153,8 @@ export default function BatchOCR() {
           ))}
         </div>
       )}
+
+      <ToolContent {...toolContentData.batchOcr} />
     </div>
   );
 }

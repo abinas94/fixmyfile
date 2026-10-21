@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Braces, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function JSONFormatter() {
   const [input, setInput] = useState('{"name":"John","age":30,"city":"Mumbai","skills":["JavaScript","Python","React"]}');
@@ -97,6 +99,8 @@ export default function JSONFormatter() {
             className={`w-full px-4 py-3 rounded-xl border text-sm font-mono resize-y ${error ? "border-red-300 bg-red-50 dark:bg-red-900/10 text-red-600" : "border-[var(--border)] bg-[var(--muted)]"}`} />
         </div>
       </div>
+
+      <ToolContent {...toolContentData.jsonFormatter} />
     </div>
   );
 }

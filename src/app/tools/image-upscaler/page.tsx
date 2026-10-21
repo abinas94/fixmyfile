@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Sparkles, ArrowLeft, Download, Loader2, Share2 } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 
 export default function ImageUpscaler() {
@@ -239,6 +241,8 @@ export default function ImageUpscaler() {
           <li>100% private — image never leaves your device</li>
         </ul>
       </div>
+
+      <ToolContent {...toolContentData.imageUpscaler} />
     </div>
   );
 }

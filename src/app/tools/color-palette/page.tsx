@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Palette, ArrowLeft, Copy, Check, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 function hexToHSL(hex: string): [number, number, number] {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -151,6 +153,8 @@ export default function ColorPaletteGenerator() {
           {palette.map((c, i) => `--color-${i + 1}: ${c};`).join("\n")}
         </code>
       </div>
+
+      <ToolContent {...toolContentData.colorPalette} />
     </div>
   );
 }

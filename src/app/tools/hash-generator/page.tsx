@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ShieldCheck, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 async function hash(text: string, algorithm: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -85,6 +87,8 @@ export default function HashGenerator() {
           Hashes are computed locally using the Web Crypto API. Your text is never sent to any server.
         </p>
       </div>
+
+      <ToolContent {...toolContentData.hashGenerator} />
     </div>
   );
 }

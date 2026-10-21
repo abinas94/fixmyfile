@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Globe, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import ProcessingButton from "@/components/ProcessingButton";
 
 export default function HTMLToPDF() {
@@ -100,6 +102,8 @@ export default function HTMLToPDF() {
       <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
         Uses your browser&apos;s print dialog. Select &quot;Save as PDF&quot; as the destination.
       </p>
+
+      <ToolContent {...toolContentData.htmlToPdf} />
     </div>
   );
 }

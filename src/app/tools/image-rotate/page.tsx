@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { RotateCw, ArrowLeft, FlipHorizontal, FlipVertical } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 
@@ -105,6 +107,8 @@ export default function ImageRotate() {
           <ProcessingButton onClick={handleProcess} isProcessing={isProcessing} isComplete={isComplete} label="Apply & Download" />
         </div>
       )}
+
+      <ToolContent {...toolContentData.imageRotate} />
     </div>
   );
 }

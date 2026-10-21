@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react";
 import { Receipt, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function GSTCalculator() {
   const [amount, setAmount] = useState(10000);
@@ -113,6 +115,8 @@ export default function GSTCalculator() {
           </div>
         </div>
       </div>
+
+      <ToolContent {...toolContentData.gstCalculator} />
     </div>
   );
 }

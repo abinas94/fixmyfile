@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Table, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { convertFile, downloadBlob } from "@/lib/convert-api";
@@ -43,6 +45,8 @@ export default function ExcelToPDF() {
           <p className="text-xs text-[var(--muted-foreground)]">All sheets, formatting, charts, and formulas rendered in PDF.</p>
         </div>
       )}
+
+      <ToolContent {...toolContentData.excelToPdf} />
     </div>
   );
 }

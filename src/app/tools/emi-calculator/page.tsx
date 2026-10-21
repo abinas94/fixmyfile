@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react";
 import { IndianRupee, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function EMICalculator() {
   const [principal, setPrincipal] = useState(1000000);
@@ -200,6 +202,8 @@ export default function EMICalculator() {
           </div>
         </div>
       </div>
+
+      <ToolContent {...toolContentData.emiCalculator} />
     </div>
   );
 }

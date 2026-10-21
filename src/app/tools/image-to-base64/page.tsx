@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Binary, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 
 export default function ImageToBase64() {
@@ -90,6 +92,8 @@ export default function ImageToBase64() {
           </p>
         </div>
       )}
+
+      <ToolContent {...toolContentData.imageToBase64} />
     </div>
   );
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { FileImage, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 import { imagesToPDF, downloadBlob } from "@/lib/pdf-utils";
@@ -136,6 +138,8 @@ export default function ImageToPDF() {
           WebP images are converted to maximum-quality JPEG before embedding. Everything runs in your browser.
         </p>
       </div>
+
+      <ToolContent {...toolContentData.imageToPdf} />
     </div>
   );
 }

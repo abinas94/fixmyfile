@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { CaseSensitive, ArrowLeft, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 
 export default function CaseConverter() {
   const [text, setText] = useState("");
@@ -77,6 +79,8 @@ export default function CaseConverter() {
           </button>
         </div>
       )}
+
+      <ToolContent {...toolContentData.caseConverter} />
     </div>
   );
 }

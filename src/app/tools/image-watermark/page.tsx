@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Stamp, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 
@@ -108,6 +110,8 @@ export default function ImageWatermark() {
           <ProcessingButton onClick={handleProcess} isProcessing={isProcessing} isComplete={isComplete} label="Add Watermark & Download" disabled={!text.trim()} />
         </div>
       )}
+
+      <ToolContent {...toolContentData.imageWatermark} />
     </div>
   );
 }

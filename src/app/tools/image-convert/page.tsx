@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { RefreshCw, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 
@@ -102,6 +104,8 @@ export default function ImageConvert() {
           <ProcessingButton onClick={handleConvert} isProcessing={isProcessing} isComplete={isComplete} label="Convert & Download" />
         </div>
       )}
+
+      <ToolContent {...toolContentData.imageConvert} />
     </div>
   );
 }

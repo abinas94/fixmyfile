@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Crop, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import ToolContent from "@/components/ToolContent";
+import { toolContentData } from "@/lib/tool-content-data";
 import FileDropZone from "@/components/FileDropZone";
 import ProcessingButton from "@/components/ProcessingButton";
 
@@ -207,6 +209,8 @@ export default function ImageCrop() {
           <ProcessingButton onClick={handleCrop} isProcessing={isProcessing} isComplete={isComplete} label="Crop & Download" />
         </div>
       )}
+
+      <ToolContent {...toolContentData.imageCrop} />
     </div>
   );
 }
