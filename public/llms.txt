@@ -1,0 +1,82 @@
+# FixMyFile
+> Free browser-based tools for PDFs, images, OCR, documents, Indian form uploads, and calculators. Files are processed on your device for most tools; nothing is uploaded for client-side tools.
+Site: https://fixmyfile.co.in/
+Sitemap: https://fixmyfile.co.in/sitemap.xml
+
+## Hubs
+- [All tools](https://fixmyfile.co.in/): Full catalog of free file tools.
+- [PDF Tools](https://fixmyfile.co.in/category/pdf-tools): Free online PDF tools that work in your browser. Merge, split, compress, rotate, sign, protect and convert PDFs to Word, Excel, images and more. No uploads, no sign-up.
+- [Image Tools](https://fixmyfile.co.in/category/image-tools): Free browser-based image tools. Resize to an exact KB size for form uploads, compress, crop, convert PNG/JPG/WebP, remove backgrounds, make passport photos and merge images. No uploads.
+- [Form Upload Tools](https://fixmyfile.co.in/category/form-upload-tools): Resize photos and signatures to exact KB limits for exam, job, passport and government portal uploads. Make passport photos, compress PDFs for forms. Free, private, no upload.
+- [OCR & Text Extraction](https://fixmyfile.co.in/category/ocr-tools): Free OCR tools to extract text from images, scanned PDFs, receipts and tables. Supports 50+ languages. Runs in your browser — no uploads, no sign-up.
+- [Documents & Text](https://fixmyfile.co.in/category/document-tools): Free document and text tools: format documents, convert Word and PowerPoint, count words, change case, find and replace, compare text and remove duplicates. Browser-based, no upload.
+- [Calculators](https://fixmyfile.co.in/category/calculators): Free financial calculators for India: EMI calculator with loan affordability, GST calculator for 5/12/18/28% and SIP mutual fund returns. Instant, in your browser.
+- [Developer Tools](https://fixmyfile.co.in/category/developer-tools): Free developer utilities: JSON formatter, Base64 encode/decode, URL encoder, color picker, QR code generator and scanner, regex tester and more. Browser-based, no upload.
+- [Blog](https://fixmyfile.co.in/blog): How-to guides for PDFs, images, OCR and form uploads.
+
+## Tools
+- [Merge PDF](https://fixmyfile.co.in/tools/merge): Combine multiple PDFs into one document
+- [Split PDF](https://fixmyfile.co.in/tools/split): Split a PDF into multiple files
+- [Compress PDF](https://fixmyfile.co.in/tools/compress): Reduce PDF file size
+- [Extract Pages](https://fixmyfile.co.in/tools/extract-pages): Extract specific pages from a PDF
+- [Rotate PDF](https://fixmyfile.co.in/tools/rotate): Rotate pages in any direction
+- [Watermark PDF](https://fixmyfile.co.in/tools/watermark): Add text or image watermarks
+- [Add Page Numbers](https://fixmyfile.co.in/tools/page-numbers): Insert page numbers on every page
+- [Crop PDF](https://fixmyfile.co.in/tools/crop-pdf): Crop page margins and whitespace
+- [Sign PDF](https://fixmyfile.co.in/tools/sign-pdf): Draw your signature on a PDF
+- [Protect PDF](https://fixmyfile.co.in/tools/protect-pdf): Add password protection
+- [Unlock PDF](https://fixmyfile.co.in/tools/unlock-pdf): Remove password protection
+- [PDF to Image](https://fixmyfile.co.in/tools/pdf-to-image): Convert PDF pages to PNG or JPG
+- [PDF to Word](https://fixmyfile.co.in/tools/pdf-to-word): Convert PDF to editable .docx document
+- [PDF to Excel](https://fixmyfile.co.in/tools/pdf-to-excel): Extract tables from PDF as CSV
+- [PDF to PowerPoint](https://fixmyfile.co.in/tools/pdf-to-ppt): Convert PDF pages to PPTX slides
+- [Image to PDF](https://fixmyfile.co.in/tools/image-to-pdf): Convert images to a PDF document
+- [HTML to PDF](https://fixmyfile.co.in/tools/html-to-pdf): Convert HTML code to PDF
+- [Excel to PDF](https://fixmyfile.co.in/tools/excel-to-pdf): Convert Excel/CSV to formatted PDF table
+- [Pipeline Builder](https://fixmyfile.co.in/tools/pipeline): Chain multiple PDF operations in one workflow
+- [Scan to PDF](https://fixmyfile.co.in/tools/scan-to-pdf): Scan documents with camera — auto-enhance to clean PDF
+- [Background Remover](https://fixmyfile.co.in/tools/bg-remover): Remove image background instantly — download as transparent PNG
+- [AI Image Enhancer](https://fixmyfile.co.in/tools/image-upscaler): Enhance blurry/low-res images — AI upscale 2x without changing faces
+- [Resize Image to KB](https://fixmyfile.co.in/tools/resize-to-kb): Compress photo/signature to 20KB, 50KB, 100KB for form uploads
+- [Resize Image](https://fixmyfile.co.in/tools/image-resize): Resize to exact dimensions or percentage
+- [Compress Image](https://fixmyfile.co.in/tools/image-compress): Reduce file size with quality control
+- [Crop Image](https://fixmyfile.co.in/tools/image-crop): Crop to custom dimensions
+- [Convert Image](https://fixmyfile.co.in/tools/image-convert): Convert between PNG, JPG, WebP
+- [Passport Photo Maker](https://fixmyfile.co.in/tools/passport-photo): Create passport-size photos (Indian standard)
+- [Rotate & Flip Image](https://fixmyfile.co.in/tools/image-rotate): Rotate or flip images in any direction
+- [Merge Images](https://fixmyfile.co.in/tools/image-merge): Combine multiple images into one, side by side or in a grid
+- [Watermark Image](https://fixmyfile.co.in/tools/image-watermark): Add tiled text watermark to images
+- [Image to Base64](https://fixmyfile.co.in/tools/image-to-base64): Convert image to Base64 data URI
+- [Image to Text (OCR)](https://fixmyfile.co.in/tools/ocr): Extract formatted text from images with paragraph detection
+- [PDF OCR](https://fixmyfile.co.in/tools/pdf-ocr): Extract text from scanned PDF documents
+- [Batch OCR](https://fixmyfile.co.in/tools/batch-ocr): Process multiple images at once, download as text files
+- [Receipt Scanner](https://fixmyfile.co.in/tools/receipt-scanner): Extract amounts, dates, items from receipts & invoices
+- [Table Extractor](https://fixmyfile.co.in/tools/table-ocr): Extract tables from images and export as CSV/Excel
+- [Document Formatter](https://fixmyfile.co.in/tools/doc-formatter): Auto-format Word docs — fix fonts, spacing, margins in one click
+- [Word to PDF](https://fixmyfile.co.in/tools/word-to-pdf): Convert .docx Word documents to PDF
+- [PPT to PDF](https://fixmyfile.co.in/tools/ppt-to-pdf): Convert PowerPoint slides to PDF
+- [PPT to Images](https://fixmyfile.co.in/tools/ppt-to-images): Export slides as PNG images
+- [Compress PPT](https://fixmyfile.co.in/tools/ppt-compress): Reduce PowerPoint file size
+- [Merge PPT](https://fixmyfile.co.in/tools/ppt-merge): Combine multiple presentations
+- [Word Counter](https://fixmyfile.co.in/tools/word-counter): Count words, characters, reading time
+- [Case Converter](https://fixmyfile.co.in/tools/case-converter): Convert text case: UPPER, lower, Title
+- [Text Formatter](https://fixmyfile.co.in/tools/text-formatter): Format, clean, sort, and fix text
+- [Find & Replace](https://fixmyfile.co.in/tools/find-replace): Bulk find and replace text patterns
+- [Remove Duplicates](https://fixmyfile.co.in/tools/remove-duplicates): Remove duplicate lines from text
+- [EMI Calculator](https://fixmyfile.co.in/tools/emi-calculator): Calculate EMI for home, car, personal loans
+- [GST Calculator](https://fixmyfile.co.in/tools/gst-calculator): Calculate GST (5%, 12%, 18%, 28%)
+- [SIP Calculator](https://fixmyfile.co.in/tools/sip-calculator): Calculate SIP investment returns
+- [JSON Formatter](https://fixmyfile.co.in/tools/json-formatter): Format, validate, and minify JSON
+- [Base64 Encode/Decode](https://fixmyfile.co.in/tools/base64): Encode or decode Base64 strings
+- [URL Encoder/Decoder](https://fixmyfile.co.in/tools/url-encoder): Encode or decode URL parameters
+- [Color Picker](https://fixmyfile.co.in/tools/color-picker): Pick colors, convert formats, generate palettes
+- [QR Code Generator](https://fixmyfile.co.in/tools/qr-code): Generate QR codes for URLs, text, UPI
+- [QR & Barcode Scanner](https://fixmyfile.co.in/tools/qr-scanner): Scan QR codes, UPI, barcodes with camera
+- [Regex Tester](https://fixmyfile.co.in/tools/regex-tester): Test regular expressions with live matching and groups
+- [Hash Generator](https://fixmyfile.co.in/tools/hash-generator): Generate MD5, SHA-1, SHA-256, SHA-512 hashes
+- [Password Generator](https://fixmyfile.co.in/tools/password-generator): Generate secure random passwords with custom rules
+- [Timestamp Converter](https://fixmyfile.co.in/tools/timestamp-converter): Convert Unix timestamps to dates and vice versa
+- [CSS Gradient Generator](https://fixmyfile.co.in/tools/css-gradient): Create beautiful CSS gradients with live preview
+- [Text Diff Checker](https://fixmyfile.co.in/tools/text-diff): Compare two texts and highlight differences line by line
+- [Line Sorter](https://fixmyfile.co.in/tools/line-sorter): Sort lines alphabetically, numerically, or randomly
+- [Color Palette Generator](https://fixmyfile.co.in/tools/color-palette): Generate harmonious color palettes from any base color
