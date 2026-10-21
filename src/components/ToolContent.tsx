@@ -1,3 +1,5 @@
+import JsonLd from "@/components/JsonLd";
+
 interface ToolContentProps {
   title: string;
   description: string;
@@ -7,8 +9,31 @@ interface ToolContentProps {
 }
 
 export default function ToolContent({ title, description, howTo, features, faqs }: ToolContentProps) {
+  const schema: object[] = [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: `${title} — FixMyFile`,
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Web browser",
+      description,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  ];
+  if (faqs.length) {
+    schema.push({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+  }
   return (
     <section className="mt-16 max-w-3xl mx-auto space-y-10 text-left">
+      <JsonLd data={schema} />
       {/* About */}
       <div>
         <h2 className="text-xl font-bold mb-3">About {title}</h2>

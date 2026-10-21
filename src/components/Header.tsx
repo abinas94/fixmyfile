@@ -63,6 +63,12 @@ export default function Header() {
               All Tools
             </Link>
             <Link
+              href="/category/form-upload-tools"
+              className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            >
+              Form Uploads
+            </Link>
+            <Link
               href="/blog"
               className="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
             >
@@ -126,6 +132,20 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 All Tools
+              </Link>
+              <Link
+                href="/category/form-upload-tools"
+                className="text-sm font-medium px-3 py-2 rounded-lg hover:bg-[var(--accent)]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Form Uploads
+              </Link>
+              <Link
+                href="/blog"
+                className="text-sm font-medium px-3 py-2 rounded-lg hover:bg-[var(--accent)]"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
               </Link>
               <Link
                 href="/tools/pipeline"

@@ -42,6 +42,18 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Tool category hubs — internal linking for SEO */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-2 mb-10 pb-8 border-b border-[var(--border)]">
+          <Link href="/category/pdf-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">PDF Tools</Link>
+          <Link href="/category/image-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Image Tools</Link>
+          <Link href="/category/form-upload-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Form Upload Tools</Link>
+          <Link href="/category/ocr-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">OCR &amp; Text</Link>
+          <Link href="/category/document-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Document Tools</Link>
+          <Link href="/category/calculators" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Calculators</Link>
+          <Link href="/category/developer-tools" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Developer Tools</Link>
+          <Link href="/blog" className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Blog &amp; Guides</Link>
+        </div>
+
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between pt-8 border-t border-[var(--border)]">
           <div className="flex items-center gap-2 mb-4 sm:mb-0">

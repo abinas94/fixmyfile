@@ -53,6 +53,36 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="google-site-verification" content="hgjtr6W6nfiR-2ioKed_mlxNyWl_RjgACA_2nOADDpo" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "FixMyFile",
+                url: "https://fixmyfile.co.in",
+                logo: "https://fixmyfile.co.in/icons/icon-192.svg",
+                description:
+                  "Free browser-based tools for PDFs, images, OCR, documents and Indian form uploads. No uploads, no sign-up.",
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "FixMyFile",
+                url: "https://fixmyfile.co.in",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: {
+                    "@type": "EntryPoint",
+                    urlTemplate: "https://fixmyfile.co.in/?q={search_term_string}",
+                  },
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]),
+          }}
+        />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2820111631429604" crossOrigin="anonymous"></script>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#6366f1" />
