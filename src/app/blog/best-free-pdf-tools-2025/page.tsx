@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "5 Best Free Online PDF Tools That Work Without Sign-Up (2025) | FixMyFile",
+  title: "5 Best Free Online PDF Tools That Work Without Sign-Up (2026) | FixMyFile",
   description: "Comparison of the best free PDF tools in 2025. No account needed, no file uploads. Merge, split, compress, convert PDFs privately in your browser.",
 };
 
@@ -14,7 +14,7 @@ export default function BestPDFToolsPost() {
         <ArrowLeft className="w-4 h-4" /> Back to Blog
       </Link>
 
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4">5 Best Free Online PDF Tools That Work Without Sign-Up (2025)</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-4">5 Best Free Online PDF Tools That Work Without Sign-Up (2026)</h1>
       <p className="text-[var(--muted-foreground)] mb-8">July 3, 2025 • 5 min read</p>
 
       <div className="prose prose-lg dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">

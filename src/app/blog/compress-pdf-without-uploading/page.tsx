@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How to Compress PDF Without Uploading Files (2025) | FixMyFile",
+  title: "How to Compress PDF Without Uploading Files (2026) | FixMyFile",
   description: "Learn how to reduce PDF file size for free without uploading documents to any server. Complete guide to private, browser-based PDF compression.",
 };
 
@@ -14,7 +14,7 @@ export default function CompressPDFPost() {
         <ArrowLeft className="w-4 h-4" /> Back to Blog
       </Link>
 
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4">How to Compress PDF Without Uploading Files (2025)</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-4">How to Compress PDF Without Uploading Files (2026)</h1>
       <p className="text-[var(--muted-foreground)] mb-8">July 3, 2025 • 3 min read</p>
 
       <div className="prose prose-lg dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">

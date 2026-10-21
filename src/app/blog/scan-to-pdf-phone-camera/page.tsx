@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Scan Documents to PDF With Phone Camera Free (2025) | FixMyFile",
+  title: "Scan Documents to PDF With Phone Camera Free (2026) | FixMyFile",
   description: "Use your phone camera as a document scanner. Create clean, professional PDFs from paper documents with auto-enhancement. Free, no app download needed.",
 };
 
@@ -14,7 +14,7 @@ export default function ScanToPDFPost() {
         <ArrowLeft className="w-4 h-4" /> Back to Blog
       </Link>
 
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4">Scan Documents to PDF With Your Phone Camera — Free, No App Needed (2025)</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-4">Scan Documents to PDF With Your Phone Camera — Free, No App Needed (2026)</h1>
       <p className="text-[var(--muted-foreground)] mb-8">July 22, 2026 • 4 min read</p>
 
       <div className="prose prose-lg dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">

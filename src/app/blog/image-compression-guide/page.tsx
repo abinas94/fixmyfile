@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Image Compression Guide: JPEG vs PNG vs WebP vs AVIF — Which Format to Use (2025)",
+  title: "Image Compression Guide: JPEG vs PNG vs WebP vs AVIF — Which Format to Use (2026)",
   description: "Complete guide to image compression formats. Learn when to use JPEG, PNG, WebP, or AVIF for the smallest file size with best quality. Free online image compressor included.",
 };
 

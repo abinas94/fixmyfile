@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "How to Convert Word to PDF Online Free (2025) | FixMyFile",
+  title: "How to Convert Word to PDF Online Free (2026) | FixMyFile",
   description: "Convert Word documents (.docx) to PDF online for free. Preserve fonts, formatting, and layout perfectly. No software installation needed.",
 };
 
@@ -14,7 +14,7 @@ export default function WordToPDFPost() {
         <ArrowLeft className="w-4 h-4" /> Back to Blog
       </Link>
 
-      <h1 className="text-3xl sm:text-4xl font-bold mb-4">How to Convert Word to PDF Online Free (2025)</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-4">How to Convert Word to PDF Online Free (2026)</h1>
       <p className="text-[var(--muted-foreground)] mb-8">July 22, 2026 • 3 min read</p>
 
       <div className="prose prose-lg dark:prose-invert max-w-none space-y-6 text-[var(--foreground)]">

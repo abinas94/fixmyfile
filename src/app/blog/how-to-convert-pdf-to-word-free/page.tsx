@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "How to Convert PDF to Word Free Without Losing Formatting (2025)",
+  title: "How to Convert PDF to Word Free Without Losing Formatting (2026)",
   description: "Step-by-step guide to converting PDF files to editable Word documents while preserving tables, images, and fonts. Free, no signup required.",
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Zap, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Code2, Search } from "lucide-react";
+import { Shield, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Code2, Search } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
 import Reveal from "@/components/Reveal";
 import { tools, categories } from "@/lib/tools-config";
@@ -49,7 +49,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base sm:text-lg lg:text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto mb-8 sm:mb-10">
-              PDF, images, documents, OCR, dev tools — 63+ tools that work instantly.
+              PDF, images, documents, OCR, dev tools — 70+ tools that work instantly.
               Most run locally in your browser. A few use secure servers for best quality. Always free.
             </p>
 
@@ -219,7 +219,7 @@ export default function Home() {
                 step: "1",
                 title: "Pick a tool",
                 description:
-                  "Choose from 30+ tools across PDFs, images, text, calculations, and development.",
+                  "Choose from 70+ tools across PDFs, images, text, calculations, and development.",
               },
               {
                 step: "2",
@@ -253,11 +253,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl font-bold gradient-text">63+</p>
+              <p className="text-3xl font-bold gradient-text">70+</p>
               <p className="text-sm text-[var(--muted-foreground)] mt-1">Free Tools</p>
             </div>
             <div>
-              <p className="text-3xl font-bold gradient-text">55+</p>
+              <p className="text-3xl font-bold gradient-text">60+</p>
               <p className="text-sm text-[var(--muted-foreground)] mt-1">100% Local Tools</p>
             </div>
             <div>
