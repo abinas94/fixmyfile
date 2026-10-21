@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Shield, Zap, Workflow, ArrowRight, FileText, ImageIcon, Calculator, Code2, Search } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
+import Reveal from "@/components/Reveal";
 import { tools, categories } from "@/lib/tools-config";
 import Link from "next/link";
 
@@ -17,6 +18,9 @@ export default function Home() {
       tool.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  // Show category-grouped layout only when browsing everything (no filter/search).
+  const isGrouped = activeCategory === "all" && searchQuery.trim() === "";
 
   return (
     <div className="min-h-screen">
@@ -146,7 +150,7 @@ export default function Home() {
         </div>
 
         {/* Tool Count */}
-        <p className="text-sm text-[var(--muted-foreground)] mb-6 text-center">
+        <p className="text-sm text-[var(--muted-foreground)] mb-8 text-center">
           Showing {filteredTools.length} tool{filteredTools.length !== 1 ? "s" : ""}
           {activeCategory !== "all" && (
             <button
@@ -158,12 +162,46 @@ export default function Home() {
           )}
         </p>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          {filteredTools.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
-        </div>
+        {isGrouped ? (
+          /* Grouped by category — easier to scan the full catalog */
+          <div className="space-y-12">
+            {categories
+              .filter((c) => c.id !== "all")
+              .map((cat) => {
+                const catTools = tools.filter((t) => t.category === cat.id);
+                if (!catTools.length) return null;
+                return (
+                  <div key={cat.id}>
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg sm:text-xl font-bold">{cat.name}</h2>
+                      <span className="text-xs text-[var(--muted-foreground)]">{catTools.length} tools</span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                      {catTools.map((tool, i) => (
+                        <Reveal key={tool.id} delay={Math.min(i, 6) * 40} className="h-full">
+                          <ToolCard tool={tool} />
+                        </Reveal>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        ) : (
+          /* Flat filtered grid */
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {filteredTools.map((tool, i) => (
+              <Reveal key={tool.id} delay={Math.min(i, 8) * 35} className="h-full">
+                <ToolCard tool={tool} />
+              </Reveal>
+            ))}
+            {filteredTools.length === 0 && (
+              <p className="col-span-full text-center text-[var(--muted-foreground)] py-10">
+                No tools match &ldquo;{searchQuery}&rdquo;. Try a different search.
+              </p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* How It Works */}
