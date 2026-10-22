@@ -87,11 +87,15 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* LaunchBuff badge */}
-        <div className="flex justify-center pt-8">
+        {/* Directory badges */}
+        <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <a href="https://launchbuff.com/products/fixmyfile-erx1t0" target="_blank" rel="noopener noreferrer" title="Featured on LaunchBuff">
             <img src="https://launchbuff.com/badge-featured-dark.svg" alt="Featured on LaunchBuff" width="256" height="80" />
+          </a>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <a href="https://launchnest.io/p/fixmyfile" target="_blank" rel="noopener noreferrer" title="FixMyFile on LaunchNest">
+            <img src="https://launchnest.io/badge/fixmyfile.svg?variant=featured" alt="FixMyFile on LaunchNest" width="220" height="56" />
           </a>
         </div>
       </div>
