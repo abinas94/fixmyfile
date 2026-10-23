@@ -13,6 +13,7 @@ export default function PPTCompress() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [quality, setQuality] = useState(0.6);
+  const [maxDimension, setMaxDimension] = useState(1920);
   const [result, setResult] = useState<{ original: number; compressed: number } | null>(null);
 
   const handleCompress = async () => {
@@ -32,22 +33,37 @@ export default function PPTCompress() {
         const ext = mediaFile.split(".").pop()?.toLowerCase();
         if (ext === "png" || ext === "jpg" || ext === "jpeg") {
           const imgData = await zip.file(mediaFile)!.async("arraybuffer");
-          
-          // Compress image via canvas
+
+          // Decode the embedded image
           const blob = new Blob([imgData]);
           const bitmap = await createImageBitmap(blob);
+
+          // Downscale oversized images — the single biggest source of PPT bloat.
+          // Slides display at ~1920px wide at most; images larger than that are wasted data.
+          let targetW = bitmap.width;
+          let targetH = bitmap.height;
+          if (maxDimension > 0 && Math.max(bitmap.width, bitmap.height) > maxDimension) {
+            const scale = maxDimension / Math.max(bitmap.width, bitmap.height);
+            targetW = Math.round(bitmap.width * scale);
+            targetH = Math.round(bitmap.height * scale);
+          }
+
           const canvas = document.createElement("canvas");
-          canvas.width = bitmap.width;
-          canvas.height = bitmap.height;
+          canvas.width = targetW;
+          canvas.height = targetH;
           const ctx = canvas.getContext("2d")!;
-          ctx.drawImage(bitmap, 0, 0);
-          
+          // White matte so transparent PNGs don't turn black when re-encoded as JPEG
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, targetW, targetH);
+          ctx.drawImage(bitmap, 0, 0, targetW, targetH);
+          bitmap.close();
+
           const compressedBlob = await new Promise<Blob>((resolve) => {
             canvas.toBlob((b) => resolve(b!), "image/jpeg", quality);
           });
-          
+
           const compressedBuffer = await compressedBlob.arrayBuffer();
-          // Only replace if smaller
+          // Only replace if the result is actually smaller
           if (compressedBuffer.byteLength < imgData.byteLength) {
             zip.file(mediaFile, compressedBuffer);
           }
@@ -90,7 +106,7 @@ export default function PPTCompress() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Compress PPT</h1>
-            <p className="text-[var(--muted-foreground)]">Reduce PowerPoint file size by compressing images</p>
+            <p className="text-[var(--muted-foreground)]">Reduce PowerPoint (PPTX) file size online free — shrink image-heavy presentations for email</p>
           </div>
         </div>
       </div>
@@ -106,6 +122,24 @@ export default function PPTCompress() {
           <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
             <span>Smaller file</span><span>Better quality</span>
           </div>
+
+          <label className="block text-sm font-medium mb-2 mt-5">Max image resolution</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {[
+              { v: 1280, label: "720p — smallest" },
+              { v: 1920, label: "1080p — balanced" },
+              { v: 2560, label: "1440p — sharp" },
+              { v: 0, label: "Keep original" },
+            ].map((opt) => (
+              <button key={opt.v} onClick={() => { setMaxDimension(opt.v); setIsComplete(false); }}
+                className={`px-2 py-2 rounded-xl text-xs border transition-all ${maxDimension === opt.v ? "border-[var(--primary)] bg-indigo-50 dark:bg-indigo-950/20 font-semibold" : "border-[var(--border)] hover:border-[var(--primary)]"}`}>
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-[var(--muted-foreground)] mt-2">
+            Shrinking oversized images is usually where the biggest size savings come from. 1080p is plenty for on-screen slides and most projectors.
+          </p>
         </div>
       )}
 

@@ -172,8 +172,8 @@ export default function PassportPhoto() {
             <UserSquare2 className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">Passport Photo Maker</h1>
-            <p className="text-[var(--muted-foreground)]">Create passport & exam photos — 3.5×4.5 cm, 3×4 cm, mini/postal & more</p>
+            <h1 className="text-2xl sm:text-3xl font-bold">Indian Passport Size Photo Maker</h1>
+            <p className="text-[var(--muted-foreground)]">Create & print passport, exam & visa photos — 3.5×4.5 cm, 3×4 cm, mini/postal & more</p>
           </div>
         </div>
       </div>
