@@ -88,14 +88,18 @@ export default function Footer() {
         </div>
 
         {/* Directory badges */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-8">
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <a href="https://launchbuff.com/products/fixmyfile-erx1t0" target="_blank" rel="noopener noreferrer" title="Featured on LaunchBuff">
-            <img src="https://launchbuff.com/badge-featured-dark.svg" alt="Featured on LaunchBuff" width="256" height="80" />
+            <img src="https://launchbuff.com/badge-featured-dark.svg" alt="Featured on LaunchBuff" width="256" height="80" className="h-9 w-auto" />
           </a>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <a href="https://launchnest.io/p/fixmyfile" target="_blank" rel="noopener noreferrer" title="FixMyFile on LaunchNest">
-            <img src="https://launchnest.io/badge/fixmyfile.svg?variant=featured" alt="FixMyFile on LaunchNest" width="220" height="56" />
+            <img src="https://launchnest.io/badge/fixmyfile.svg?variant=featured" alt="FixMyFile on LaunchNest" width="220" height="56" className="h-9 w-auto" />
+          </a>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <a href="https://launchkiwi.com/p/fixmyfile" target="_blank" rel="noopener noreferrer" title="Featured on LaunchKiwi">
+            <img src="https://launchkiwi.com/badge-light.svg" alt="Featured on LaunchKiwi" width="198" height="62" className="h-9 w-auto" />
           </a>
         </div>
       </div>
