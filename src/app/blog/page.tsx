@@ -5,6 +5,41 @@ import { ArrowRight, FileText } from "lucide-react";
 
 const posts = [
   {
+    slug: "resize-photo-to-20kb-50kb-100kb",
+    title: "How to Resize a Photo to 20KB, 50KB or 100KB for Online Form Upload",
+    description: "Why portals ask for tiny files, what decides file size, and a step-by-step method to hit an exact KB limit without a blurry photo.",
+    date: "October 21, 2026",
+    readTime: "7 min read",
+  },
+  {
+    slug: "passport-size-photo-requirements-india",
+    title: "Passport Size Photo Requirements in India: Sizes, Pixels and How to Print at Home",
+    description: "Common photo sizes (3.5x4.5 cm, 3x4 cm, 2.5x3.5 cm, 2x2 inch) with pixel dimensions, face and background rules, and correct home printing.",
+    date: "October 21, 2026",
+    readTime: "8 min read",
+  },
+  {
+    slug: "resize-signature-for-online-application-forms",
+    title: "How to Scan, Resize and Compress Your Signature for Online Application Forms",
+    description: "Write, capture, crop and compress a clear signature that fits 10KB, 20KB or 50KB limits, with a checklist before you upload.",
+    date: "October 21, 2026",
+    readTime: "6 min read",
+  },
+  {
+    slug: "photo-signature-upload-errors-and-fixes",
+    title: "Photo or Signature Upload Failed? 9 Common Errors and How to Fix Them",
+    description: "Wrong format, size too large or too small, sideways images, HEIC files and more. A simple fix for each common upload error.",
+    date: "October 21, 2026",
+    readTime: "7 min read",
+  },
+  {
+    slug: "compress-pdf-for-form-upload",
+    title: "How to Compress a PDF to Under 100KB, 200KB or 500KB for Form Uploads",
+    description: "Scan settings, compression, splitting and merging to get certificates and ID proofs under a portal's PDF size limit.",
+    date: "October 21, 2026",
+    readTime: "8 min read",
+  },
+  {
     slug: "protect-pdf-with-password",
     title: "How to Protect PDF with Password Online Free (2026)",
     description: "Add AES-256 encryption to your PDF files in seconds. Secure confidential documents before sharing via email or cloud storage.",

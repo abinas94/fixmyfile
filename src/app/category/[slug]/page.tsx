@@ -87,6 +87,30 @@ export default async function CategoryHub({
         ))}
       </div>
 
+      {c.slug === "form-upload-tools" && (
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold mb-4">Guides for form uploads</h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { href: "/blog/resize-photo-to-20kb-50kb-100kb", label: "Resize a photo to 20KB, 50KB or 100KB" },
+              { href: "/blog/passport-size-photo-requirements-india", label: "Passport size photo requirements in India" },
+              { href: "/blog/resize-signature-for-online-application-forms", label: "Prepare your signature for online forms" },
+              { href: "/blog/photo-signature-upload-errors-and-fixes", label: "9 upload errors and how to fix them" },
+              { href: "/blog/compress-pdf-for-form-upload", label: "Compress a PDF for form upload" },
+            ].map((g) => (
+              <li key={g.href}>
+                <Link
+                  href={g.href}
+                  className="block p-4 rounded-xl border border-[var(--border)] bg-[var(--card)] text-sm font-medium hover:border-[var(--primary)] transition-colors"
+                >
+                  {g.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <p className="text-sm text-[var(--muted-foreground)] mt-10">
         {categoryTools.length} free {c.name.toLowerCase()} — all private, with most running entirely in your browser.{" "}
         <Link href="/" className="text-[var(--primary)] hover:underline">
